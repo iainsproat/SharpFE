@@ -7,13 +7,13 @@ using System;
 
 namespace SharpFE
 {
-    public delegate bool ArgumentComparator();
+    internal delegate bool ArgumentComparator();
     /// <summary>
     /// Guard provides a number of methods which check for bad variable states.
     /// This may include null parameters etc..
     /// All methods of Guard will throw an exception on finding a bad variable.
     /// </summary>
-    public class Guard
+    internal class Guard
     {
         /// <summary>
         /// Throws an exception if the parameter is null.
