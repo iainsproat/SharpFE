@@ -117,15 +117,8 @@ namespace SharpFE
         /// <returns>A matrix representing the stiffness for these combinations of rows and columns</returns>
         private Matrix BuildStiffnessSubMatrix(IList<NodalDegreeOfFreedom> rowData, IList<NodalDegreeOfFreedom> columnData)
         {
-            if (rowData == null)
-            {
-                throw new ArgumentNullException("rowData");
-            }
-            
-            if (columnData == null)
-            {
-                throw new ArgumentNullException("columnData");
-            }
+            Guard.AgainstNullArgument(rowData, "rowData");
+            Guard.AgainstNullArgument(columnData, "columnData");
             
             int numRows = rowData.Count;
             int numCols = columnData.Count;
@@ -133,6 +126,8 @@ namespace SharpFE
             Matrix result = new DenseMatrix(numRows, numCols);
             IList<FiniteElement> connectedElements;
             NodalDegreeOfFreedom row;
+            
+            // TODO Parallel?
             for (int i = 0; i < numRows; i++)
             {
                 row = rowData[i];

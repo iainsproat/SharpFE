@@ -77,15 +77,11 @@ namespace SharpFE
         public ForceVector(Vector vectorToClone)
             : base(6)
         {
-            if (vectorToClone == null)
-            {
-                throw new ArgumentNullException("vectorToClone");
-            }
-            
-            if (vectorToClone.Count != 6)
-            {
-                throw new ArgumentException("Can only clone from a vector of a length of 6", "vectorToClone");
-            }
+            Guard.AgainstNullArgument(vectorToClone, "vectorToClone");
+            Guard.AgainstBadArgument(
+                () => { return vectorToClone.Count != 6; },
+                "Can only clone from a vector of a length of 6",
+                "vectorToClone");
             
             this.Id = Guid.NewGuid();
             this.SetValue(DegreeOfFreedom.X, vectorToClone[(int)DegreeOfFreedom.X]);

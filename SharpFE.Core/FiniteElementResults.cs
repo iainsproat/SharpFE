@@ -82,11 +82,6 @@ namespace SharpFE
         /// <param name="displacementComponent">The value of the displacement in this global direction</param>
         public void AddDisplacement(NodalDegreeOfFreedom nodalDegreeOfFreedom, double displacementComponent)
         {
-            if (nodalDegreeOfFreedom.Node == null)
-            {
-                throw new ArgumentException("nodalDof.Node cannot be null");
-            }
-            
             if (!this.displacements.ContainsKey(nodalDegreeOfFreedom.Node))
             {
                 this.displacements.Add(nodalDegreeOfFreedom.Node, new DisplacementVector(nodalDegreeOfFreedom.Node));
@@ -112,11 +107,6 @@ namespace SharpFE
         /// <param name="forceComponent">The value of the reaction in this global direction</param>
         public void AddReaction(NodalDegreeOfFreedom nodalDegreeOfFreedom, double forceComponent)
         {
-            if (nodalDegreeOfFreedom.Node == null)
-            {
-                throw new ArgumentException("nodalDof.Node cannot be null");
-            }
-            
             if (!this.reactions.ContainsKey(nodalDegreeOfFreedom.Node))
             {
                 this.reactions.Add(nodalDegreeOfFreedom.Node, new ReactionVector(nodalDegreeOfFreedom.Node));
@@ -142,6 +132,9 @@ namespace SharpFE
         /// <param name="displacements">The value of the displacements.  The order of this vector matches the order of the identifiers in the corresponding parameter</param>
         public void AddMultipleDisplacements(IList<NodalDegreeOfFreedom> identifiers, Vector displacements)
         {
+            Guard.AgainstNullArgument(identifiers, "identifiers");
+            Guard.AgainstNullArgument(reactions, "reactions");
+            
             int numberOfUnknownDisplacements = displacements.Count;
             if (numberOfUnknownDisplacements != identifiers.Count)
             {
@@ -161,6 +154,9 @@ namespace SharpFE
         /// <param name="reactions">The value of the reactions.  The order of this vector matches the order of the identifiers in the corresponding parameter.</param>
         public void AddMultipleReactions(IList<NodalDegreeOfFreedom> identifiers, Vector reactions)
         {
+            Guard.AgainstNullArgument(identifiers, "identifiers");
+            Guard.AgainstNullArgument(reactions, "reactions");
+            
             int numberOfUnknownDisplacements = reactions.Count;
             if (numberOfUnknownDisplacements != identifiers.Count)
             {

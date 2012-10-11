@@ -4,7 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # SharpDevelop 4.2.1.8805
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core", "SharpFE.Core\SharpFE.Core.csproj", "{17CB0AD8-2C64-4FB2-88DC-891043DC9C22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Tests", "SharpFE.Core.Tests\SharpFE.Tests.csproj", "{62D8C935-A60E-47CA-B913-B32250036252}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core.Tests", "SharpFE.Core.Tests\SharpFE.Core.Tests.csproj", "{62D8C935-A60E-47CA-B913-B32250036252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

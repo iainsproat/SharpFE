@@ -16,16 +16,16 @@ namespace SharpFE
         /// <summary>
         /// One dimension. i.e. constrained to a line
         /// </summary>
-        OneDimensional,
+        OneDimension,
         
         /// <summary>
         /// Two dimensions. i.e. constrained to a plane
         /// </summary>
-        TwoDimensional,
+        TwoDimension,
         
         /// <summary>
         /// Three dimensions
         /// </summary>
-        ThreeDimensional
+        ThreeDimension
     }
 }

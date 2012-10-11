@@ -22,20 +22,15 @@ namespace SharpFE
         /// <returns>A vector representing the cross product of the left and right hand side.</returns>
         public static Vector CrossProduct(this Vector leftHandSide, Vector rightHandSide)
         {
-            if (rightHandSide == null)
-            {
-                throw new ArgumentNullException("rightHandSide");
-            }
-            
-            if (!(leftHandSide.Count == 3 || leftHandSide.Count == 2))
-            {
-                throw new ArgumentException("Cross product can only be carried out with a 2 or 3 dimensional vector", "leftHandSide");
-            }
-            
-            if (!(rightHandSide.Count == 2 || rightHandSide.Count == 3))
-            {
-                throw new ArgumentException("Cross product can only be carried out with a 2 or 3 dimensional vector", "rightHandSide");
-            }
+            Guard.AgainstNullArgument(rightHandSide, "rightHandSide");
+            Guard.AgainstBadArgument(
+                () => { return !(leftHandSide.Count == 3 || leftHandSide.Count == 2); },
+                "Cross product can only be carried out with a 2 or 3 dimensional vector",
+                "leftHandSide");
+            Guard.AgainstBadArgument(
+                () => { return !(rightHandSide.Count == 2 || rightHandSide.Count == 3); },
+                "Cross product can only be carried out with a 2 or 3 dimensional vector",
+                "rightHandSide");
             
             Vector result = new DenseVector(3);
             result[0] = (leftHandSide[1] * rightHandSide[2]) - (leftHandSide[2] * rightHandSide[1]);

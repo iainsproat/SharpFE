@@ -205,6 +205,8 @@ namespace SharpFE
         /// </exception>
         public IList<FiniteElement> GetAllElementsConnectedTo(FiniteElementNode node)
         {
+            Guard.AgainstNullArgument(node, "node");
+            
             IList<FiniteElement> response = this.elements.GetAllElementsConnectedTo(node);
             if (response == null)
             {
@@ -228,6 +230,7 @@ namespace SharpFE
             NodalDegreeOfFreedom currentTuple;
             ForceVector nodalForce;
             
+            // TODO Parallel?
             for (int i = 0; i < numberOfKnownForces; i++)
             {
                 currentTuple = knownForces[i];

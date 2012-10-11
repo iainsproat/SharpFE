@@ -36,13 +36,11 @@ namespace SharpFE
         /// <exception cref="ArgumentException">The force has not previous been registered with this repository.  The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter"</exception>
         public void ApplyForceToNode(ForceVector forceToApply, FiniteElementNode nodeToApplyTo)
         {
-            if (!this.Contains(forceToApply))
-            {
-                throw new ArgumentException(
+            Guard.AgainstBadArgument(
+                () => { return !this.Contains(forceToApply); },
                     "The force has not previously been registered with this repository.  " +
                     "The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter",
                     "forceToApply");
-            }
             
             this.nodalForces.Add(nodeToApplyTo, forceToApply);
         }
@@ -54,10 +52,7 @@ namespace SharpFE
         /// <returns>A list of all forces applied to the provided node.</returns>
         public IList<ForceVector> GetAllForcesAppliedTo(FiniteElementNode node)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException("node");
-            }
+            Guard.AgainstNullArgument(node, "node");
             
             IList<ForceVector> response = this.nodalForces.Get(node);
             if (response == null)
@@ -75,10 +70,7 @@ namespace SharpFE
         /// <returns>A single force vector representing the combined force on the node</returns>
         public ForceVector GetCombinedForceOn(FiniteElementNode node) // TODO filter for different loadcases
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException("node");
-            }
+            Guard.AgainstNullArgument(node, "node");
             
             IList<ForceVector> forces = this.GetAllForcesAppliedTo(node);
             if (forces.Count == 0)
@@ -103,10 +95,7 @@ namespace SharpFE
         /// <returns>A vector of forces at each node for each degree of freedom on that node.</returns>
         public Vector GetCombinedForcesFor(IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms)
         {
-            if (nodalDegreeOfFreedoms == null)
-            {
-                throw new ArgumentNullException("nodalDegreeOfFreedoms");
-            }
+            Guard.AgainstNullArgument(nodalDegreeOfFreedoms, "nodalDegreeOfFreedoms");
             
             int numberOfItems = nodalDegreeOfFreedoms.Count;
             Vector result = new DenseVector(numberOfItems);
@@ -174,15 +163,7 @@ namespace SharpFE
         /// <returns>the component of the applied force at the requested node for the specified degree of freedom on that node.</returns>
         private double GetCombinedForceFor(NodalDegreeOfFreedom item, out ForceVector combinedForceOnNode)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
-            
-            if (item.Node == null)
-            {
-                throw new ArgumentException("Node property of item cannot be null.", "item");
-            }
+            Guard.AgainstNullArgument(item, "item");
             
             combinedForceOnNode = this.GetCombinedForceOn(item.Node);
             

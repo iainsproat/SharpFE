@@ -31,10 +31,7 @@ namespace SharpFE
         /// <exception cref="ArgumentNullException">node parameter cannot be null</exception>
         public NodalDegreeOfFreedom(FiniteElementNode node, DegreeOfFreedom degreeOfFreedom)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException("node");
-            }
+            Guard.AgainstNullArgument(node, "node");
             
             this.targetNode = node;
             this.dof = degreeOfFreedom;
@@ -43,6 +40,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the node which this relates to.
         /// </summary>
+        /// <remarks>Node will never be null.</remarks>
         public FiniteElementNode Node
         {
             get { return this.targetNode; }

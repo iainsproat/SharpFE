@@ -51,7 +51,7 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.OneDimensional)
+            if (this.modelType.GetDimensions() != GeometryDimensionality.OneDimension)
             {
                 throw new InvalidOperationException("Can only create a Node with an x-coordinate when a 1D system is in use");
             }
@@ -74,7 +74,7 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalYAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimensional)
+            if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)
             {
                 throw new InvalidOperationException("Can only create a Node with an x and y coordinate when a 2D system is in use");
             }
@@ -97,7 +97,7 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalYAxis, double coordinateAlongGlobalZAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.ThreeDimensional)
+            if (this.modelType.GetDimensions() != GeometryDimensionality.ThreeDimension)
             {
                 throw new InvalidOperationException("Can only create a Node with an x, y and z coordinate when a 3D system is in use");
             }

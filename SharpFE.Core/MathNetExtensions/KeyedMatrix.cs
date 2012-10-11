@@ -225,25 +225,16 @@ namespace SharpFE
         /// <param name="keysForColumns">The keys to replace the ColumnKeys property with</param>
         private void CheckAndAddKeys(IList<TKey> keysForRows, IList<TKey> keysForColumns)
         {
-            if (keysForRows == null)
-            {
-                throw new ArgumentNullException("keysForRows");
-            }
-            
-            if (keysForColumns == null)
-            {
-                throw new ArgumentNullException("keysForColumns");
-            }
-            
-            if (this.RowCount != keysForRows.Count)
-            {
-                throw new ArgumentException("The number of items in the rowKeys list should match the number of rows of the underlying matrix", "keysForRows");
-            }
-            
-            if (this.ColumnCount != keysForColumns.Count)
-            {
-                throw new ArgumentException("The number of items in the columnKeys list should match the number of rows of the underlying matrix", "keysForColumns");
-            }
+            Guard.AgainstNullArgument(keysForRows, "keysForRows");
+            Guard.AgainstNullArgument(keysForColumns, "keysForColumns");
+            Guard.AgainstBadArgument(
+                () => {return this.RowCount != keysForRows.Count;},
+                "The number of items in the rowKeys list should match the number of rows of the underlying matrix",
+                "keysForRows");
+            Guard.AgainstBadArgument(
+                () => {return this.ColumnCount != keysForColumns.Count;},
+                "The number of items in the columnKeys list should match the number of rows of the underlying matrix",
+                "keysForColumns");
             
             // TODO check for duplicate keys?
             this.RowKeys = keysForRows;
@@ -277,10 +268,11 @@ namespace SharpFE
         /// <returns>The key of the row</returns>
         private TKey RowKeyFromIndex(int rowIndex)
         {
-            if (rowIndex > this.RowCount)
-            {
-                throw new ArgumentException("rowIndex cannot be greater than the number of rows of the matrix", "rowIndex");
-            }
+            Guard.AgainstBadArgument(
+                () => { return rowIndex > this.RowCount; },
+                "rowIndex cannot be greater than the number of rows of the matrix",
+                "rowIndex"
+               );
             
             return this.RowKeys[rowIndex];
         }
@@ -292,10 +284,10 @@ namespace SharpFE
         /// <returns>The key of the column</returns>
         private TKey ColumnKeyFromIndex(int columnIndex)
         {
-            if (columnIndex > this.ColumnCount)
-            {
-                throw new ArgumentException("columnIndex cannot be greater than the number of columns of the matrix", "columnIndex");
-            }
+            Guard.AgainstBadArgument(
+                () => {return columnIndex > this.ColumnCount; },
+                "columnIndex cannot be greater than the number of columns of the matrix",
+                "columnIndex");
             
             return this.ColumnKeys[columnIndex];
         }

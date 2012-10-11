@@ -81,6 +81,7 @@ namespace SharpFE
         /// <returns>A submatrix of the stiffness matrix</returns>
         public Matrix<double> SubMatrix(FiniteElementNode nodeRowKey, FiniteElementNode nodeColumnKey)
         {
+            // TODO guard against bad parameters
             IList<NodalDegreeOfFreedom> validRowKeys = this.GetAllRowKeysWithMatchingNode(nodeRowKey);
             IList<NodalDegreeOfFreedom> validColumnKeys = this.GetAllColumnKeysWithMatchingNode(nodeColumnKey);
             int numberValidRowKeys = validRowKeys.Count;
@@ -90,6 +91,7 @@ namespace SharpFE
             NodalDegreeOfFreedom rowKey;
             NodalDegreeOfFreedom columnKey;
             
+            // TODO Parallel?
             for (int i = 0; i < numberValidRowKeys; i++)
             {
                 rowKey = validRowKeys[i];
@@ -147,6 +149,8 @@ namespace SharpFE
         private static IList<NodalDegreeOfFreedom> GetAllRowKeysWithMatchingNode(IList<NodalDegreeOfFreedom> listToFindMatchesFrom, FiniteElementNode nodeToMatch)
         {
             IList<NodalDegreeOfFreedom> matchingKeys = new List<NodalDegreeOfFreedom>();
+            
+            // TODO Linq
             foreach (NodalDegreeOfFreedom nodalDof in listToFindMatchesFrom)
             {
                 if (nodalDof.Node.Equals(nodeToMatch))

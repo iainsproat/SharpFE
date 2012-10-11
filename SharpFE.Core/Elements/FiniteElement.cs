@@ -251,15 +251,8 @@ namespace SharpFE
         /// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
         public double GetStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
         {
-            if (rowNode == null)
-            {
-                throw new ArgumentNullException("rowNode");
-            }
-            
-            if (columnNode == null)
-            {
-                throw new ArgumentNullException("columnNode");
-            }
+            Guard.AgainstNullArgument(rowNode, "rowNode");
+            Guard.AgainstNullArgument(columnNode, "columnNode");
             
             if (this.elementIsDirty)
             {
@@ -275,6 +268,8 @@ namespace SharpFE
         /// <param name="nodeToAdd">The node to add to the element</param>
         internal void AddNode(FiniteElementNode nodeToAdd)
         {
+            Guard.AgainstNullArgument(nodeToAdd, "nodeToAdd");
+            
             this.ThrowIfNodeCannotBeAdded(nodeToAdd);
             this.nodeStore.Add(nodeToAdd);
             this.elementIsDirty = true;

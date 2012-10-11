@@ -61,10 +61,10 @@ namespace SharpFE
         /// <param name="item">The item to register in this repository</param>
         public void Add(T item)
         {
-            if (this.Contains(item))
-            {
-                throw new ArgumentException("This repository already contains the item. Duplicate items cannot be added to a repository", "item");
-            }
+            Guard.AgainstBadArgument(
+                () => { return this.Contains(item); },
+                "This repository already contains the item. Duplicate items cannot be added to a repository",
+                "item");
             
             this.InternalStore.Add(item);
             this.AddToRepository(item);

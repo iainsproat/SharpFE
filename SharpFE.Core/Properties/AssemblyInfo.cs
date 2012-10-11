@@ -41,4 +41,4 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 
 // The internals of this assembly should be exposed to the unit testing framework
-[assembly: InternalsVisibleTo("SharpFE.Tests")]
+[assembly: InternalsVisibleTo("SharpFE.Core.Tests")]

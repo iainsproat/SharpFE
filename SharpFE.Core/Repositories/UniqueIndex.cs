@@ -70,10 +70,10 @@ namespace SharpFE
         /// <returns>the key for the item</returns>
         public Key KeyOfValue(Value item)
         {
-            if (!this.reverseIndex.ContainsKey(item))
-            {
-                throw new ArgumentException("The item is not contained by any key in this UniqueIndex");
-            }
+            Guard.AgainstBadArgument(
+                () => { return !this.reverseIndex.ContainsKey(item); },
+                "The item is not contained by any key in this UniqueIndex",
+                "item");
             
             return this.reverseIndex[item];
         }

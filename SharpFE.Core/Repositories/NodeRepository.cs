@@ -129,6 +129,8 @@ namespace SharpFE
         /// <param name="item">The new item to register</param>
         protected override void AddToRepository(FiniteElementNode item)
         {
+            Guard.AgainstNullArgument(item, "item");
+            
             IList<DegreeOfFreedom> allowedDegreesOfFreedom = this.ModelType.GetAllowedDegreesOfFreedomForBoundaryConditions();
             foreach (DegreeOfFreedom degreeOfFreedom in allowedDegreesOfFreedom)
             {

@@ -104,14 +104,14 @@ namespace SharpFE
             {
                 case ModelType.Truss1D:
                 case ModelType.Beam1D:
-                    return GeometryDimensionality.OneDimensional;
+                    return GeometryDimensionality.OneDimension;
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:
-                    return GeometryDimensionality.TwoDimensional;
+                    return GeometryDimensionality.TwoDimension;
                 case ModelType.Truss3D:
                 case ModelType.MultiStorey2DSlab:
                 case ModelType.Full3D:
-                    return GeometryDimensionality.ThreeDimensional;
+                    return GeometryDimensionality.ThreeDimension;
                 default:
                     throw new NotImplementedException(string.Format(
                         System.Globalization.CultureInfo.InvariantCulture,
