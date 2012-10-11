@@ -85,5 +85,8 @@
     <Folder Include="Repositories" />
     <Folder Include="Solvers" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
