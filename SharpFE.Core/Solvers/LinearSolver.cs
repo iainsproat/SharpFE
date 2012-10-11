@@ -8,8 +8,8 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE;
     using MathNet.Numerics.LinearAlgebra.Double;
+    using SharpFE;
 
     /// <summary>
     /// Carries out a simple, linear analysis to solve a static, implicit finite element problem.

@@ -38,8 +38,7 @@ namespace SharpFE
         {
             Guard.AgainstBadArgument(
                 () => { return !this.Contains(forceToApply); },
-                    "The force has not previously been registered with this repository.  " +
-                    "The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter",
+                    "The force has not previously been registered with this repository.  The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter",
                     "forceToApply");
             
             this.nodalForces.Add(nodeToApplyTo, forceToApply);

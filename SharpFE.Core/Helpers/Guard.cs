@@ -1,13 +1,19 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="FiniteElement.cs" company="Iain Sproat">
+// <copyright file="Guard.cs" company="SharpFE">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
 
 namespace SharpFE
 {
+    using System;
+    
+    /// <summary>
+    /// Returns a boolean value based on internal statements to the delegate.
+    /// </summary>
+    /// <returns>true if the internal statements of the delegate wish it so.</returns>
     internal delegate bool ArgumentComparator();
+    
     /// <summary>
     /// Guard provides a number of methods which check for bad variable states.
     /// This may include null parameters etc..

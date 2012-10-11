@@ -8,8 +8,8 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
+    using MathNet.Numerics.LinearAlgebra.Double;    
     using SharpFE;
-    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// A finite element model is composed of nodes connected by finite elements.

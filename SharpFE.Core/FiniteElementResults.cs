@@ -133,7 +133,7 @@ namespace SharpFE
         public void AddMultipleDisplacements(IList<NodalDegreeOfFreedom> identifiers, Vector displacements)
         {
             Guard.AgainstNullArgument(identifiers, "identifiers");
-            Guard.AgainstNullArgument(reactions, "reactions");
+            Guard.AgainstNullArgument(displacements, "displacements");
             
             int numberOfUnknownDisplacements = displacements.Count;
             if (numberOfUnknownDisplacements != identifiers.Count)

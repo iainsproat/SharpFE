@@ -228,11 +228,11 @@ namespace SharpFE
             Guard.AgainstNullArgument(keysForRows, "keysForRows");
             Guard.AgainstNullArgument(keysForColumns, "keysForColumns");
             Guard.AgainstBadArgument(
-                () => {return this.RowCount != keysForRows.Count;},
+                () => { return this.RowCount != keysForRows.Count; },
                 "The number of items in the rowKeys list should match the number of rows of the underlying matrix",
                 "keysForRows");
             Guard.AgainstBadArgument(
-                () => {return this.ColumnCount != keysForColumns.Count;},
+                () => { return this.ColumnCount != keysForColumns.Count; },
                 "The number of items in the columnKeys list should match the number of rows of the underlying matrix",
                 "keysForColumns");
             
@@ -271,8 +271,7 @@ namespace SharpFE
             Guard.AgainstBadArgument(
                 () => { return rowIndex > this.RowCount; },
                 "rowIndex cannot be greater than the number of rows of the matrix",
-                "rowIndex"
-               );
+                "rowIndex");
             
             return this.RowKeys[rowIndex];
         }
@@ -285,7 +284,7 @@ namespace SharpFE
         private TKey ColumnKeyFromIndex(int columnIndex)
         {
             Guard.AgainstBadArgument(
-                () => {return columnIndex > this.ColumnCount; },
+                () => { return columnIndex > this.ColumnCount; },
                 "columnIndex cannot be greater than the number of columns of the matrix",
                 "columnIndex");
             
