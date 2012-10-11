@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{17CB0AD8-2C64-4FB2-88DC-891043DC9C22}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharpFE</RootNamespace>
+    <AssemblyName>SharpFE.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>lib\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="Elements\ElementStiffnessMatrix.cs" />
+    <Compile Include="Elements\FiniteElement.cs" />
+    <Compile Include="Elements\Spring.cs" />
+    <Compile Include="Factory\ElementFactory.cs" />
+    <Compile Include="Factory\ForceFactory.cs" />
+    <Compile Include="Factory\NodeFactory.cs" />
+    <Compile Include="FiniteElementModel.cs" />
+    <Compile Include="FiniteElementResults.cs" />
+    <Compile Include="GeometryDimensionality.cs" />
+    <Compile Include="IFiniteElementSolver.cs" />
+    <Compile Include="MathNetExtensions\VectorExtensions.cs" />
+    <Compile Include="MathNetExtensions\KeyedMatrix.cs" />
+    <Compile Include="Measures\DisplacementVector.cs" />
+    <Compile Include="Measures\ForceVector.cs" />
+    <Compile Include="Measures\ReactionVector.cs" />
+    <Compile Include="ModelType.cs" />
+    <Compile Include="ModelTypeExtensions.cs" />
+    <Compile Include="FiniteElementNode.cs" />
+    <Compile Include="NodalDegreeOfFreedom.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ElementRepository.cs" />
+    <Compile Include="Repositories\ForceRepository.cs" />
+    <Compile Include="Repositories\Index.cs" />
+    <Compile Include="Repositories\IndexEnumerator.cs" />
+    <Compile Include="Repositories\NodeRepository.cs" />
+    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\UniqueIndex.cs" />
+    <Compile Include="Solvers\LinearSolver.cs" />
+    <Compile Include="Solvers\StiffnessMatrixBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Elements" />
+    <Folder Include="Measures" />
+    <Folder Include="Factory" />
+    <Folder Include="MathNetExtensions" />
+    <Folder Include="Repositories" />
+    <Folder Include="Solvers" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+</Project>
