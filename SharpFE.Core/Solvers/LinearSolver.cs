@@ -37,6 +37,11 @@ namespace SharpFE
             // empty
         }
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearSolver" /> class.
+        /// </summary>
+        /// <param name="modelToSolve">The model on which to run the analysis</param>
+        /// <param name="stiffnessMatrixBuilder">The class which generates the stiffness matrices for solving.</param>
         public LinearSolver(FiniteElementModel modelToSolve, StiffnessMatrixBuilder stiffnessMatrixBuilder)
         {
             Guard.AgainstNullArgument(modelToSolve, "modelToSolve");
@@ -153,7 +158,7 @@ namespace SharpFE
         /// <param name="displacementIdentifiers">Identifers for the nodes and degrees of freedom which are free and therefore have displacements</param>
         /// <param name="reactionIdentifiers">Identifers for the nodes and degrees of freedom which are fixed and therefore have reactions</param>
         /// <param name="displacements">The calculated displacements.  The index of the values in the vector matches the index of the displacement identifiers.</param>
-        /// <param name="reactions">The calculated displacements.  The index of the values in the vector matches the index of the displacement identifiers.</param>
+        /// <param name="reactions">The calculated reactions.  The index of the values in the vector matches the index of the reaction identifiers.</param>
         /// <returns>The results in a presentable data structure</returns>
         private FiniteElementResults CreateResults(IList<NodalDegreeOfFreedom> displacementIdentifiers, IList<NodalDegreeOfFreedom> reactionIdentifiers, Vector displacements, Vector reactions)
         {

@@ -1,17 +1,18 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IStiffnessProvider" company="SharpFE">
+// <copyright file="IStiffnessProvider.cs" company="SharpFE">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
 
 namespace SharpFE
 {
+    using System;
+    
     /// <summary>
     /// IStiffnessProvider provides values for the stiffness.
     /// </summary>
     public interface IStiffnessProvider
     {
-        
+        // TODO
     }
 }

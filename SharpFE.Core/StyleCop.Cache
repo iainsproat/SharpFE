@@ -102,6 +102,15 @@
     <milliseconds>608</milliseconds>
     <violations />
   </sourcecode>
+  <sourcecode name="IStiffnessProvider.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>03/21/2012 12:05:02</timestamp>
+      <milliseconds>0</milliseconds>
+    </settings>
+    <timestamp>10/12/2012 01:12:29</timestamp>
+    <milliseconds>826</milliseconds>
+    <violations />
+  </sourcecode>
   <sourcecode name="Guard.cs" parser="StyleCop.CSharp.CsParser">
     <settings>
       <timestamp>03/21/2012 12:05:02</timestamp>
@@ -255,15 +264,6 @@
     <milliseconds>817</milliseconds>
     <violations />
   </sourcecode>
-  <sourcecode name="LinearSolver.cs" parser="StyleCop.CSharp.CsParser">
-    <settings>
-      <timestamp>03/21/2012 12:05:02</timestamp>
-      <milliseconds>0</milliseconds>
-    </settings>
-    <timestamp>10/12/2012 00:27:01</timestamp>
-    <milliseconds>520</milliseconds>
-    <violations />
-  </sourcecode>
   <sourcecode name="UniqueIndex.cs" parser="StyleCop.CSharp.CsParser">
     <settings>
       <timestamp>03/21/2012 12:05:02</timestamp>
@@ -271,6 +271,15 @@
     </settings>
     <timestamp>10/12/2012 00:11:16</timestamp>
     <milliseconds>408</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="LinearSolver.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>03/21/2012 12:05:02</timestamp>
+      <milliseconds>0</milliseconds>
+    </settings>
+    <timestamp>10/12/2012 01:13:00</timestamp>
+    <milliseconds>372</milliseconds>
     <violations />
   </sourcecode>
   <sourcecode name=".NETFramework,Version=v4.0,Profile=Client.AssemblyAttributes.cs" parser="StyleCop.CSharp.CsParser">
@@ -287,8 +296,8 @@
       <timestamp>03/21/2012 12:05:02</timestamp>
       <milliseconds>0</milliseconds>
     </settings>
-    <timestamp>10/12/2012 00:12:27</timestamp>
-    <milliseconds>883</milliseconds>
+    <timestamp>10/12/2012 00:57:53</timestamp>
+    <milliseconds>317</milliseconds>
     <violations />
   </sourcecode>
 </stylecopresultscache>
