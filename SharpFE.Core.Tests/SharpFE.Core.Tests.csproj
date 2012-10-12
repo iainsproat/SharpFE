@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Elements\BarElementTest.cs" />
     <Compile Include="Elements\SpringElementRotationTest.cs" />
+    <Compile Include="Elements\SpringElementStiffnessTest.cs" />
     <Compile Include="Elements\SpringElementTest.cs" />
     <Compile Include="Elements\SpringElementTestBase.cs" />
     <Compile Include="Examples\Spring1DIn2DModel.cs" />

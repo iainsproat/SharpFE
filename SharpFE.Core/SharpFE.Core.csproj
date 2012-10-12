@@ -56,6 +56,7 @@
     <Compile Include="GeometryDimensionality.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
+    <Compile Include="IStiffnessProvider.cs" />
     <Compile Include="MathNetExtensions\VectorExtensions.cs" />
     <Compile Include="MathNetExtensions\KeyedMatrix.cs" />
     <Compile Include="Measures\DisplacementVector.cs" />

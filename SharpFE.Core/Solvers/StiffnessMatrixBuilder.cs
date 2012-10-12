@@ -52,15 +52,15 @@ namespace SharpFE
         /// <returns>A stiffness matrix for known forces and unknown displacements</returns>
         public Matrix BuildKnownForcesUnknownDisplacementStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> knownForces = this.parent.DegreesOfFreedomWithKnownForce;
-            if (knownForces == null || knownForces.Count == 0)
+            IList<NodalDegreeOfFreedom> knownForceIdentifiers = this.parent.DegreesOfFreedomWithKnownForce;
+            if (knownForceIdentifiers == null || knownForceIdentifiers.Count == 0)
             {
                 throw new InvalidOperationException("The model has too many constraints and no displacements will occur.  The reactions of each node equals the forces applied to each node.");
             }
             
-            IList<NodalDegreeOfFreedom> unknownDisplacements = this.parent.DegreesOfFreedomWithUnknownDisplacement;
+            IList<NodalDegreeOfFreedom> unknownDisplacementIdentifiers = this.parent.DegreesOfFreedomWithUnknownDisplacement;
             
-            return this.BuildStiffnessSubMatrix(knownForces, unknownDisplacements);
+            return this.BuildStiffnessSubMatrix(knownForceIdentifiers, unknownDisplacementIdentifiers);
         }
         
         /// <summary>
