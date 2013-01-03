@@ -51,36 +51,15 @@ namespace SharpFE.Core.Tests.Elements
             Assert.AreEqual(2, SUT.SpringConstant);
         }
         
-        [Test]
-        public void HasALocalStiffnessMatrix()
-        {
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            Matrix result = SUT.LocalStiffnessMatrix;
-            Helpers.AssertMatrix(result, 12, 12,
-                                 2, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 -2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-        }
-
-        
         #region Global Stiffness Matrix
         [Test]
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
         {
             SUT = this.CreateSpringFromOriginTo(1, 0);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
-            Helpers.AssertMatrix(SUT.ElementRotationMatrixFromLocalToGlobalCoordinates, 12, 12,
+            Helpers.AssertMatrix(SUT.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates(), 12, 12,
                                  1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
                                  0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
                                  0, 0, 1, 0, 0, 0,  0, 0, 0, 0, 0, 0,
@@ -113,7 +92,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, 0);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             this.Assert12x12StiffnessMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0,
                                             0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
@@ -134,7 +113,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                             0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
@@ -155,7 +134,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                             0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
@@ -176,7 +155,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, 0, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix(0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
                                             0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
                                             0, 0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0,
@@ -196,7 +175,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, 0, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix(0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
                                             0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
                                             0, 0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0,
@@ -216,7 +195,7 @@ namespace SharpFE.Core.Tests.Elements
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXYPlaneQuadrant1()
         {
             SUT = this.CreateSpringFromOriginTo(1, 1, 0);
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix( 0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
                                              0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
                                              0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
@@ -235,7 +214,7 @@ namespace SharpFE.Core.Tests.Elements
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXYPlaneQuadrant3()
         {
             SUT = this.CreateSpringFromOriginTo(-1, -1, 0);
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix( 0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
                                              0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
                                              0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
@@ -255,7 +234,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, 0, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix( 0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
                                              0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
                                              0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
@@ -275,7 +254,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, 0, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix( 0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
                                              0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
                                              0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
@@ -295,7 +274,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, 1, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix(0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
                                             0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
                                             0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
@@ -315,7 +294,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, -1, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert12x12StiffnessMatrix(0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
                                             0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
                                             0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
@@ -335,7 +314,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, 1, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
@@ -357,7 +336,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, 1, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
@@ -379,7 +358,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, -1, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
@@ -401,7 +380,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, -1, 1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
@@ -423,7 +402,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, 1, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
@@ -445,7 +424,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, 1, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
@@ -467,7 +446,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(-1, -1, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
@@ -489,7 +468,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, -1, -1);
             
-            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             double a = 1.0 / 3.0;
             this.Assert12x12StiffnessMatrix( a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,

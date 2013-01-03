@@ -4,15 +4,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+
 
 namespace SharpFE.Stiffness
 {
+	using System;
+	using MathNet.Numerics.LinearAlgebra.Double;
 	/// <summary>
 	/// Builds the stiffness matrix for a finite element
 	/// </summary>
 	public interface IStiffnessMatrixBuilder
 	{
+		KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix(FiniteElement element);
 		ElementStiffnessMatrix GetStiffnessMatrix(FiniteElement element);
 	}
 }

@@ -53,5 +53,16 @@ namespace SharpFE
             
             return newSpring;
         }
+        
+        public LinearTrussElement CreateLinearTruss(FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
+        {
+        	LinearTrussElement newTruss = new LinearTrussElement(node1, node2, material, crossSection);
+        	if (this.repository != null)
+        	{
+        		this.repository.Add(newTruss);
+        	}
+        	
+        	return newTruss;
+        }
     }
 }

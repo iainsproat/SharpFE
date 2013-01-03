@@ -44,11 +44,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrossSections\Coordinate2D.cs" />
+    <Compile Include="CrossSections\ICrossSection.cs" />
+    <Compile Include="CrossSections\IHasConstantCrossSection.cs" />
+    <Compile Include="CrossSections\IHasCrossSection.cs" />
+    <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
     <Compile Include="Elements\ConstantLinearSpring.cs" />
     <Compile Include="Elements\ElementStiffnessMatrix.cs" />
     <Compile Include="Elements\FiniteElement.cs" />
     <Compile Include="Elements\FiniteElement1D.cs" />
+    <Compile Include="Elements\LinearTrussElement.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
     <Compile Include="Factory\NodeFactory.cs" />
@@ -58,6 +64,11 @@
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
     <Compile Include="IStiffnessProvider.cs" />
+    <Compile Include="Materials\GenericElasticMaterial.cs" />
+    <Compile Include="Materials\IHasMaterial.cs" />
+    <Compile Include="Materials\ILinearElasticMaterial.cs" />
+    <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="MathNetExtensions\KeyedVector.cs" />
     <Compile Include="MathNetExtensions\VectorExtensions.cs" />
     <Compile Include="MathNetExtensions\KeyedMatrix.cs" />
     <Compile Include="Measures\DisplacementVector.cs" />
@@ -78,7 +89,9 @@
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\LinearElastic1DSpringStiffnessProvider.cs" />
+    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear1DElasticMaterialCrossSectionStiffnessBuilder.cs" />
+    <Compile Include="Stiffness\LinearStiffnessMatrixBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />
@@ -86,6 +99,8 @@
     <Folder Include="Factory" />
     <Folder Include="MathNetExtensions" />
     <Folder Include="Helpers" />
+    <Folder Include="Materials" />
+    <Folder Include="CrossSections" />
     <Folder Include="Stiffness" />
     <Folder Include="Repositories" />
     <Folder Include="Solvers" />

@@ -21,12 +21,12 @@ namespace SharpFE
         /// <summary>
         /// The keys which identify the rows of this keyed matrix
         /// </summary>
-        private List<TKey> keysForRows;
+        private IList<TKey> keysForRows;
         
         /// <summary>
         /// The keys which identify the columns of this keyed matrix
         /// </summary>
-        private List<TKey> keysForColumns;
+        private IList<TKey> keysForColumns;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
@@ -90,7 +90,7 @@ namespace SharpFE
         {
             get
             {
-                return this.keysForRows.AsReadOnly();
+            	return ((List<TKey>)this.keysForRows).AsReadOnly();
             }
             
             private set
@@ -106,7 +106,7 @@ namespace SharpFE
         {
             get
             {
-                return this.keysForColumns.AsReadOnly();
+            	return ((List<TKey>)this.keysForColumns).AsReadOnly();
             }
             
             private set

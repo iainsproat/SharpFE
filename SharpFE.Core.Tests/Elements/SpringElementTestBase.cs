@@ -56,15 +56,15 @@ namespace SharpFE.Core.Tests.Elements
         protected void Assert3x3RotationMatrix(params double[] expectedValues)
         {
         	// a rotation matrix has a determinant of +1
-        	double det = SUT.RotationMatrixFromGlobalToLocal.Determinant();
+        	double det = SUT.CalculateElementRotationMatrix().Determinant();
         	Assert.AreEqual(1, 
         	                det,
         	                0.0001,
         	                String.Format("A rotation matrix should have a determinant of + 1. \n\r Determinant of {0} from actual matrix: \n\r {1}", 
         	                              det, 
-        	                              SUT.RotationMatrixFromGlobalToLocal));
+        	                              SUT.CalculateElementRotationMatrix()));
         	
-            Helpers.AssertMatrix(SUT.RotationMatrixFromGlobalToLocal, 3, 3, expectedValues);
+            Helpers.AssertMatrix(SUT.CalculateElementRotationMatrix(), 3, 3, expectedValues);
         }
     }
 }

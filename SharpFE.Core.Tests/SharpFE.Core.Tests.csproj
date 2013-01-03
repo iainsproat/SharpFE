@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\BarElementTest.cs" />
+    <Compile Include="Elements\LinearTrussElementTest.cs" />
     <Compile Include="Elements\SpringElementRotationTest.cs" />
     <Compile Include="Elements\SpringElementTest.cs" />
     <Compile Include="Elements\SpringElementTestBase.cs" />

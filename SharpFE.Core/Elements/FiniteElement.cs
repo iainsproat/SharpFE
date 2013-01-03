@@ -70,7 +70,7 @@ namespace SharpFE
 			{
 				if (this.elementIsDirty)
 				{
-					this.PrepareAndGenerateLocalStiffnessMatrix();
+					this.PrepareAndGenerateGlobalStiffnessMatrix();
 				}
 				
 				return this.stiffnessMatrix;
@@ -80,34 +80,6 @@ namespace SharpFE
 			{
 				this.stiffnessMatrix = value;
 			}
-		}
-		
-		/// <summary>
-		/// Gets the stiffness matrix for this element.
-		/// Amending values in the matrix will alter the behaviour of this element.
-		/// </summary>
-		internal ElementStiffnessMatrix LocalStiffnessMatrix // HACK exposed as internal for unit testing only, should be private
-		{
-			get;
-			private set;
-		}
-		
-		/// <summary>
-		/// Gets the rotational matrix of this element, which will transform local coordinates to global coordinates
-		/// </summary>
-		internal ElementStiffnessMatrix ElementRotationMatrixFromLocalToGlobalCoordinates // HACK exposed as internal for unit testing only, should be private
-		{
-			get;
-			private set;
-		}
-		
-		/// <summary>
-		/// Gets the rotation matrix for rotating this element from local to global coordinates
-		/// </summary>
-		internal Matrix RotationMatrixFromGlobalToLocal // HACK exposed as internal for unit testing only, should be private
-		{
-			get;
-			private set;
 		}
 		
 		/// <summary>
@@ -160,102 +132,46 @@ namespace SharpFE
 		}
 		
 		#region Equals and GetHashCode implementation
-		/// <summary>
-		/// Determines whether two finite elements equal each other
-		/// </summary>
-		/// <param name="leftHandSide">The finite element on the left hand side of the equality comparison statement</param>
-		/// <param name="rightHandSide">The finite element on the right hand side of the equality comparison statement</param>
-		/// <returns>true if the nodes equal each other; otherwise, false</returns>
-		public static bool operator ==(FiniteElement leftHandSide, FiniteElement rightHandSide)
-		{
-			if (ReferenceEquals(leftHandSide, rightHandSide))
-			{
-				return true;
-			}
-			
-			if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
-			{
-				return false;
-			}
-			
-			return leftHandSide.Equals(rightHandSide);
-		}
-		
-		/// <summary>
-		/// Determines whether two finite elements do not equal each other
-		/// </summary>
-		/// <param name="leftHandSide">The finite element on the left hand side of the inequality comparison statement</param>
-		/// <param name="rightHandSide">The finite element on the right hand side of the inequality comparison statement</param>
-		/// <returns>false if the nodes equal each other; otherwise, true</returns>
-		public static bool operator !=(FiniteElement leftHandSide, FiniteElement rightHandSide)
-		{
-			return !(leftHandSide == rightHandSide);
-		}
-		
-		/// <summary>
-		/// Determines whether this element equals the object
-		/// </summary>
-		/// <param name="obj">The object being compared to this element</param>
-		/// <returns>true if the object equals this element; otherwise, false</returns>
 		public override bool Equals(object obj)
 		{
 			FiniteElement other = obj as FiniteElement;
-			return this.Equals(other);
-		}
-		
-		/// <summary>
-		/// Determines whether this element equals the other element
-		/// </summary>
-		/// <param name="other">The other element being compared to this element</param>
-		/// <returns>true if the other element equals this element; otherwise, false</returns>
-		public bool Equals(FiniteElement other)
-		{
 			if (other == null)
-			{
 				return false;
-			}
-			
-			int numberNodes = this.nodeStore.Count;
-			if (other.nodeStore.Count != numberNodes)
-			{
-				return false;
-			}
-			
-			for (int i = 0; i < numberNodes; i++)
-			{
-				if (!object.Equals(this.nodeStore[i], other.nodeStore[i]))
-				{
-					return false;
-				}
-			}
-			
-			// FIXME what about elements which validly connect exactly the same nodes? e.g. two springs between the same nodes?
-			return object.Equals(this.LocalStiffnessMatrix, other.LocalStiffnessMatrix);
+			return object.Equals(this.nodeStore, other.nodeStore) && this.elementIsDirty == other.elementIsDirty && object.Equals(this.stiffnessMatrix, other.stiffnessMatrix) && object.Equals(this.StiffnessProvider, other.StiffnessProvider) && object.Equals(this.SupportedNodalDegreeOfFreedoms, other.SupportedNodalDegreeOfFreedoms);
 		}
 		
-		/// <summary>
-		/// Serves as a hash function for a particular type
-		/// </summary>
-		/// <returns>A hashcode for this element</returns>
 		public override int GetHashCode()
 		{
 			int hashCode = 0;
-			unchecked
-			{
-				if (this.nodeStore != null)
-				{
-					hashCode += 1000000007 * this.nodeStore.GetHashCode();
-				}
-				
-				if (this.LocalStiffnessMatrix != null)
-				{
-					hashCode += 1000000009 * this.LocalStiffnessMatrix.GetHashCode();
-				}
+			unchecked {
+				if (nodeStore != null)
+					hashCode += 1000000007 * nodeStore.GetHashCode();
+				hashCode += 1000000009 * elementIsDirty.GetHashCode();
+				if (stiffnessMatrix != null)
+					hashCode += 1000000021 * stiffnessMatrix.GetHashCode();
+				if (StiffnessProvider != null)
+					hashCode += 1000000033 * StiffnessProvider.GetHashCode();
+				if (SupportedNodalDegreeOfFreedoms != null)
+					hashCode += 1000000087 * SupportedNodalDegreeOfFreedoms.GetHashCode();
 			}
-			
 			return hashCode;
 		}
+		
+		public static bool operator ==(FiniteElement lhs, FiniteElement rhs)
+		{
+			if (ReferenceEquals(lhs, rhs))
+				return true;
+			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+				return false;
+			return lhs.Equals(rhs);
+		}
+		
+		public static bool operator !=(FiniteElement lhs, FiniteElement rhs)
+		{
+			return !(lhs == rhs);
+		}
 		#endregion
+
 		
 		/// <summary>
 		/// Determines whether a degree of freedom is supported by this element
@@ -287,7 +203,7 @@ namespace SharpFE
 			
 			if (this.elementIsDirty)
 			{
-				this.PrepareAndGenerateLocalStiffnessMatrix();
+				this.PrepareAndGenerateGlobalStiffnessMatrix();
 			}
 			
 			return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
@@ -323,15 +239,38 @@ namespace SharpFE
 		/// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
 		/// It sets the stiffnessMatrixHasBeenGenerated flag to true.
 		/// </summary>
-		internal void PrepareAndGenerateLocalStiffnessMatrix() // HACK exposed as internal for unit testing only, should be private
+		internal void PrepareAndGenerateGlobalStiffnessMatrix() // HACK exposed as internal for unit testing only, should be private
 		{
 			this.SupportedNodalDegreeOfFreedoms = this.BuildSupportedNodalDegreeOfFreedoms();
 			
-			this.LocalStiffnessMatrix = this.StiffnessProvider.GetStiffnessMatrix(this);
-			this.BuildRotationalMatrixFromGlobalToLocalCoordinates();
-			this.GlobalStiffnessMatrix = this.CalculateGlobalStiffnessMatrix();
+			Matrix localStiffnessMatrix = this.StiffnessProvider.GetStiffnessMatrix(this);
+			Matrix rotationalMatrix = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
+			this.GlobalStiffnessMatrix = this.CalculateGlobalStiffnessMatrix(localStiffnessMatrix, rotationalMatrix);
 			
 			this.elementIsDirty = false;
+		}
+		
+		/// <summary>
+		/// Builds the rotational matrix from local coordinates to global coordinates.
+		/// </summary>
+		internal Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
+		{
+			Matrix rotationMatrix = CalculateElementRotationMatrix();
+			
+			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new ElementStiffnessMatrix(this.SupportedNodalDegreeOfFreedoms);
+
+			int numberOfRowsInRotationMatrix = rotationMatrix.RowCount;
+			int numberOfColumnsInRotationMatrix = rotationMatrix.ColumnCount;
+			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, rotationMatrix);
+			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, rotationMatrix);
+			return elementRotationMatrixFromLocalToGlobalCoordinates;
+		}
+		
+		internal Matrix CalculateElementRotationMatrix()
+		{
+			Matrix rotationMatrix = (Matrix)DenseMatrix.CreateFromRows(new List<Vector<double>>(3) { this.LocalXAxis, this.LocalYAxis, this.LocalZAxis });
+			rotationMatrix = (Matrix)rotationMatrix.NormalizeRows(2);
+			return rotationMatrix;
 		}
 		
 		/// <summary>
@@ -371,33 +310,13 @@ namespace SharpFE
 		/// Calculates the global stiffness matrix using the local stiffness matrix and the rotational matrix
 		/// </summary>
 		/// <returns>A matrix representing the stiffness matrix of this element in the global coordinate system</returns>
-		private ElementStiffnessMatrix CalculateGlobalStiffnessMatrix()
+		private ElementStiffnessMatrix CalculateGlobalStiffnessMatrix(Matrix k, Matrix t)
 		{
-			Matrix t = (Matrix)this.ElementRotationMatrixFromLocalToGlobalCoordinates;
-			Matrix k = this.LocalStiffnessMatrix;
 			Matrix kt = (Matrix)k.Multiply(t); // K*T
 			Matrix ttransposed = (Matrix)t.Transpose(); // T^
 			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			ElementStiffnessMatrix result = new ElementStiffnessMatrix(ttransposedkt, this.LocalStiffnessMatrix.RowKeys, this.LocalStiffnessMatrix.ColumnKeys);
+			ElementStiffnessMatrix result = new ElementStiffnessMatrix(ttransposedkt, this.SupportedNodalDegreeOfFreedoms, this.SupportedNodalDegreeOfFreedoms);
 			return result;
-		}
-		
-		/// <summary>
-		/// Builds the rotational matrix from global coordinates to local coordinates.
-		/// Assumes the coordinates of nodes of this element are in the global coordinate system.
-		/// </summary>
-		private void BuildRotationalMatrixFromGlobalToLocalCoordinates()
-		{
-            this.RotationMatrixFromGlobalToLocal = (Matrix)DenseMatrix.CreateFromRows(new List<Vector<double>>(3) { this.LocalXAxis, this.LocalYAxis, this.LocalZAxis });
-            this.RotationMatrixFromGlobalToLocal = (Matrix)this.RotationMatrixFromGlobalToLocal.NormalizeRows(2);
-            
-			this.ElementRotationMatrixFromLocalToGlobalCoordinates = new ElementStiffnessMatrix(this.SupportedNodalDegreeOfFreedoms);
-
-			int numberOfRowsInRotationMatrix = this.RotationMatrixFromGlobalToLocal.RowCount;
-			int numberOfColumnsInRotationMatrix = this.RotationMatrixFromGlobalToLocal.ColumnCount;
-			this.ElementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, this.RotationMatrixFromGlobalToLocal);
-			this.ElementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, this.RotationMatrixFromGlobalToLocal);
-			return;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿
 
-namespace SharpFE
+namespace SharpFE.Elements
 {
 	using System;
 	using MathNet.Numerics.LinearAlgebra.Double;
@@ -37,6 +37,14 @@ namespace SharpFE
 			get
 			{
 				return this.Nodes[1];
+			}
+		}
+		
+		public double OriginalLength
+		{
+			get
+			{
+				return this.EndNode.OriginalX - this.StartNode.OriginalX;
 			}
 		}
 		
