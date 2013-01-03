@@ -10,7 +10,7 @@ using NUnit.Framework;
 using SharpFE;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace SharpFE.Tests.Repositories
+namespace SharpFE.Core.Tests.Repositories
 {
     [TestFixture]
     public class ForceRepositoryTest

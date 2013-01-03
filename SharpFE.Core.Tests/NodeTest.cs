@@ -8,7 +8,7 @@ using System;
 using NUnit.Framework;
 using SharpFE;
 
-namespace SharpFE.Tests
+namespace SharpFE.Core.Tests
 {
     [TestFixture]
     public class NodeTest

@@ -5,40 +5,88 @@
  * 
  */
 using System;
+using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra.Double;
 using NUnit.Framework;
 
-namespace SharpFE.Tests
+namespace SharpFE.Core.Tests
 {
-    [TestFixture]
-    public class ResultTest
-    {
-        [Test]
-        public void ResultsHaveDateTimeOfWhenCreated()
-        {
-            FiniteElementResults SUT = new FiniteElementResults(ModelType.Truss1D);
-            Assert.IsNotNull(SUT.ResultsCreatedAt);
-        }
-        
-        [Test]
-        public void CanGetDisplacementOfNode()
-        {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Truss1D);
-            FiniteElementNode node = model.NodeFactory.Create(0);
-            FiniteElementResults SUT = new FiniteElementResults(ModelType.Truss1D);
-            SUT.AddDisplacement(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), 0.002);
-            
-            Assert.AreEqual(0.002, SUT.GetDisplacement(node).X);
-        }
-        
-        [Test]
-        public void CanGetForceAtNode()
-        {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Truss1D);
-            FiniteElementNode node = model.NodeFactory.Create(0);
-            FiniteElementResults SUT = new FiniteElementResults(ModelType.Truss1D);
-            SUT.AddReaction(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), 22);
-            
-            Assert.AreEqual(22, SUT.GetReaction(node).X);
-        }
-    }
+	[TestFixture]
+	public class ResultTest
+	{
+		FiniteElementModel model;
+		FiniteElementNode node;
+		
+		FiniteElementResults SUT;
+			
+		[SetUp]
+		public void SetUp()
+		{
+			model = new FiniteElementModel(ModelType.Truss1D);
+			node = model.NodeFactory.Create(0);
+			
+			SUT = new FiniteElementResults(ModelType.Truss1D);
+		}
+		
+		[Test]
+		public void ResultsHaveDateTimeOfWhenCreated()
+		{
+			Assert.IsNotNull(SUT.ResultsCreatedAt);
+		}
+		
+		[Test]
+		public void CanGetDisplacementOfNode()
+		{
+			SUT.AddDisplacement(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), 0.002);
+			
+			Assert.AreEqual(0.002, SUT.GetDisplacement(node).X);
+		}
+		
+		[Test]
+		public void CanGetForceAtNode()
+		{
+			SUT.AddReaction(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), 22);
+			
+			Assert.AreEqual(22, SUT.GetReaction(node).X);
+		}
+		
+		[Test]
+		public void CanAddMultipleDisplacements()
+		{			
+			FiniteElementNode node1 = model.NodeFactory.Create(1);
+			IList<NodalDegreeOfFreedom> identifiers = new List<NodalDegreeOfFreedom>(3);
+			identifiers.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X));
+			identifiers.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y));
+			identifiers.Add(new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y));
+			
+			Vector displacements = new DenseVector(3);
+			displacements[0] = 10;
+			displacements[1] = 12;
+			displacements[2] = 13;
+			
+			SUT.AddMultipleDisplacements(identifiers, displacements);
+			
+			Assert.AreEqual(10, SUT.GetDisplacement(node).X);
+			Assert.AreEqual(12, SUT.GetDisplacement(node).Y);
+			Assert.AreEqual(13, SUT.GetDisplacement(node1).Y);
+		}
+		
+		[Test]
+		public void DuplicateMultipleDisplacementsAreNotAdditive()
+		{
+			NodalDegreeOfFreedom nDof = new NodalDegreeOfFreedom(node, DegreeOfFreedom.X);
+			IList<NodalDegreeOfFreedom> identifiers = new List<NodalDegreeOfFreedom>(2);
+			identifiers.Add(nDof);
+			identifiers.Add(nDof);
+			
+			Vector displacements = new DenseVector(2);
+			displacements[0] = 10;
+			displacements[1] = 11;
+
+			
+			SUT.AddMultipleDisplacements(identifiers, displacements);
+			
+			Assert.AreEqual(11, SUT.GetDisplacement(node).X);
+		}
+	}
 }

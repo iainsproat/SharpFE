@@ -8,7 +8,7 @@ using System;
 using NUnit.Framework;
 using SharpFE;
 
-namespace SharpFE.Tests.Solvers
+namespace SharpFE.Core.Tests.Solvers
 {
     [TestFixture]
     public class LinearSolverTest
@@ -16,9 +16,7 @@ namespace SharpFE.Tests.Solvers
         FiniteElementModel model;
         FiniteElementNode node1;
         FiniteElementNode node2;
-        FiniteElementNode node3;
-        Spring spring1;
-        Spring spring2;
+        ConstantLinearSpring spring1;
         ForceVector force1;
         
         LinearSolver SUT;
@@ -29,13 +27,10 @@ namespace SharpFE.Tests.Solvers
             model = new FiniteElementModel(ModelType.Truss1D);
             node1 = model.NodeFactory.Create(0);
             node2 = model.NodeFactory.Create(1);
-            node3 = model.NodeFactory.Create(2);
             
-            spring1 = model.ElementFactory.CreateSpring(node1, node2, 3);
-            spring2 = model.ElementFactory.CreateSpring(node2, node3, 2);
+            spring1 = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 4);
             
             model.ConstrainNode(node1, DegreeOfFreedom.X);
-            model.ConstrainNode(node3, DegreeOfFreedom.X);
             
             force1 = model.ForceFactory.Create(20);
             model.ApplyForceToNode(force1, node2);
@@ -48,9 +43,8 @@ namespace SharpFE.Tests.Solvers
         {
             FiniteElementResults results = SUT.Solve();
             Assert.IsNotNull(results);
-            Assert.AreEqual(4, results.GetDisplacement(node2).X);
-            Assert.AreEqual(-12, results.GetReaction(node1).X);
-            Assert.AreEqual(-8, results.GetReaction(node3).X);
+            Assert.AreEqual(5, results.GetDisplacement(node2).X);
+            Assert.AreEqual(-20, results.GetReaction(node1).X);
         }
         
         [Test]
@@ -60,9 +54,8 @@ namespace SharpFE.Tests.Solvers
             
             FiniteElementResults results = SUT.Solve();
             Assert.IsNotNull(results);
-            Assert.AreEqual(4, results.GetDisplacement(node2).X);
-            Assert.AreEqual(8, results.GetReaction(node1).X);
-            Assert.AreEqual(-8, results.GetReaction(node3).X);
+            Assert.AreEqual(5, results.GetDisplacement(node2).X);
+            Assert.AreEqual(0, results.GetReaction(node1).X);
         }
         
         [Test]
@@ -95,6 +88,7 @@ namespace SharpFE.Tests.Solvers
         [Test]
         public void WillCheckForUnjoinedModel()
         {
+        	// TODO
             // no continuous path of elements connecting all nodes. i.e. there are actually two or more models
             Assert.Ignore();
         }
@@ -105,7 +99,6 @@ namespace SharpFE.Tests.Solvers
         {
             // remove all constraints
             model.UnconstrainNode(node1, DegreeOfFreedom.X);
-            model.UnconstrainNode(node3, DegreeOfFreedom.X);
             
             SUT.Solve();
         }

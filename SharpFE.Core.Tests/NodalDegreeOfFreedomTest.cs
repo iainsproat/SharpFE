@@ -7,7 +7,7 @@ using System;
 using SharpFE;
 using NUnit.Framework;
 
-namespace SharpFE.Tests
+namespace SharpFE.Core.Tests
 {
     [TestFixture]
     public class NodalDegreeOfFreedomTest

@@ -10,10 +10,10 @@ using SharpFE;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace SharpFE.Tests.Elements
+namespace SharpFE.Core.Tests.Elements
 {
     [TestFixture]
-    public class SpringElementTest : SpringElementTestBase
+    public class ConstantLinearSpringElementTest : ConstantLinearSpringElementTestBase
     {
         [SetUp]
         public void Setup()
@@ -48,7 +48,7 @@ namespace SharpFE.Tests.Elements
         [Test]
         public void ElementHasASpringConstant()
         {
-            Assert.AreEqual(2, SUT.Stiffness);
+            Assert.AreEqual(2, SUT.SpringConstant);
         }
         
         [Test]
@@ -70,5 +70,453 @@ namespace SharpFE.Tests.Elements
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
+
+        
+        #region Global Stiffness Matrix
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, 0);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            Helpers.AssertMatrix(SUT.ElementRotationMatrixFromLocalToGlobalCoordinates, 12, 12,
+                                 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 1, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 1, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
+            
+            this.Assert12x12StiffnessMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            -1, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToNegativeGlobalXAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, 0);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            this.Assert12x12StiffnessMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            -1, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalYAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0, -1, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0);
+        }
+        
+                [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToNegativeGlobalYAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0, -1, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                            0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalZAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, 0, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix(0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0, -1, 0, 0, 0, 0, 0,  1, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToNegativeGlobalZAxis()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, 0, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix(0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0, -1, 0, 0, 0, 0, 0,  1, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+                                            0, 0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0);
+        }
+
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXYPlaneQuadrant1()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, 1, 0);
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix( 0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
+                                             0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                            -0.5, -0.5, 0, 0, 0, 0,   0.5,  0.5, 0, 0, 0, 0,
+                                            -0.5, -0.5, 0, 0, 0, 0,   0.5,  0.5, 0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXYPlaneQuadrant3()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, -1, 0);
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix( 0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
+                                             0.5,  0.5, 0, 0, 0, 0,  -0.5, -0.5, 0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                            -0.5, -0.5, 0, 0, 0, 0,   0.5,  0.5, 0, 0, 0, 0,
+                                            -0.5, -0.5, 0, 0, 0, 0,   0.5,  0.5, 0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0,
+                                             0,    0,   0, 0, 0, 0,   0,    0,   0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXZPlaneQuadrant1()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, 0, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix( 0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                            -0.5, 0, -0.5, 0, 0, 0,  0.5, 0,    0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                            -0.5, 0, -0.5, 0, 0, 0,  0.5, 0,    0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXZPlaneQuadrant3()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, 0, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix( 0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0.5, 0,  0.5, 0, 0, 0, -0.5, 0,   -0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                            -0.5, 0, -0.5, 0, 0, 0,  0.5, 0,    0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                            -0.5, 0, -0.5, 0, 0, 0,  0.5, 0,    0.5, 0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0,
+                                             0,   0,  0,   0, 0, 0,  0,   0,    0,   0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalYZPlaneQuadrant1()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, 1, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix(0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
+                                            0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0, -0.5, -0.5, 0, 0, 0, 0,  0.5,  0.5, 0, 0, 0,
+                                            0, -0.5, -0.5, 0, 0, 0, 0,  0.5,  0.5, 0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0);
+        }
+        
+                [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalYZPlaneQuadrant3()
+        {
+            SUT = this.CreateSpringFromOriginTo(0, -1, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            this.Assert12x12StiffnessMatrix(0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
+                                            0,  0.5,  0.5, 0, 0, 0, 0, -0.5, -0.5, 0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0, -0.5, -0.5, 0, 0, 0, 0,  0.5,  0.5, 0, 0, 0,
+                                            0, -0.5, -0.5, 0, 0, 0, 0,  0.5,  0.5, 0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0,
+                                            0,  0,    0,   0, 0, 0, 0,  0,    0,   0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant1PositiveZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, 1, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant2PositiveZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, 1, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                             a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                             a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant3PositiveZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, -1, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                             a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                             a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant4PositiveZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, -1, 1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant1NegativeZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, 1, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                             a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                            -a, -a,  a, 0, 0, 0,  a,  a, -a, 0, 0, 0,
+                                             a,  a, -a, 0, 0, 0, -a, -a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant2NegativeZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, 1, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             a, -a,  a, 0, 0, 0, -a,  a, -a, 0, 0, 0,
+                                            -a,  a, -a, 0, 0, 0,  a, -a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant3NegativeZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(-1, -1, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             a,  a,  a, 0, 0, 0, -a, -a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                            -a, -a, -a, 0, 0, 0,  a,  a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void CanCanCreateGlobalStiffnessMatrixForSpringInQuadrant4NegativeZ()
+        {
+            SUT = this.CreateSpringFromOriginTo(1, -1, -1);
+            
+            SUT.PrepareAndGenerateLocalStiffnessMatrix();
+            
+            double a = 1.0 / 3.0;
+            this.Assert12x12StiffnessMatrix( a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                            -a,  a,  a, 0, 0, 0,  a, -a, -a, 0, 0, 0,
+                                             a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                             a, -a, -a, 0, 0, 0, -a,  a,  a, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
+                                             0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
+        }
+        
+        #endregion
+        
+        [Test]
+        public void CanGetStiffnessAt()
+        {
+            double result = SUT.GetStiffnessAt(start, DegreeOfFreedom.X, start, DegreeOfFreedom.X);
+            Assert.AreEqual(2, result);
+            result = SUT.GetStiffnessAt(start, DegreeOfFreedom.X, end, DegreeOfFreedom.X);
+            Assert.AreEqual(-2, result);
+        }
+        
+
     }
 }

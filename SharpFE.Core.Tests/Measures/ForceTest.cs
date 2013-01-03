@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 using SharpFE;
 
-namespace SharpFE.Tests.Measures
+namespace SharpFE.Core.Tests.Measures
 {
     /// <summary>
     /// Description of ForceTest.

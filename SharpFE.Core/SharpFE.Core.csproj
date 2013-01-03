@@ -45,9 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="Elements\ConstantLinearSpring.cs" />
     <Compile Include="Elements\ElementStiffnessMatrix.cs" />
     <Compile Include="Elements\FiniteElement.cs" />
-    <Compile Include="Elements\Spring.cs" />
+    <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
     <Compile Include="Factory\NodeFactory.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearElastic1DSpringStiffnessProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />
@@ -83,6 +86,7 @@
     <Folder Include="Factory" />
     <Folder Include="MathNetExtensions" />
     <Folder Include="Helpers" />
+    <Folder Include="Stiffness" />
     <Folder Include="Repositories" />
     <Folder Include="Solvers" />
   </ItemGroup>

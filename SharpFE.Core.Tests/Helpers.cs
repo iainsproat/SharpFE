@@ -8,7 +8,7 @@ using System;
 using NUnit.Framework;
 using MathNet.Numerics.LinearAlgebra.Generic;
 
-namespace SharpFE.Tests
+namespace SharpFE.Core.Tests
 {
     /// <summary>
     /// Description of Helpers.

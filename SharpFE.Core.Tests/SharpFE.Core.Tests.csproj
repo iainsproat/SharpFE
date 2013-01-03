@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="Elements\BarElementTest.cs" />
     <Compile Include="Elements\SpringElementRotationTest.cs" />
-    <Compile Include="Elements\SpringElementStiffnessTest.cs" />
     <Compile Include="Elements\SpringElementTest.cs" />
     <Compile Include="Elements\SpringElementTestBase.cs" />
     <Compile Include="Examples\Spring1DIn2DModel.cs" />
@@ -70,6 +69,7 @@
     <Compile Include="Repositories\UniqueIndexTest.cs" />
     <Compile Include="ResultTest.cs" />
     <Compile Include="Solvers\LinearSolverTest.cs" />
+    <Compile Include="Solvers\LinearSolverTestsIn2D.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

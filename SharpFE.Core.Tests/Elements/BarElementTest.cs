@@ -7,7 +7,7 @@ using System;
 using NUnit.Framework;
 using SharpFE;
 
-namespace SharpFE.Tests.Elements
+namespace SharpFE.Core.Tests.Elements
 {
     [TestFixture]
     public class BarElementTest
@@ -38,24 +38,6 @@ namespace SharpFE.Tests.Elements
         
         [Test]
         public void ElementHasAStiffnessAgainstShear()
-        {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void CanCreateElementStiffnessMatrixWhereLocalCoordinatesAreAlignedWithGlobal()
-        {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void StiffnessMatrixCorrectlyTransformsLocalStiffnessToGlobalStiffnessFor2D()
-        {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void StiffnessMatrixCorrectlyTransformsLocalStiffnessToGlobalStiffnessFor3D()
         {
             Assert.Ignore();
         }

@@ -7,10 +7,10 @@ using System;
 using SharpFE;
 using NUnit.Framework;
 
-namespace SharpFE.Tests.Elements
+namespace SharpFE.Core.Tests.Elements
 {
     [TestFixture]
-    public class SpringElementRotationTest : SpringElementTestBase
+    public class ConstantLinearSpringElementRotationTest : ConstantLinearSpringElementTestBase
     {
         [SetUp]
         public void Setup()
@@ -46,9 +46,9 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(0, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix( 0, 1, 0,
-                                         -1, 0, 0,
-                                          0, 0, 1);
+            this.Assert3x3RotationMatrix(  0, 1, 0,
+                                          -1, 0, 0,
+                                           0, 0, 1);
         }
         
         [Test]
@@ -77,9 +77,9 @@ namespace SharpFE.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(0, 0, -1);
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix(  0, 0, -1,
-                                           0, -1, 0,
-                                           -1, 0, 0);
+            this.Assert3x3RotationMatrix(  0,  0, -1,
+                                           0, -1,  0,
+                                          -1,  0,  0);
         }
         
         [Test]
@@ -88,9 +88,11 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(1, 1, 0);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix( 0.5, 0.5, 0,
-                                         -0.5, 0.5, 0,
-                                          0,   0,   1);
+            
+            double a = 1 / Math.Sqrt(2);
+            this.Assert3x3RotationMatrix( a, a, 0,
+                                         -a, a, 0,
+                                          0, 0, 1);
         }
         
         [Test]
@@ -99,9 +101,11 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(1, 0, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix( 0.5, 0, 0.5,
-                                          0,   1,  0,
-                                          -0.5, 0,  0.5);
+            
+            double a = 1 / Math.Sqrt(2);
+            this.Assert3x3RotationMatrix(  a, 0, a,
+                                           0, 1, 0,
+                                          -a, 0, a);
         }
         
         [Test]
@@ -110,9 +114,11 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(0, 1, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix( 0,  0.5, 0.5,
-                                         -1,  0,   0,
-                                          0, -0.5, 0.5);
+            
+            double a = 1 / Math.Sqrt(2);
+            this.Assert3x3RotationMatrix( 0,  a, a,
+                                         -1,  0, 0,
+                                          0, -a, a);
         }
         
         [Test]
@@ -120,11 +126,14 @@ namespace SharpFE.Tests.Elements
         {
             SUT = this.CreateSpringFromOriginTo(1, 1, 1);
             
-            double a = 1.0 / 3.0;
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            this.Assert3x3RotationMatrix( a,     a,    a,
-                                         -0.5,   0.5,  0,
-                                         -0.25, -0.25, 0.5);
+            
+            this.Assert3x3RotationMatrix( b,  b,  b,
+                                         -a,  a,  0,
+                                         -c, -c,  2*c);
         }
         
         [Test]
@@ -133,10 +142,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(-1, 1, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix( -a,     a,    a,
-                                          -0.5,  -0.5,  0,
-                                          0.25, -0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( -b,  b,  b,
+                                          -a, -a,  0,
+                                           c, -c,  2*c);
         }
         
         [Test]
@@ -145,10 +157,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(-1, -1, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3;
-            this.Assert3x3RotationMatrix( -a, -a, a,
-                                           0.5, -0.5, 0,
-                                           0.25, 0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( -b, -b, b,
+                                           a, -a, 0,
+                                           c,  c, 2*c);
         }
         
         [Test]
@@ -157,10 +172,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(1, -1, 1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix( a,   -a,    a,
-                                          0.5,  0.5,  0,
-                                         -0.25, 0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( b, -b, b,
+                                          a,  a, 0,
+                                         -c,  c, 2*c);
         }
         
         [Test]
@@ -169,10 +187,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(1, 1, -1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix( a,    a,   -a,
-                                         -0.5,  0.5,  0,
-                                          0.25, 0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( b, b, -b,
+                                         -a, a,  0,
+                                          c, c,  2*c);
         }
         
         [Test]
@@ -181,10 +202,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(-1, 1, -1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix( -a,    a,   -a,
-                                          -0.5, -0.5,  0,
-                                          -0.25, 0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( -b,  b, -b,
+                                          -a, -a,  0,
+                                          -c,  c,  2*c);
         }
         
         [Test]
@@ -193,10 +217,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(-1, -1, -1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix(-a,    -a,   -a,
-                                          0.5,  -0.5,  0,
-                                         -0.25, -0.25, 0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix(-b, -b, -b,
+                                          a, -a,  0,
+                                         -c, -c,  2*c);
         }
         
         [Test]
@@ -205,10 +232,13 @@ namespace SharpFE.Tests.Elements
             SUT = this.CreateSpringFromOriginTo(1, -1, -1);
             
             SUT.PrepareAndGenerateLocalStiffnessMatrix();
-            double a = 1.0/3.0;
-            this.Assert3x3RotationMatrix( a,    -a,    -a,
-                                          0.5,   0.5,   0,
-                                          0.25, -0.25,  0.5);
+            double a = 1.0 / Math.Sqrt(2.0);
+            double b = 1.0 / Math.Sqrt(3.0);
+            double c = 1.0 / Math.Sqrt(6.0);
+            
+            this.Assert3x3RotationMatrix( b, -b, -b,
+                                          a,  a,  0,
+                                          c, -c,  2*c);
         }
     }
 }

@@ -6,7 +6,7 @@
 using System;
 using NUnit.Framework;
 
-namespace SharpFE.Tests.Factory
+namespace SharpFE.Core.Tests.Factory
 {
     [TestFixture]
     public class ElementFactoryTest
@@ -28,11 +28,10 @@ namespace SharpFE.Tests.Factory
         [Test]
         public void ElementsCanBeCreated()
         {
-            Spring result = SUT.CreateSpring(node1, node2, 1);
+            ConstantLinearSpring result = SUT.CreateConstantLinearSpring(node1, node2, 1);
             Assert.IsNotNull(result);
             Assert.AreEqual(node1, result.StartNode);
             Assert.AreEqual(node2, result.EndNode);
-            Assert.AreEqual(1, result.Stiffness);
         }
         
         [Test]
@@ -42,7 +41,7 @@ namespace SharpFE.Tests.Factory
             SUT = new ElementFactory(repository);
             Assert.AreEqual(0, repository.Count);
             
-            SUT.CreateSpring(node1, node2, 2);
+            SUT.CreateConstantLinearSpring(node1, node2, 2);
             Assert.AreEqual(1, repository.Count);
         }
     }

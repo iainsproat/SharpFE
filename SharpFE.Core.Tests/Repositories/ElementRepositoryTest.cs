@@ -10,7 +10,7 @@ using NUnit.Framework;
 using SharpFE;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace SharpFE.Tests.Repositories
+namespace SharpFE.Core.Tests.Repositories
 {
     [TestFixture]
     public class ElementRepositoryTest
@@ -19,8 +19,8 @@ namespace SharpFE.Tests.Repositories
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        Spring spring1;
-        Spring spring2;
+        ConstantLinearSpring spring1;
+        ConstantLinearSpring spring2;
         ElementRepository SUT;
         ElementFactory elementFactory;
         
@@ -33,8 +33,8 @@ namespace SharpFE.Tests.Repositories
             node3 = nodeFactory.Create(0, 2);
             SUT = new ElementRepository();
             elementFactory = new ElementFactory(SUT);
-            spring1 = elementFactory.CreateSpring(node1, node2, 1);
-            spring2 = elementFactory.CreateSpring(node2, node3, 2);
+            spring1 = elementFactory.CreateConstantLinearSpring(node1, node2, 1);
+            spring2 = elementFactory.CreateConstantLinearSpring(node2, node3, 2);
         }
         
         [Test]

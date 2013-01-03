@@ -43,9 +43,9 @@ namespace SharpFE
         /// <param name="node2">The node at the end of the spring</param>
         /// <param name="springConstant">The constant value of stiffness of the spring.</param>
         /// <returns>The newly created Spring element</returns>
-        public Spring CreateSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+        public ConstantLinearSpring CreateConstantLinearSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
         {
-            Spring newSpring = new Spring(node1, node2, springConstant);
+            ConstantLinearSpring newSpring = new ConstantLinearSpring(node1, node2, springConstant);
             if (this.repository != null)
             {
                 this.repository.Add(newSpring);

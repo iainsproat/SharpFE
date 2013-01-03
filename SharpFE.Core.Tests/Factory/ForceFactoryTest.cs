@@ -6,7 +6,7 @@
 using System;
 using NUnit.Framework;
 
-namespace SharpFE.Tests.Factory
+namespace SharpFE.Core.Tests.Factory
 {
     [TestFixture]
     public class ForceFactoryTest

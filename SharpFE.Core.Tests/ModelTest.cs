@@ -9,7 +9,7 @@ using NUnit.Framework;
 using SharpFE;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace SharpFE.Tests
+namespace SharpFE.Core.Tests
 {
     [TestFixture]
     public class ModelTest
@@ -18,8 +18,8 @@ namespace SharpFE.Tests
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        Spring spring1;
-        Spring spring2;
+        ConstantLinearSpring spring1;
+        ConstantLinearSpring spring2;
         ForceVector force1;
         
         [SetUp]
@@ -30,8 +30,8 @@ namespace SharpFE.Tests
             node1 = SUT.NodeFactory.Create(0);
             node2 = SUT.NodeFactory.Create(1);
             node3 = SUT.NodeFactory.Create(2);
-            spring1 = SUT.ElementFactory.CreateSpring(node1, node2, 3);
-            spring2 = SUT.ElementFactory.CreateSpring(node2, node3, 2);
+            spring1 = SUT.ElementFactory.CreateConstantLinearSpring(node1, node2, 3);
+            spring2 = SUT.ElementFactory.CreateConstantLinearSpring(node2, node3, 2);
             
             SUT.ConstrainNode(node1, DegreeOfFreedom.X);
             SUT.ConstrainNode(node3, DegreeOfFreedom.X);

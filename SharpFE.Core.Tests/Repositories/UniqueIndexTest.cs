@@ -7,7 +7,7 @@ using System;
 using NUnit.Framework;
 using SharpFE;
 
-namespace SharpFE.Tests.Repositories
+namespace SharpFE.Core.Tests.Repositories
 {
     [TestFixture]
     public class UniqueIndexTest

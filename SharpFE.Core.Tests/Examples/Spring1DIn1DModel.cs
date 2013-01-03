@@ -32,7 +32,7 @@ namespace SharpFE.Examples
 
             FiniteElementNode node2 = model.NodeFactory.Create(1.0); // create a second node at a distance 1 metre along the X axis
             
-            model.ElementFactory.CreateSpring(node1, node2, 2000.0); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            model.ElementFactory.CreateConstantLinearSpring(node1, node2, 2000.0); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
             
             ForceVector force = model.ForceFactory.Create(10.0); // Create a force of 10 Newtons in the x direction
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
@@ -57,8 +57,8 @@ namespace SharpFE.Examples
             FiniteElementNode node2 = model.NodeFactory.Create(1.0); // create a second node at a distance 1 metre along the X axis
             FiniteElementNode node3 = model.NodeFactory.Create(2.0); // create a third node at a distance 2 metres along the X axis
             
-            model.ElementFactory.CreateSpring(node1, node2, 10.0); // create a spring between the first two nodes of a stiffness of 10 Newtons per metre
-            model.ElementFactory.CreateSpring(node2, node3, 20.0); // create a spring between the second two nodes of a stiffness of 20 Newtons per metre
+            model.ElementFactory.CreateConstantLinearSpring(node1, node2, 10.0); // create a spring between the first two nodes of a stiffness of 10 Newtons per metre
+            model.ElementFactory.CreateConstantLinearSpring(node2, node3, 20.0); // create a spring between the second two nodes of a stiffness of 20 Newtons per metre
             
             ForceVector force = model.ForceFactory.Create(0.5); // Create a force of 0.5 Newtons in the x direction
             model.ApplyForceToNode(force, node2); // Apply that force to the second node

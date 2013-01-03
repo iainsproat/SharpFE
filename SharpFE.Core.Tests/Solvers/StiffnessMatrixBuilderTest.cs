@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace SharpFE.Tests.Solvers
+namespace SharpFE.Core.Tests.Solvers
 {
     using System;
     using NUnit.Framework;
@@ -18,8 +18,8 @@ namespace SharpFE.Tests.Solvers
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        Spring spring1;
-        Spring spring2;
+        ConstantLinearSpring spring1;
+        ConstantLinearSpring spring2;
         StiffnessMatrixBuilder SUT;
         
         [SetUp]
@@ -30,8 +30,8 @@ namespace SharpFE.Tests.Solvers
             node1 = model.NodeFactory.Create(0);
             node2 = model.NodeFactory.Create(1);
             node3 = model.NodeFactory.Create(2);
-            spring1 = model.ElementFactory.CreateSpring(node1, node2, 3);
-            spring2 = model.ElementFactory.CreateSpring(node2, node3, 2);
+            spring1 = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 3);
+            spring2 = model.ElementFactory.CreateConstantLinearSpring(node2, node3, 2);
             
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node3, DegreeOfFreedom.X);
