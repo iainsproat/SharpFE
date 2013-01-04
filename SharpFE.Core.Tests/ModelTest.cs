@@ -18,8 +18,8 @@ namespace SharpFE.Core.Tests
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        ConstantLinearSpring spring1;
-        ConstantLinearSpring spring2;
+        LinearConstantSpring spring1;
+        LinearConstantSpring spring2;
         ForceVector force1;
         
         [SetUp]
@@ -30,8 +30,8 @@ namespace SharpFE.Core.Tests
             node1 = SUT.NodeFactory.Create(0);
             node2 = SUT.NodeFactory.Create(1);
             node3 = SUT.NodeFactory.Create(2);
-            spring1 = SUT.ElementFactory.CreateConstantLinearSpring(node1, node2, 3);
-            spring2 = SUT.ElementFactory.CreateConstantLinearSpring(node2, node3, 2);
+            spring1 = SUT.ElementFactory.CreateLinearConstantSpring(node1, node2, 3);
+            spring2 = SUT.ElementFactory.CreateLinearConstantSpring(node2, node3, 2);
             
             SUT.ConstrainNode(node1, DegreeOfFreedom.X);
             SUT.ConstrainNode(node3, DegreeOfFreedom.X);

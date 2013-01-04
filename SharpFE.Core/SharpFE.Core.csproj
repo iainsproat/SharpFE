@@ -50,10 +50,11 @@
     <Compile Include="CrossSections\IHasCrossSection.cs" />
     <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
-    <Compile Include="Elements\ConstantLinearSpring.cs" />
+    <Compile Include="Elements\LinearConstantSpring.cs" />
     <Compile Include="Elements\ElementStiffnessMatrix.cs" />
     <Compile Include="Elements\FiniteElement.cs" />
     <Compile Include="Elements\FiniteElement1D.cs" />
+    <Compile Include="Elements\Linear3DBeam.cs" />
     <Compile Include="Elements\LinearMajorAxisBeam.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
@@ -64,7 +65,6 @@
     <Compile Include="GeometryDimensionality.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
-    <Compile Include="IStiffnessProvider.cs" />
     <Compile Include="Materials\GenericElasticMaterial.cs" />
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
@@ -90,10 +90,11 @@
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\Linear1DElasticMaterialCrossSectionStiffnessBuilder.cs" />
-    <Compile Include="Stiffness\LinearStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\MajorAxisBarStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear1DStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearMajorAxisBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\StiffnessMatrixBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

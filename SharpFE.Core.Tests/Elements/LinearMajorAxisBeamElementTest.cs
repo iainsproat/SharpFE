@@ -13,7 +13,7 @@ namespace SharpFE.Core.Tests.Elements
     public class LinearMajorAxisBeamElementTest
     {
         [Test]
-        public void CanCreateBarElement()
+        public void It_can_be_constructed()
         {
             Assert.Ignore();
         }

@@ -18,8 +18,8 @@ namespace SharpFE.Core.Tests.Solvers
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        ConstantLinearSpring spring1;
-        ConstantLinearSpring spring2;
+        LinearConstantSpring spring1;
+        LinearConstantSpring spring2;
         StiffnessMatrixBuilder SUT;
         
         [SetUp]
@@ -30,8 +30,8 @@ namespace SharpFE.Core.Tests.Solvers
             node1 = model.NodeFactory.Create(0);
             node2 = model.NodeFactory.Create(1);
             node3 = model.NodeFactory.Create(2);
-            spring1 = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 3);
-            spring2 = model.ElementFactory.CreateConstantLinearSpring(node2, node3, 2);
+            spring1 = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 3);
+            spring2 = model.ElementFactory.CreateLinearConstantSpring(node2, node3, 2);
             
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node3, DegreeOfFreedom.X);

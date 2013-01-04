@@ -27,7 +27,7 @@ namespace SharpFE.Examples
             FiniteElementNode node2 = model.NodeFactory.Create(1, 0); // create a second node at a distance 1 metre along the X axis.
             model.ConstrainNode(node2, DegreeOfFreedom.Y); // fix this node from moving along the Y-axis.  It is still free to move along the X-axis however.
             
-            ConstantLinearSpring spring = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 1000); // create a spring between the two nodes of a stiffness of 1000 Newtons per metre
+            LinearConstantSpring spring = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 1000); // create a spring between the two nodes of a stiffness of 1000 Newtons per metre
             
             ForceVector force = model.ForceFactory.Create(10, 0); // Create a force of 10 Newtons along the x-axis.
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
@@ -54,7 +54,7 @@ namespace SharpFE.Examples
             FiniteElementNode node2 = model.NodeFactory.Create(1, 1.73205); // create a second node at a distance 1 metre along the X axis and 1.73 metres along the Y axis (giving an angle of 60 degrees from x-axis).
             model.ConstrainNode(node2, DegreeOfFreedom.X);
             
-            ConstantLinearSpring spring = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 1000); // create a spring between the first two nodes of a stiffness of 1000 Newtons per metre
+            LinearConstantSpring spring = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 1000); // create a spring between the first two nodes of a stiffness of 1000 Newtons per metre
             
             ForceVector force = model.ForceFactory.Create(0, 10); // Create a force of with components of 10 Newtons along the y-axis.
             model.ApplyForceToNode(force, node2); // Apply that force to the second node

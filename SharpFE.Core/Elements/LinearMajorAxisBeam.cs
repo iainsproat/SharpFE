@@ -10,7 +10,7 @@ namespace SharpFE.Elements
 	public class LinearMajorAxisBeam : FiniteElement1D
 	{
 		public LinearMajorAxisBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
-			:base(new MajorAxisBarStiffnessMatrixBuilder(), start, end)
+			:base(new LinearMajorAxisBeamStiffnessMatrixBuilder(), start, end)
 		{
 			Guard.AgainstNullArgument(mat, "mat");
 			Guard.AgainstNullArgument(section, "section");
@@ -29,6 +29,24 @@ namespace SharpFE.Elements
 		{
 			get;
 			private set;
+		}
+		
+		
+		
+		public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+		{
+			switch(degreeOfFreedom)
+			{
+				case DegreeOfFreedom.X:
+				case DegreeOfFreedom.Z: //major-axis shear
+				case DegreeOfFreedom.YY: //major-axis moment
+					return true;
+				case DegreeOfFreedom.Y:  //minor-axis shear
+				case DegreeOfFreedom.XX: //torsion
+				case DegreeOfFreedom.ZZ: //minor-axis
+				default:
+					return false;
+			}
 		}
 	}
 }

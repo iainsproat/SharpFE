@@ -8,7 +8,7 @@ namespace SharpFE.Stiffness
 	/// <summary>
 	/// Description of LinearElasticMaterialCrossSectionStiffnessBuilder.
 	/// </summary>
-	public class Linear1DElasticMaterialCrossSectionStiffnessBuilder : LinearTrussStiffnessMatrixBuilder
+	public class LinearTrussStiffnessMatrixBuilder : Linear1DStiffnessMatrixBuilder
 	{
 		
 		public override ElementStiffnessMatrix GetStiffnessMatrix()
@@ -19,7 +19,7 @@ namespace SharpFE.Stiffness
 			
 			double stiffness = material.YoungsModulus * crossSection.Area / element1D.OriginalLength;
 			
-			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(element1D.SupportedNodalDegreeOfFreedoms);
+			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
             matrix.At(element1D.StartNode, DegreeOfFreedom.X, element1D.StartNode, DegreeOfFreedom.X, stiffness);
             matrix.At(element1D.StartNode, DegreeOfFreedom.X, element1D.EndNode, DegreeOfFreedom.X, -stiffness);
             matrix.At(element1D.EndNode, DegreeOfFreedom.X, element1D.StartNode, DegreeOfFreedom.X, -stiffness);

@@ -6,9 +6,9 @@ namespace SharpFE.Stiffness
 	using System.Collections.Generic;
 	using SharpFE.Elements;
 	
-	public abstract class LinearTrussStiffnessMatrixBuilder : StiffnessMatrixBuilder
+	public abstract class Linear1DStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
-		public LinearTrussStiffnessMatrixBuilder()
+		public Linear1DStiffnessMatrixBuilder()
 		{
 			// empty
 		}
@@ -22,7 +22,7 @@ namespace SharpFE.Stiffness
 		{
 			FiniteElement1D fe1d = this.CastElementToFiniteElement1D();
 			
-			IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = fe1d.SupportedNodalDegreeOfFreedoms;
+			IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = this.Element.SupportedNodalDegreeOfFreedoms;
 			KeyedVector<NodalDegreeOfFreedom> B = new KeyedVector<NodalDegreeOfFreedom>(supportedNodalDegreeOfFreedoms);
 			
 			double originalLength = fe1d.OriginalLength;

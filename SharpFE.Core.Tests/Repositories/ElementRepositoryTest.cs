@@ -19,8 +19,8 @@ namespace SharpFE.Core.Tests.Repositories
         FiniteElementNode node1;
         FiniteElementNode node2;
         FiniteElementNode node3;
-        ConstantLinearSpring spring1;
-        ConstantLinearSpring spring2;
+        LinearConstantSpring spring1;
+        LinearConstantSpring spring2;
         ElementRepository SUT;
         ElementFactory elementFactory;
         
@@ -33,8 +33,8 @@ namespace SharpFE.Core.Tests.Repositories
             node3 = nodeFactory.Create(0, 2);
             SUT = new ElementRepository();
             elementFactory = new ElementFactory(SUT);
-            spring1 = elementFactory.CreateConstantLinearSpring(node1, node2, 1);
-            spring2 = elementFactory.CreateConstantLinearSpring(node2, node3, 2);
+            spring1 = elementFactory.CreateLinearConstantSpring(node1, node2, 1);
+            spring2 = elementFactory.CreateLinearConstantSpring(node2, node3, 2);
         }
         
         [Test]

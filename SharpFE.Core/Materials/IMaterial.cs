@@ -12,5 +12,6 @@ namespace SharpFE
 		double Density { get; }
 		double YoungsModulus { get; }
 		double PoissonsRatio { get; }
+		double ShearModulusElasticity { get; }
 	}
 }

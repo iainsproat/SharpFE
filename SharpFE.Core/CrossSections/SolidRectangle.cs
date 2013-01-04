@@ -41,7 +41,7 @@
 			}
 		}
 		
-		public double SecondMomentOfAreaAroundXX
+		public double SecondMomentOfAreaAroundYY
 		{
 			get
 			{
@@ -49,7 +49,7 @@
 			}
 		}
 		
-		public double SecondMomentOfAreaAroundYY
+		public double SecondMomentOfAreaAroundZZ
 		{
 			get
 			{
@@ -69,7 +69,7 @@
 		{
 			get
 			{
-				throw new NotImplementedException("MomentOfInertiaInTorsion");
+				return Math.Pow(this.MaximumDepth, 3) / 3.0 * (this.MaximumWidth - 0.63 * this.MaximumDepth * ( 1 - Math.Pow(this.MaximumDepth, 4) / (12.0 * Math.Pow(this.MaximumWidth, 4))));
 			}
 		}
 		

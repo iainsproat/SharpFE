@@ -79,22 +79,6 @@ namespace SharpFE.Elements
 			}
 		}
 		
-		public override bool IsASupportedStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
-		{
-			switch(degreeOfFreedom)
-			{
-				case DegreeOfFreedom.X:
-					return true;
-				case DegreeOfFreedom.Y:
-				case DegreeOfFreedom.Z:
-				case DegreeOfFreedom.XX:
-				case DegreeOfFreedom.YY:
-				case DegreeOfFreedom.ZZ:
-				default:
-					return false;
-			}
-		}
-		
 		/// <summary>
 		/// Checks as to whether a new node can actually be added
 		/// </summary>

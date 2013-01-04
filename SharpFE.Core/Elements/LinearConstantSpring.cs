@@ -16,7 +16,7 @@ namespace SharpFE
     /// <summary>
     /// A spring is a 1D linear element which has a constant stiffness along the local x-axis.
     /// </summary>
-    public class ConstantLinearSpring : FiniteElement1D
+    public class LinearConstantSpring : FiniteElement1D
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantLinearSpring" /> class.
@@ -24,8 +24,8 @@ namespace SharpFE
         /// <param name="node1">The node at the start of the spring.</param>
         /// <param name="node2">The node at the end of the spring.</param>
         /// <param name="springConstant">The value which defines the constant stiffness of the spring.</param>
-        internal ConstantLinearSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
-            : base(new Linear1DElasticDirectStiffnessMatrixBuilder(springConstant), node1, node2)
+        internal LinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+            : base(new LinearConstantSpringStiffnessMatrixBuilder(springConstant), node1, node2)
         {
         	// empty
         }
@@ -34,7 +34,7 @@ namespace SharpFE
         {
         	get
         	{
-        		Linear1DElasticDirectStiffnessMatrixBuilder les = this.StiffnessBuilder as Linear1DElasticDirectStiffnessMatrixBuilder;
+        		LinearConstantSpringStiffnessMatrixBuilder les = this.StiffnessBuilder as LinearConstantSpringStiffnessMatrixBuilder;
         		if (les == null)
         		{
         			throw new InvalidOperationException("The expected StiffnessProvider for the ConstantSpring class is that of a LinearElasticSpring.  This does not seem to be the case");
@@ -43,5 +43,21 @@ namespace SharpFE
         		return les.SpringConstant;
         	}
         }
+        
+        public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+		{
+			switch(degreeOfFreedom)
+			{
+				case DegreeOfFreedom.X:
+					return true;
+				case DegreeOfFreedom.Y:
+				case DegreeOfFreedom.Z:
+				case DegreeOfFreedom.XX:
+				case DegreeOfFreedom.YY:
+				case DegreeOfFreedom.ZZ:
+				default:
+					return false;
+			}
+		}
     }
 }

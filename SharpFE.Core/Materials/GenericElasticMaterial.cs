@@ -7,11 +7,12 @@
 	/// </summary>
 	public class GenericElasticMaterial : ILinearElasticMaterial
 	{
-		public GenericElasticMaterial(double rho, double E, double nu)
+		public GenericElasticMaterial(double rho, double E, double nu, double G)
 		{
 			this.Density = rho;
 			this.YoungsModulus = E;
 			this.PoissonsRatio = nu;
+			this.ShearModulusElasticity = G;
 		}
 		
 		public double Density
@@ -27,6 +28,12 @@
 		}
 		
 		public double PoissonsRatio
+		{
+			get;
+			private set;
+		}
+		
+		public double ShearModulusElasticity
 		{
 			get;
 			private set;

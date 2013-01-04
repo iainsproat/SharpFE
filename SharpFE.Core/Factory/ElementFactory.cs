@@ -43,9 +43,9 @@ namespace SharpFE
         /// <param name="node2">The node at the end of the spring</param>
         /// <param name="springConstant">The constant value of stiffness of the spring.</param>
         /// <returns>The newly created Spring element</returns>
-        public ConstantLinearSpring CreateConstantLinearSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+        public LinearConstantSpring CreateLinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
         {
-            ConstantLinearSpring newSpring = new ConstantLinearSpring(node1, node2, springConstant);
+            LinearConstantSpring newSpring = new LinearConstantSpring(node1, node2, springConstant);
             if (this.repository != null)
             {
                 this.repository.Add(newSpring);
@@ -63,6 +63,17 @@ namespace SharpFE
         	}
         	
         	return newTruss;
+        }
+        
+        public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+        {
+        	Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
+        	if (this.repository != null)
+        	{
+        		this.repository.Add(newBeam);
+        	}
+        	
+        	return newBeam;
         }
     }
 }

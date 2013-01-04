@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace SharpFE.Core.Tests.Stiffness
 {
     [TestFixture]
-    public class Linear1DElasticDirectStiffnessMatrixBuilderRotationTest : Linear1DElasticDirectStiffnessMatrixBuilderTestBase
+    public class StiffnessMatrixBuilderTest : LinearConstantSpringStiffnessMatrixBuilderTestBase
     {
         [SetUp]
         public void Setup()

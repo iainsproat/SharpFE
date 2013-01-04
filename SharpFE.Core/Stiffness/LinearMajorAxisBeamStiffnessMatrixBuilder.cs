@@ -2,7 +2,7 @@
 {
 	using System;
 
-	public class MajorAxisBarStiffnessMatrixBuilder : StiffnessMatrixBuilder
+	public class LinearMajorAxisBeamStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
 		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{

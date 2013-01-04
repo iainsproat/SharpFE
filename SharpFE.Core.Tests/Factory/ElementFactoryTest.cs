@@ -28,7 +28,7 @@ namespace SharpFE.Core.Tests.Factory
         [Test]
         public void ElementsCanBeCreated()
         {
-            ConstantLinearSpring result = SUT.CreateConstantLinearSpring(node1, node2, 1);
+            LinearConstantSpring result = SUT.CreateLinearConstantSpring(node1, node2, 1);
             Assert.IsNotNull(result);
             Assert.AreEqual(node1, result.StartNode);
             Assert.AreEqual(node2, result.EndNode);
@@ -41,7 +41,7 @@ namespace SharpFE.Core.Tests.Factory
             SUT = new ElementFactory(repository);
             Assert.AreEqual(0, repository.Count);
             
-            SUT.CreateConstantLinearSpring(node1, node2, 2);
+            SUT.CreateLinearConstantSpring(node1, node2, 2);
             Assert.AreEqual(1, repository.Count);
         }
     }

@@ -12,13 +12,13 @@ namespace SharpFE.Core.Tests.Stiffness
     /// <summary>
     /// Description of SpringElementTestBase.
     /// </summary>
-    public class Linear1DElasticDirectStiffnessMatrixBuilderTestBase
+    public class LinearConstantSpringStiffnessMatrixBuilderTestBase
     {
         protected NodeFactory nodeFactory;
         protected ElementFactory elementFactory;
         protected FiniteElementNode start;
         protected FiniteElementNode end;
-        protected ConstantLinearSpring spring;
+        protected LinearConstantSpring spring;
         protected IStiffnessMatrixBuilder SUT;
         
         public void SetUp()
@@ -27,7 +27,7 @@ namespace SharpFE.Core.Tests.Stiffness
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
             elementFactory = new ElementFactory();
-            spring = elementFactory.CreateConstantLinearSpring(start, end, 2);
+            spring = elementFactory.CreateLinearConstantSpring(start, end, 2);
             SUT = spring.StiffnessBuilder;
         }
         
@@ -38,7 +38,7 @@ namespace SharpFE.Core.Tests.Stiffness
             end = nodeFactory.Create(x, y);
             
             elementFactory = new ElementFactory();
-            this.spring = elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);
             this.SUT = this.spring.StiffnessBuilder;
         }
         
@@ -49,13 +49,13 @@ namespace SharpFE.Core.Tests.Stiffness
             end = nodeFactory.Create(x, y, z);
             
             elementFactory = new ElementFactory();
-            this.spring = elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);
             this.SUT = this.spring.StiffnessBuilder;
         }
         
         protected void Assert12x12StiffnessMatrix(params double[] expectedValues)
         {
-            Helpers.AssertMatrix(SUT.BuildGlobalStiffnessMatrix(), 12, 12, expectedValues);
+        	StiffnessHelpers.Assert12x12StiffnessMatrix(SUT, expectedValues);
         }
         
         protected void Assert3x3RotationMatrix(params double[] expectedValues)

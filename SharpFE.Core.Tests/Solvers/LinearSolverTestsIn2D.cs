@@ -16,7 +16,7 @@ namespace SharpFE.Core.Tests.Solvers
 		FiniteElementModel model;
 		FiniteElementNode node1;
 		FiniteElementNode node2;
-		ConstantLinearSpring spring1;
+		LinearConstantSpring spring1;
 		ForceVector force1;
 		
 		LinearSolver SUT;
@@ -137,7 +137,7 @@ namespace SharpFE.Core.Tests.Solvers
 			node1 = model.NodeFactory.Create(0, 0);
 			node2 = model.NodeFactory.Create(x, y);
 
-			spring1 = model.ElementFactory.CreateConstantLinearSpring(node1, node2, 1000);
+			spring1 = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 1000);
 			
 			model.ConstrainNode(node1, DegreeOfFreedom.X);
 			model.ConstrainNode(node1, DegreeOfFreedom.Y);

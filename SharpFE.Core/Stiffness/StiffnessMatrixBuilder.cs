@@ -48,30 +48,34 @@
 			Matrix k = this.GetStiffnessMatrix();
 			Matrix t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
 			
+			//FIXME these multiplications assume the keys of both matrices are ordered and identical
 			Matrix kt = (Matrix)k.Multiply(t); // K*T
 			Matrix ttransposed = (Matrix)t.Transpose(); // T^
 			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
 			ElementStiffnessMatrix result = new ElementStiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
 			return result;
-			
-			
 		}
 		
 		/// <summary>
 		/// Builds the rotational matrix from local coordinates to global coordinates.
 		/// </summary>
-		private Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
+		private Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates() //FIXME only valid for beam elements
 		{
 			this.ThrowIfNotInitialized();
 			
 			Matrix rotationMatrix = this.CalculateElementRotationMatrix();
+			Matrix identityMatrix = DenseMatrix.Identity(3);
 			
-			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
 			int numberOfRowsInRotationMatrix = rotationMatrix.RowCount;
 			int numberOfColumnsInRotationMatrix = rotationMatrix.ColumnCount;
+			
 			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, rotationMatrix);
+			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(3, 3, 3, 3, identityMatrix);
 			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, rotationMatrix);
+			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(9, 3, 9, 3, identityMatrix);
+			
 			return elementRotationMatrixFromLocalToGlobalCoordinates;
 		}
 		

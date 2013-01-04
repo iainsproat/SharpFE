@@ -6,10 +6,9 @@ using SharpFE.Stiffness;
 namespace SharpFE.Core.Tests.Stiffness
 {
 	[TestFixture]
-	public class Linear1DElasticDirectStiffnessMatrixBuilderGlobalStiffnessTest : Linear1DElasticDirectStiffnessMatrixBuilderTestBase
+	public class LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest : LinearConstantSpringStiffnessMatrixBuilderTestBase
 	{
-		      
-        #region Global Stiffness Matrix
+		     
         [Test]
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
         {
@@ -399,8 +398,5 @@ namespace SharpFE.Core.Tests.Stiffness
                                              0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0,
                                              0,  0,  0, 0, 0, 0,  0,  0,  0, 0, 0, 0);
         }
-        
-        #endregion
-        
 	}
 }

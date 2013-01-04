@@ -25,7 +25,7 @@ namespace SharpFE.Core.Tests.Elements
 			start = nodeFactory.Create(0);
 			end = nodeFactory.Create(1);
 			elementFactory = new ElementFactory();
-			GenericElasticMaterial material = new GenericElasticMaterial(0, 0.1, 0);
+			GenericElasticMaterial material = new GenericElasticMaterial(0, 0.1, 0, 0);
 			SolidRectangle section = new SolidRectangle(0.1, 1);
 			SUT = elementFactory.CreateLinearTruss(start, end, material, section);
 		}

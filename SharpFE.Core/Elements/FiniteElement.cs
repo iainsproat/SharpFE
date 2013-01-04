@@ -139,7 +139,7 @@ namespace SharpFE
 			{
 				if(this.elementIsDirty)
 				{
-					this.BuildSupportedNodalDegreeOfFreedoms();
+					this.BuildSupportedGlobalNodalDegreeOfFreedoms();
 				}
 				return this._supportedNodalDegreeOfFreedoms;
 			}
@@ -169,7 +169,7 @@ namespace SharpFE
 					hashCode += 1000000021 * stiffnessMatrix.GetHashCode();
 				if (StiffnessBuilder != null)
 					hashCode += 1000000033 * StiffnessBuilder.GetHashCode();
-				// TODO implement the below, using the items of the list rather than the list object
+				// TODO implement the below, using the items of the list rather than the list objec
 //				if (SupportedNodalDegreeOfFreedoms != null)
 //					hashCode += 1000000087 * SupportedNodalDegreeOfFreedoms.GetHashCode();
 			}
@@ -197,7 +197,7 @@ namespace SharpFE
 		/// </summary>
 		/// <param name="degreeOfFreedom"></param>
 		/// <returns></returns>
-		public abstract bool IsASupportedStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
+		public abstract bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
 		
 		/// <summary>
 		/// Gets the exact stiffness value for a given node and degree of freedom combinations.
@@ -267,10 +267,10 @@ namespace SharpFE
 		protected abstract void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd);
 		
 		/// <summary>
-		/// Builds the list of possible nodal degree of freedoms for this element
+		/// Builds the list of possible nodal degree of freedoms for this element which are expected by the model
 		/// </summary>
 		/// <returns>A list of all the possible nodal degree of freedoms for this element</returns>
-		protected void BuildSupportedNodalDegreeOfFreedoms() //FIXME make abstract and move to derived classes.
+		protected void BuildSupportedGlobalNodalDegreeOfFreedoms() //FIXME make abstract and move to derived classes.
 		{
 			IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
 			foreach (FiniteElementNode node in this.nodeStore)
@@ -285,5 +285,7 @@ namespace SharpFE
 			
 			this.SupportedNodalDegreeOfFreedoms = nodalDegreeOfFreedoms;
 		}
+		
+		
 	}
 }

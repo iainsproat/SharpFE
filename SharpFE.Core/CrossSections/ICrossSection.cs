@@ -28,16 +28,18 @@
 		double Area { get; }
 		
 		/// <summary>
-		/// The second moment of area around the XX axis.
-		/// The location of the XX axis is defined by the geometric centroid.
-		/// </summary>
-		double SecondMomentOfAreaAroundXX { get; }
-		
-		/// <summary>
 		/// The second moment of area around the YY axis.
 		/// The location of the YY axis is defined by the geometric centroid.
 		/// </summary>
+		/// <remarks>Major axis moment in most vertically dominant beams</remarks>
 		double SecondMomentOfAreaAroundYY { get; }
+		
+		/// <summary>
+		/// The second moment of area around the ZZ axis.
+		/// The location of the ZZ axis is defined by the geometric centroid.
+		/// </summary>
+		/// <remarks>Minor axis moment in most vertically dominant beams</remarks>
+		double SecondMomentOfAreaAroundZZ { get; }
 		
 		/// <summary>
 		/// The length of the external perimeter of the cross section.

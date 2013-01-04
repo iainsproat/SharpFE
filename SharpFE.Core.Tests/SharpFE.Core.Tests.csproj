@@ -48,9 +48,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\Linear3DBeamTest.cs" />
     <Compile Include="Elements\LinearMajorAxisBeamElementTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
-    <Compile Include="Elements\SpringElementTest.cs" />
+    <Compile Include="Elements\LinearConstantSpringTest.cs" />
     <Compile Include="Examples\Spring1DIn2DModel.cs" />
     <Compile Include="Examples\Spring1DIn1DModel.cs" />
     <Compile Include="Factory\ElementFactoryTest.cs" />
@@ -71,9 +72,11 @@
     <Compile Include="Solvers\LinearSolverTest.cs" />
     <Compile Include="Solvers\LinearSolverTestsIn2D.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilderTest.cs" />
-    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
-    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderRotationTest.cs" />
-    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderTestBase.cs" />
+    <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
+    <Compile Include="Stiffness\StiffnessHelpers.cs" />
+    <Compile Include="Stiffness\StiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Examples" />

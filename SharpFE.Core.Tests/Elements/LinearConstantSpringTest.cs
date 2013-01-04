@@ -13,13 +13,13 @@ using MathNet.Numerics.LinearAlgebra.Double;
 namespace SharpFE.Core.Tests.Elements
 {
     [TestFixture]
-    public class ConstantLinearSpringElementTest
+    public class LinearConstantSpringTest
     {
-    	protected NodeFactory nodeFactory;
-        protected ElementFactory elementFactory;
-        protected FiniteElementNode start;
-        protected FiniteElementNode end;
-        protected ConstantLinearSpring SUT;
+    	private NodeFactory nodeFactory;
+        private ElementFactory elementFactory;
+        private FiniteElementNode start;
+        private FiniteElementNode end;
+        private LinearConstantSpring SUT;
         
         [SetUp]
         public void SetUp()
@@ -28,7 +28,7 @@ namespace SharpFE.Core.Tests.Elements
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
             elementFactory = new ElementFactory();
-            SUT = elementFactory.CreateConstantLinearSpring(start, end, 2);
+            SUT = elementFactory.CreateLinearConstantSpring(start, end, 2);
         }
         
         [Test]

@@ -13,7 +13,7 @@
 	public class LinearTruss : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
 	{
 		public LinearTruss(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
-			:base(new Linear1DElasticMaterialCrossSectionStiffnessBuilder(), start, end)
+			:base(new LinearTrussStiffnessMatrixBuilder(), start, end)
 		{
 			this.CrossSection = crossSection;
 			this.Material = material;
@@ -29,6 +29,22 @@
 		{
 			get;
 			private set;
+		}
+		
+		public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+		{
+			switch(degreeOfFreedom)
+			{
+				case DegreeOfFreedom.X:
+					return true;
+				case DegreeOfFreedom.Y:
+				case DegreeOfFreedom.Z:
+				case DegreeOfFreedom.XX:
+				case DegreeOfFreedom.YY:
+				case DegreeOfFreedom.ZZ:
+				default:
+					return false;
+			}
 		}
 	}
 }

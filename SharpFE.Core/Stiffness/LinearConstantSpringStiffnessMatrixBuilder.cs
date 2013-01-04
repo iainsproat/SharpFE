@@ -12,9 +12,9 @@ namespace SharpFE.Stiffness
 	/// <summary>
 	/// Provides stiffness for linear elastic springs in 1D
 	/// </summary>
-	public class Linear1DElasticDirectStiffnessMatrixBuilder : LinearTrussStiffnessMatrixBuilder
+	public class LinearConstantSpringStiffnessMatrixBuilder : LinearTrussStiffnessMatrixBuilder
 	{
-		public Linear1DElasticDirectStiffnessMatrixBuilder(double constant)
+		public LinearConstantSpringStiffnessMatrixBuilder(double constant)
 		{
 			this.SpringConstant = constant;
 		}
@@ -30,7 +30,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         public override ElementStiffnessMatrix GetStiffnessMatrix()
         {
-        	ConstantLinearSpring spring = this.CastElementToSpring();
+        	LinearConstantSpring spring = this.CastElementToSpring();
 			
 			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
             matrix.At(spring.StartNode, DegreeOfFreedom.X, spring.StartNode, DegreeOfFreedom.X, this.SpringConstant);
@@ -41,9 +41,9 @@ namespace SharpFE.Stiffness
             return matrix;
         }
         
-        private ConstantLinearSpring CastElementToSpring()
+        private LinearConstantSpring CastElementToSpring()
         {
-        	ConstantLinearSpring spring = this.Element as ConstantLinearSpring;
+        	LinearConstantSpring spring = this.Element as LinearConstantSpring;
 			if (spring == null)
 			{
 				throw new NotImplementedException("LinearElasticSpring has only been implemented for Spring finite elements");
