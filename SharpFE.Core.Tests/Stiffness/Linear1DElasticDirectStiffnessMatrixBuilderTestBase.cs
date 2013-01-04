@@ -5,19 +5,21 @@
 //-----------------------------------------------------------------------
 using System;
 using NUnit.Framework;
+using SharpFE.Stiffness;
 
-namespace SharpFE.Core.Tests.Elements
+namespace SharpFE.Core.Tests.Stiffness
 {
     /// <summary>
     /// Description of SpringElementTestBase.
     /// </summary>
-    public class ConstantLinearSpringElementTestBase
+    public class Linear1DElasticDirectStiffnessMatrixBuilderTestBase
     {
         protected NodeFactory nodeFactory;
         protected ElementFactory elementFactory;
         protected FiniteElementNode start;
         protected FiniteElementNode end;
-        protected ConstantLinearSpring SUT;
+        protected ConstantLinearSpring spring;
+        protected IStiffnessMatrixBuilder SUT;
         
         public void SetUp()
         {
@@ -25,32 +27,35 @@ namespace SharpFE.Core.Tests.Elements
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
             elementFactory = new ElementFactory();
-            SUT = elementFactory.CreateConstantLinearSpring(start, end, 2);
+            spring = elementFactory.CreateConstantLinearSpring(start, end, 2);
+            SUT = spring.StiffnessBuilder;
         }
         
-        protected ConstantLinearSpring CreateSpringFromOriginTo(double x, double y)
+        protected void CreateAndStore2DSpringFromOriginTo(double x, double y)
         {
             nodeFactory = new NodeFactory(ModelType.Truss2D);
             start = nodeFactory.Create(0, 0);
             end = nodeFactory.Create(x, y);
             
             elementFactory = new ElementFactory();
-            return elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.spring = elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.SUT = this.spring.StiffnessBuilder;
         }
         
-        protected ConstantLinearSpring CreateSpringFromOriginTo(double x, double y, double z)
+        protected void CreateAndStore3DSpringFromOriginTo(double x, double y, double z)
         {
             nodeFactory = new NodeFactory(ModelType.Truss3D);
             start = nodeFactory.Create(0, 0, 0);
             end = nodeFactory.Create(x, y, z);
             
             elementFactory = new ElementFactory();
-            return elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.spring = elementFactory.CreateConstantLinearSpring(start, end, 1);
+            this.SUT = this.spring.StiffnessBuilder;
         }
         
         protected void Assert12x12StiffnessMatrix(params double[] expectedValues)
         {
-            Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 12, 12, expectedValues);
+            Helpers.AssertMatrix(SUT.BuildGlobalStiffnessMatrix(), 12, 12, expectedValues);
         }
         
         protected void Assert3x3RotationMatrix(params double[] expectedValues)

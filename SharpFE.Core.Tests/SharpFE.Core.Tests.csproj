@@ -5,11 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>SharpFE.Tests</RootNamespace>
+    <RootNamespace>SharpFE.Core.Tests</RootNamespace>
     <AssemblyName>SharpFE.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -47,11 +48,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elements\BarElementTest.cs" />
+    <Compile Include="Elements\LinearMajorAxisBeamElementTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
-    <Compile Include="Elements\SpringElementRotationTest.cs" />
     <Compile Include="Elements\SpringElementTest.cs" />
-    <Compile Include="Elements\SpringElementTestBase.cs" />
     <Compile Include="Examples\Spring1DIn2DModel.cs" />
     <Compile Include="Examples\Spring1DIn1DModel.cs" />
     <Compile Include="Factory\ElementFactoryTest.cs" />
@@ -72,12 +71,16 @@
     <Compile Include="Solvers\LinearSolverTest.cs" />
     <Compile Include="Solvers\LinearSolverTestsIn2D.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
+    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderRotationTest.cs" />
+    <Compile Include="Stiffness\Linear1DElasticDirectStiffnessMatrixBuilderTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Examples" />
     <Folder Include="Elements" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
+    <Folder Include="Stiffness" />
     <Folder Include="Solvers" />
     <Folder Include="Repositories" />
   </ItemGroup>

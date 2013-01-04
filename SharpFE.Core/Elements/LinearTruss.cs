@@ -7,11 +7,12 @@
 
 	/// <summary>
 	/// Linear element which has constant cross section
-	/// and constant material properties
+	/// and constant material properties.
+	/// Also known as a Rod element.
 	/// </summary>
-	public class LinearTrussElement : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
+	public class LinearTruss : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
 	{
-		public LinearTrussElement(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+		public LinearTruss(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
 			:base(new Linear1DElasticMaterialCrossSectionStiffnessBuilder(), start, end)
 		{
 			this.CrossSection = crossSection;

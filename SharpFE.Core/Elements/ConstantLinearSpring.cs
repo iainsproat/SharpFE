@@ -34,7 +34,7 @@ namespace SharpFE
         {
         	get
         	{
-        		Linear1DElasticDirectStiffnessMatrixBuilder les = this.StiffnessProvider as Linear1DElasticDirectStiffnessMatrixBuilder;
+        		Linear1DElasticDirectStiffnessMatrixBuilder les = this.StiffnessBuilder as Linear1DElasticDirectStiffnessMatrixBuilder;
         		if (les == null)
         		{
         			throw new InvalidOperationException("The expected StiffnessProvider for the ConstantSpring class is that of a LinearElasticSpring.  This does not seem to be the case");

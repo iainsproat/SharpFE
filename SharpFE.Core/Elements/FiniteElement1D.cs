@@ -7,7 +7,7 @@ namespace SharpFE.Elements
 	using SharpFE.Stiffness;
 	
 	/// <summary>
-	/// Description of FiniteElement1D.
+	/// One dimensional finite element. i.e. a line
 	/// </summary>
 	public abstract class FiniteElement1D : FiniteElement
 	{
@@ -51,7 +51,7 @@ namespace SharpFE.Elements
 		/// <summary>
 		/// Gets or sets the vector representing the local x axis
 		/// </summary>
-		protected override Vector LocalXAxis
+		public override Vector LocalXAxis
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace SharpFE.Elements
 		/// <summary>
 		/// Gets or sets the vector representing the direction of the local y axis
 		/// </summary>
-		protected override Vector LocalYAxis
+		public override Vector LocalYAxis
 		{
 			get
 			{

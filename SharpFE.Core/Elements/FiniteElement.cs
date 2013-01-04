@@ -14,7 +14,9 @@ namespace SharpFE
 
 	/// <summary>
 	/// Finite elements connect nodes and define the relationship between these nodes.
-	/// Finite elements do this by providing stiffness values between nodes.
+	/// The finite element class defines the topology between nodes.
+	/// The finite element class defines the local coordinate frame for the finite element in relation to the global frame.
+	/// The StiffnessBuilder property connects to a separate object implementing IStiffnessBuilder - that class calculates the stiffness matrices, strain-displacement matrices, rotation matrices and shape functions for this element.
 	/// </summary>
 	public abstract class FiniteElement
 	{
@@ -35,7 +37,11 @@ namespace SharpFE
 		/// </summary>
 		private ElementStiffnessMatrix stiffnessMatrix;
 		
-		
+		/// <summary>
+		/// The nodal degrees of freedom supported by this element.
+		/// </summary>
+		/// <param name="stiffness"></param>
+		private IList<NodalDegreeOfFreedom> _supportedNodalDegreeOfFreedoms;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FiniteElement" /> class.
@@ -46,7 +52,8 @@ namespace SharpFE
 			{
 				throw new ArgumentNullException("stiffness");
 			}
-			this.StiffnessProvider = stiffness;
+			this.StiffnessBuilder = stiffness;
+			this.StiffnessBuilder.Initialize(this);
 		}
 		
 		/// <summary>
@@ -70,7 +77,8 @@ namespace SharpFE
 			{
 				if (this.elementIsDirty)
 				{
-					this.PrepareAndGenerateGlobalStiffnessMatrix();
+					this.GlobalStiffnessMatrix = this.StiffnessBuilder.BuildGlobalStiffnessMatrix();
+					this.elementIsDirty = false;
 				}
 				
 				return this.stiffnessMatrix;
@@ -86,7 +94,7 @@ namespace SharpFE
 		/// Determine the stiffness of the element,
 		/// and is used when building the local stiffness matrix
 		/// </summary>
-		protected IStiffnessMatrixBuilder StiffnessProvider
+		internal IStiffnessMatrixBuilder StiffnessBuilder
 		{
 			get;
 			private set;
@@ -95,7 +103,7 @@ namespace SharpFE
 		/// <summary>
 		/// Gets the local x-axis of this finite element
 		/// </summary>
-		protected abstract Vector LocalXAxis
+		public abstract Vector LocalXAxis
 		{
 			get;
 		}
@@ -103,7 +111,7 @@ namespace SharpFE
 		/// <summary>
 		/// Gets the local y-axis of this finite element.
 		/// </summary>
-		protected abstract Vector LocalYAxis
+		public abstract Vector LocalYAxis
 		{
 			get;
 		}
@@ -114,7 +122,7 @@ namespace SharpFE
 		/// <remarks>
 		/// Calculates the normalised cross-product of the x and y axes.
 		/// </remarks>
-		protected Vector LocalZAxis
+		public Vector LocalZAxis
 		{
 			get
 			{
@@ -127,8 +135,18 @@ namespace SharpFE
 		/// </summary>
 		internal IList<NodalDegreeOfFreedom> SupportedNodalDegreeOfFreedoms
 		{
-			get;
-			private set;
+			get
+			{
+				if(this.elementIsDirty)
+				{
+					this.BuildSupportedNodalDegreeOfFreedoms();
+				}
+				return this._supportedNodalDegreeOfFreedoms;
+			}
+			private set
+			{
+				this._supportedNodalDegreeOfFreedoms = value;
+			}
 		}
 		
 		#region Equals and GetHashCode implementation
@@ -137,7 +155,8 @@ namespace SharpFE
 			FiniteElement other = obj as FiniteElement;
 			if (other == null)
 				return false;
-			return object.Equals(this.nodeStore, other.nodeStore) && this.elementIsDirty == other.elementIsDirty && object.Equals(this.stiffnessMatrix, other.stiffnessMatrix) && object.Equals(this.StiffnessProvider, other.StiffnessProvider) && object.Equals(this.SupportedNodalDegreeOfFreedoms, other.SupportedNodalDegreeOfFreedoms);
+			return object.Equals(this.nodeStore, other.nodeStore) && this.elementIsDirty == other.elementIsDirty && object.Equals(this.stiffnessMatrix, other.stiffnessMatrix) && object.Equals(this.StiffnessBuilder, other.StiffnessBuilder);
+			//TODO compare supported nodal degrees of freedom (will need to compare the contents, as the list object will change).
 		}
 		
 		public override int GetHashCode()
@@ -146,13 +165,13 @@ namespace SharpFE
 			unchecked {
 				if (nodeStore != null)
 					hashCode += 1000000007 * nodeStore.GetHashCode();
-				hashCode += 1000000009 * elementIsDirty.GetHashCode();
 				if (stiffnessMatrix != null)
 					hashCode += 1000000021 * stiffnessMatrix.GetHashCode();
-				if (StiffnessProvider != null)
-					hashCode += 1000000033 * StiffnessProvider.GetHashCode();
-				if (SupportedNodalDegreeOfFreedoms != null)
-					hashCode += 1000000087 * SupportedNodalDegreeOfFreedoms.GetHashCode();
+				if (StiffnessBuilder != null)
+					hashCode += 1000000033 * StiffnessBuilder.GetHashCode();
+				// TODO implement the below, using the items of the list rather than the list object
+//				if (SupportedNodalDegreeOfFreedoms != null)
+//					hashCode += 1000000087 * SupportedNodalDegreeOfFreedoms.GetHashCode();
 			}
 			return hashCode;
 		}
@@ -203,7 +222,8 @@ namespace SharpFE
 			
 			if (this.elementIsDirty)
 			{
-				this.PrepareAndGenerateGlobalStiffnessMatrix();
+				this.GlobalStiffnessMatrix = this.StiffnessBuilder.BuildGlobalStiffnessMatrix();
+				this.elementIsDirty = false;
 			}
 			
 			return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
@@ -234,46 +254,6 @@ namespace SharpFE
 		}
 		
 		/// <summary>
-		/// Prepares and generates the stiffness matrix.
-		/// It creates an entirely new matrix from the current set of nodes and the supported degrees of freedom of this element.
-		/// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
-		/// It sets the stiffnessMatrixHasBeenGenerated flag to true.
-		/// </summary>
-		internal void PrepareAndGenerateGlobalStiffnessMatrix() // HACK exposed as internal for unit testing only, should be private
-		{
-			this.SupportedNodalDegreeOfFreedoms = this.BuildSupportedNodalDegreeOfFreedoms();
-			
-			Matrix localStiffnessMatrix = this.StiffnessProvider.GetStiffnessMatrix(this);
-			Matrix rotationalMatrix = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
-			this.GlobalStiffnessMatrix = this.CalculateGlobalStiffnessMatrix(localStiffnessMatrix, rotationalMatrix);
-			
-			this.elementIsDirty = false;
-		}
-		
-		/// <summary>
-		/// Builds the rotational matrix from local coordinates to global coordinates.
-		/// </summary>
-		internal Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
-		{
-			Matrix rotationMatrix = CalculateElementRotationMatrix();
-			
-			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new ElementStiffnessMatrix(this.SupportedNodalDegreeOfFreedoms);
-
-			int numberOfRowsInRotationMatrix = rotationMatrix.RowCount;
-			int numberOfColumnsInRotationMatrix = rotationMatrix.ColumnCount;
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, rotationMatrix);
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, rotationMatrix);
-			return elementRotationMatrixFromLocalToGlobalCoordinates;
-		}
-		
-		internal Matrix CalculateElementRotationMatrix()
-		{
-			Matrix rotationMatrix = (Matrix)DenseMatrix.CreateFromRows(new List<Vector<double>>(3) { this.LocalXAxis, this.LocalYAxis, this.LocalZAxis });
-			rotationMatrix = (Matrix)rotationMatrix.NormalizeRows(2);
-			return rotationMatrix;
-		}
-		
-		/// <summary>
 		/// Checks as to whether a new node can actually be added
 		/// </summary>
 		/// <param name="nodeToAdd">The candidate node to add to this element</param>
@@ -290,7 +270,7 @@ namespace SharpFE
 		/// Builds the list of possible nodal degree of freedoms for this element
 		/// </summary>
 		/// <returns>A list of all the possible nodal degree of freedoms for this element</returns>
-		private IList<NodalDegreeOfFreedom> BuildSupportedNodalDegreeOfFreedoms()
+		protected void BuildSupportedNodalDegreeOfFreedoms() //FIXME make abstract and move to derived classes.
 		{
 			IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
 			foreach (FiniteElementNode node in this.nodeStore)
@@ -303,20 +283,7 @@ namespace SharpFE
 				nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ));
 			}
 			
-			return nodalDegreeOfFreedoms;
-		}
-		
-		/// <summary>
-		/// Calculates the global stiffness matrix using the local stiffness matrix and the rotational matrix
-		/// </summary>
-		/// <returns>A matrix representing the stiffness matrix of this element in the global coordinate system</returns>
-		private ElementStiffnessMatrix CalculateGlobalStiffnessMatrix(Matrix k, Matrix t)
-		{
-			Matrix kt = (Matrix)k.Multiply(t); // K*T
-			Matrix ttransposed = (Matrix)t.Transpose(); // T^
-			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			ElementStiffnessMatrix result = new ElementStiffnessMatrix(ttransposedkt, this.SupportedNodalDegreeOfFreedoms, this.SupportedNodalDegreeOfFreedoms);
-			return result;
+			this.SupportedNodalDegreeOfFreedoms = nodalDegreeOfFreedoms;
 		}
 	}
 }

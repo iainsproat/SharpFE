@@ -16,7 +16,7 @@ namespace SharpFE.Core.Tests.Elements
 		protected ElementFactory elementFactory;
 		protected FiniteElementNode start;
 		protected FiniteElementNode end;
-		protected LinearTrussElement SUT;
+		protected LinearTruss SUT;
 		
 		[SetUp]
 		public void SetUp()
@@ -34,40 +34,6 @@ namespace SharpFE.Core.Tests.Elements
 		public void It_can_be_constructed()
 		{
 			Assert.IsNotNull(SUT);
-		}
-		
-		[Test]
-		public void CanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
-		{
-			SUT.PrepareAndGenerateGlobalStiffnessMatrix();
-			
-			Helpers.AssertMatrix(SUT.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates(), 12, 12,
-			                     1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 1, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 1, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
-			
-			Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 12, 12,
-			                     0.01, 0, 0, 0, 0, 0, -0.01, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     -0.01, 0, 0, 0, 0, 0,  0.01, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-			                     0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
 		}
 	}
 }

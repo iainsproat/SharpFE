@@ -7,10 +7,10 @@ using System;
 using SharpFE;
 using NUnit.Framework;
 
-namespace SharpFE.Core.Tests.Elements
+namespace SharpFE.Core.Tests.Stiffness
 {
     [TestFixture]
-    public class ConstantLinearSpringElementRotationTest : ConstantLinearSpringElementTestBase
+    public class Linear1DElasticDirectStiffnessMatrixBuilderRotationTest : Linear1DElasticDirectStiffnessMatrixBuilderTestBase
     {
         [SetUp]
         public void Setup()
@@ -21,9 +21,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalXAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(1, 0);
+            this.CreateAndStore2DSpringFromOriginTo(1, 0);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert3x3RotationMatrix( 1, 0, 0,
                                           0, 1, 0,
                                           0, 0, 1);
@@ -32,9 +31,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToNegativeGlobalXAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(-1, 0);
+            this.CreateAndStore2DSpringFromOriginTo(-1, 0);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert3x3RotationMatrix( -1,  0, 0,
                                            0, -1, 0,
                                            0,  0, 1);
@@ -43,9 +41,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalYAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(0, 1);
+            this.CreateAndStore2DSpringFromOriginTo(0, 1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert3x3RotationMatrix(  0, 1, 0,
                                           -1, 0, 0,
                                            0, 0, 1);
@@ -54,8 +51,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToNegativeGlobalYAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(0, -1);
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
+            this.CreateAndStore2DSpringFromOriginTo(0, -1);
+            
             this.Assert3x3RotationMatrix( 0, -1, 0,
                                           1,  0, 0,
                                           0,  0, 1);
@@ -64,9 +61,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalZAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(0, 0, 1);
+            this.CreateAndStore3DSpringFromOriginTo(0, 0, 1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             this.Assert3x3RotationMatrix( 0, 0, 1,
                                           0, 1, 0,
                                          -1, 0, 0);
@@ -75,8 +71,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToNegativeGlobalZAxis()
         {
-            SUT = this.CreateSpringFromOriginTo(0, 0, -1);
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
+            this.CreateAndStore3DSpringFromOriginTo(0, 0, -1);
+            
             this.Assert3x3RotationMatrix(  0,  0, -1,
                                            0, -1,  0,
                                           -1,  0,  0);
@@ -85,9 +81,7 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalXYPlaneQuadrant1()
         {
-            SUT = this.CreateSpringFromOriginTo(1, 1, 0);
-            
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
+            this.CreateAndStore3DSpringFromOriginTo(1, 1, 0);
             
             double a = 1 / Math.Sqrt(2);
             this.Assert3x3RotationMatrix( a, a, 0,
@@ -98,9 +92,7 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalXZPlaneQuadrant1()
         {
-            SUT = this.CreateSpringFromOriginTo(1, 0, 1);
-            
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
+            this.CreateAndStore3DSpringFromOriginTo(1, 0, 1);
             
             double a = 1 / Math.Sqrt(2);
             this.Assert3x3RotationMatrix(  a, 0, a,
@@ -111,9 +103,7 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalYZPlaneQuadrant1()
         {
-            SUT = this.CreateSpringFromOriginTo(0, 1, 1);
-            
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
+            this.CreateAndStore3DSpringFromOriginTo(0, 1, 1);
             
             double a = 1 / Math.Sqrt(2);
             this.Assert3x3RotationMatrix( 0,  a, a,
@@ -124,12 +114,11 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant1PositiveZ()
         {
-            SUT = this.CreateSpringFromOriginTo(1, 1, 1);
+            this.CreateAndStore3DSpringFromOriginTo(1, 1, 1);
             
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             
             this.Assert3x3RotationMatrix( b,  b,  b,
                                          -a,  a,  0,
@@ -139,9 +128,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant2PositiveZ()
         {
-            SUT = this.CreateSpringFromOriginTo(-1, 1, 1);
+            this.CreateAndStore3DSpringFromOriginTo(-1, 1, 1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -154,9 +142,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant3PositiveZ()
         {
-            SUT = this.CreateSpringFromOriginTo(-1, -1, 1);
+            this.CreateAndStore3DSpringFromOriginTo(-1, -1, 1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -169,9 +156,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant4PositiveZ()
         {
-            SUT = this.CreateSpringFromOriginTo(1, -1, 1);
+            this.CreateAndStore3DSpringFromOriginTo(1, -1, 1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -184,9 +170,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant1NegativeZ()
         {
-            SUT = this.CreateSpringFromOriginTo(1, 1, -1);
+            this.CreateAndStore3DSpringFromOriginTo(1, 1, -1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -199,9 +184,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant2NegativeZ()
         {
-            SUT = this.CreateSpringFromOriginTo(-1, 1, -1);
+            this.CreateAndStore3DSpringFromOriginTo(-1, 1, -1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -214,9 +198,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant3NegativeZ()
         {
-            SUT = this.CreateSpringFromOriginTo(-1, -1, -1);
+            this.CreateAndStore3DSpringFromOriginTo(-1, -1, -1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);
@@ -229,9 +212,8 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void CanCreateRotationMatrixForSpringInQuadrant4NegativeZ()
         {
-            SUT = this.CreateSpringFromOriginTo(1, -1, -1);
+            this.CreateAndStore3DSpringFromOriginTo(1, -1, -1);
             
-            SUT.PrepareAndGenerateGlobalStiffnessMatrix();
             double a = 1.0 / Math.Sqrt(2.0);
             double b = 1.0 / Math.Sqrt(3.0);
             double c = 1.0 / Math.Sqrt(6.0);

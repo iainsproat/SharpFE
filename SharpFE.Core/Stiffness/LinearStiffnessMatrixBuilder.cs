@@ -6,16 +6,21 @@ namespace SharpFE.Stiffness
 	using System.Collections.Generic;
 	using SharpFE.Elements;
 	
-	public abstract class LinearStiffnessMatrixBuilder : IStiffnessMatrixBuilder
+	public abstract class LinearTrussStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
+		public LinearTrussStiffnessMatrixBuilder()
+		{
+			// empty
+		}
+		
 		/// <summary>
 		/// Generates the transposed strain-displacement matrix for the given element
 		/// </summary>
 		/// <param name="element"></param>
 		/// <returns></returns>
-		public KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix(FiniteElement element)
+		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{
-			FiniteElement1D fe1d = this.CastToFiniteElement1D(element);
+			FiniteElement1D fe1d = this.CastElementToFiniteElement1D();
 			
 			IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = fe1d.SupportedNodalDegreeOfFreedoms;
 			KeyedVector<NodalDegreeOfFreedom> B = new KeyedVector<NodalDegreeOfFreedom>(supportedNodalDegreeOfFreedoms);
@@ -28,16 +33,9 @@ namespace SharpFE.Stiffness
 			return B;
 		}
 		
-		public abstract ElementStiffnessMatrix GetStiffnessMatrix(FiniteElement element);
-		
-		protected FiniteElement1D CastToFiniteElement1D(FiniteElement element)
-        {
-        	if (element == null)
-        	{
-        		throw new ArgumentNullException("element");
-        	}
-        	
-        	FiniteElement1D fe1d = element as FiniteElement1D;
+		protected FiniteElement1D CastElementToFiniteElement1D()
+        {        	
+        	FiniteElement1D fe1d = this.Element as FiniteElement1D;
 			if (fe1d == null)
 			{
 				throw new NotImplementedException("LinearStiffnessMatrixBuilder has only been implemented for finite elements derived from FiniteElement1D");

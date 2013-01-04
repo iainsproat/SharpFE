@@ -10,7 +10,7 @@ using SharpFE;
 namespace SharpFE.Core.Tests.Elements
 {
     [TestFixture]
-    public class BarElementTest
+    public class LinearMajorAxisBeamElementTest
     {
         [Test]
         public void CanCreateBarElement()

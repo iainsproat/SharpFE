@@ -8,14 +8,14 @@ namespace SharpFE.Stiffness
 	/// <summary>
 	/// Description of LinearElasticMaterialCrossSectionStiffnessBuilder.
 	/// </summary>
-	public class Linear1DElasticMaterialCrossSectionStiffnessBuilder : LinearStiffnessMatrixBuilder
+	public class Linear1DElasticMaterialCrossSectionStiffnessBuilder : LinearTrussStiffnessMatrixBuilder
 	{
 		
-		public override ElementStiffnessMatrix GetStiffnessMatrix(FiniteElement element)
+		public override ElementStiffnessMatrix GetStiffnessMatrix()
 		{
-			IMaterial material = this.GetMaterialFromElement(element);
-			ICrossSection crossSection = this.GetCrossSectionFromElement(element);
-			FiniteElement1D element1D = this.CastToFiniteElement1D(element);
+			IMaterial material = this.GetMaterialFromElement();
+			ICrossSection crossSection = this.GetCrossSectionFromElement();
+			FiniteElement1D element1D = this.CastElementToFiniteElement1D();
 			
 			double stiffness = material.YoungsModulus * crossSection.Area / element1D.OriginalLength;
 			
@@ -28,14 +28,9 @@ namespace SharpFE.Stiffness
             return matrix;
 		}
 		
-		private IMaterial GetMaterialFromElement(FiniteElement element)
-        {
-        	if (element == null)
-        	{
-        		throw new ArgumentNullException("element");
-        	}
-        	
-        	IHasMaterial hasMaterial = element as IHasMaterial;
+		private IMaterial GetMaterialFromElement()
+        {        	
+        	IHasMaterial hasMaterial = this.Element as IHasMaterial;
 			if (hasMaterial == null)
 			{
 				throw new NotImplementedException("LinearElasticMaterialCrossSectionStiffnessBuilder expects finite elements to implement IHasMaterial");
@@ -44,14 +39,9 @@ namespace SharpFE.Stiffness
 			return hasMaterial.Material;
         }
 		
-		private ICrossSection GetCrossSectionFromElement(FiniteElement element)
+		private ICrossSection GetCrossSectionFromElement()
         {
-        	if (element == null)
-        	{
-        		throw new ArgumentNullException("element");
-        	}
-        	
-        	IHasConstantCrossSection hasCrossSection = element as IHasConstantCrossSection;
+        	IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
 			if (hasCrossSection == null)
 			{
 				throw new NotImplementedException("LinearElasticMaterialCrossSectionStiffnessBuilder expects finite elements to implement IHasConstantCrossSection");

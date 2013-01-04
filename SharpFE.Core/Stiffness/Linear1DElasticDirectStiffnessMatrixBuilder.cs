@@ -12,13 +12,8 @@ namespace SharpFE.Stiffness
 	/// <summary>
 	/// Provides stiffness for linear elastic springs in 1D
 	/// </summary>
-	public class Linear1DElasticDirectStiffnessMatrixBuilder : LinearStiffnessMatrixBuilder
+	public class Linear1DElasticDirectStiffnessMatrixBuilder : LinearTrussStiffnessMatrixBuilder
 	{
-		public Linear1DElasticDirectStiffnessMatrixBuilder()
-		{
-			SpringConstant = 1;
-		}
-		
 		public Linear1DElasticDirectStiffnessMatrixBuilder(double constant)
 		{
 			this.SpringConstant = constant;
@@ -33,11 +28,11 @@ namespace SharpFE.Stiffness
 		/// <summary>
         /// Generates the stiffness matrix for the given element
         /// </summary>
-        public override ElementStiffnessMatrix GetStiffnessMatrix(FiniteElement element)
+        public override ElementStiffnessMatrix GetStiffnessMatrix()
         {
-        	ConstantLinearSpring spring = this.CastToSpring(element);
+        	ConstantLinearSpring spring = this.CastElementToSpring();
 			
-			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(spring.SupportedNodalDegreeOfFreedoms);
+			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
             matrix.At(spring.StartNode, DegreeOfFreedom.X, spring.StartNode, DegreeOfFreedom.X, this.SpringConstant);
             matrix.At(spring.StartNode, DegreeOfFreedom.X, spring.EndNode, DegreeOfFreedom.X, -this.SpringConstant);
             matrix.At(spring.EndNode, DegreeOfFreedom.X, spring.StartNode, DegreeOfFreedom.X, -this.SpringConstant);
@@ -46,14 +41,9 @@ namespace SharpFE.Stiffness
             return matrix;
         }
         
-        private ConstantLinearSpring CastToSpring(FiniteElement element)
+        private ConstantLinearSpring CastElementToSpring()
         {
-        	if (element == null)
-        	{
-        		throw new ArgumentNullException("element");
-        	}
-        	
-        	ConstantLinearSpring spring = element as ConstantLinearSpring;
+        	ConstantLinearSpring spring = this.Element as ConstantLinearSpring;
 			if (spring == null)
 			{
 				throw new NotImplementedException("LinearElasticSpring has only been implemented for Spring finite elements");
