@@ -52,8 +52,9 @@
     <Compile Include="Elements\LinearMajorAxisBeamElementTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
     <Compile Include="Elements\LinearConstantSpringTest.cs" />
-    <Compile Include="Examples\Spring1DIn2DModel.cs" />
-    <Compile Include="Examples\Spring1DIn1DModel.cs" />
+    <Compile Include="Examples\Beam\BeamIn1DModel.cs" />
+    <Compile Include="Examples\Truss\SpringIn1DModel.cs" />
+    <Compile Include="Examples\Truss\SpringIn2DModel.cs" />
     <Compile Include="Factory\ElementFactoryTest.cs" />
     <Compile Include="Factory\ForceFactoryTest.cs" />
     <Compile Include="Factory\NodeFactoryTest.cs" />
@@ -81,6 +82,8 @@
   <ItemGroup>
     <Folder Include="Examples" />
     <Folder Include="Elements" />
+    <Folder Include="Examples\Beam" />
+    <Folder Include="Examples\Truss" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
     <Folder Include="Stiffness" />

@@ -20,8 +20,8 @@ namespace SharpFE.Core.Tests.Factory
         public void SetUp()
         {
             nodeFactory = new NodeFactory(ModelType.Truss2D);
-            node1 = nodeFactory.Create(0, 0);
-            node2 = nodeFactory.Create(0, 1);
+            node1 = nodeFactory.CreateForTruss(0, 0);
+            node2 = nodeFactory.CreateForTruss(0, 1);
             SUT = new ElementFactory();
         }
         

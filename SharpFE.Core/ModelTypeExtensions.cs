@@ -38,13 +38,13 @@ namespace SharpFE
                     return new List<DegreeOfFreedom>(2)
                     {
                         DegreeOfFreedom.X,
-                        DegreeOfFreedom.Y
+                        DegreeOfFreedom.Z
                     };
                 case ModelType.Frame2D:
                     return new List<DegreeOfFreedom>(2)
                     {
                         DegreeOfFreedom.X,
-                        DegreeOfFreedom.Y,
+                        DegreeOfFreedom.Z,
                     };
                 case ModelType.Slab2D:
                     return new List<DegreeOfFreedom>(2)
@@ -137,21 +137,21 @@ namespace SharpFE
                 case ModelType.Beam1D:
                     return new List<DegreeOfFreedom>(3)
                     {
-                        DegreeOfFreedom.Y,
-                        DegreeOfFreedom.ZZ
+                        DegreeOfFreedom.Z,
+                        DegreeOfFreedom.YY
                     };
                 case ModelType.Truss2D:
                     return new List<DegreeOfFreedom>(2)
                     {
                         DegreeOfFreedom.X,
-                        DegreeOfFreedom.Y
+                        DegreeOfFreedom.Z
                     };
                 case ModelType.Frame2D:
                     return new List<DegreeOfFreedom>(3)
                     {
                         DegreeOfFreedom.X,
-                        DegreeOfFreedom.Y,
-                        DegreeOfFreedom.ZZ
+                        DegreeOfFreedom.Z,
+                        DegreeOfFreedom.YY
                     };
                 case ModelType.Slab2D:
                     return new List<DegreeOfFreedom>(4)

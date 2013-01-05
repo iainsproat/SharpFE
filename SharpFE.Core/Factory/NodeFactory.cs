@@ -79,7 +79,37 @@ namespace SharpFE
                 throw new InvalidOperationException("Can only create a Node with an x and y coordinate when a 2D system is in use");
             }
             
+            if (!this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Y))
+        	{
+        		throw new InvalidOperationException(String.Format(
+            		"Cannot define geometry in the Y-direction for model type of {0}.  Use the CreateForTruss method instead.",
+            		this.modelType));
+        	}
+            
             FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis, coordinateAlongGlobalYAxis);
+            if (this.repo != null)
+            {
+                this.repo.Add(newNode);
+            }
+            
+            return newNode;
+        }
+        
+        public FiniteElementNode CreateForTruss(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
+        {
+        	if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)
+        	{
+        		throw new InvalidOperationException("Can only create a Node with an x and z coordinate when a 2D system is in use");
+        	}
+        	
+        	if (!this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Z))
+        	{
+        		throw new InvalidOperationException(String.Format(
+            		"Cannot define geometry in the Z-direction for model type of {0}.  Use the Create method instead.",
+            		this.modelType));
+        	}
+        	
+        	FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis, 0, coordinateAlongGlobalZAxis);
             if (this.repo != null)
             {
                 this.repo.Add(newNode);

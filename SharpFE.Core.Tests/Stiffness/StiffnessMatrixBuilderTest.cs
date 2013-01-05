@@ -21,7 +21,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalXAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(1, 0);
+            this.CreateAndStore3DSpringFromOriginTo(1, 0, 0);
             
             this.Assert3x3RotationMatrix( 1, 0, 0,
                                           0, 1, 0,
@@ -31,7 +31,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToNegativeGlobalXAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(-1, 0);
+            this.CreateAndStore3DSpringFromOriginTo(-1, 0, 0);
             
             this.Assert3x3RotationMatrix( -1,  0, 0,
                                            0, -1, 0,
@@ -41,7 +41,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalYAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(0, 1);
+            this.CreateAndStore3DSpringFromOriginTo(0, 1, 0);
             
             this.Assert3x3RotationMatrix(  0, 1, 0,
                                           -1, 0, 0,
@@ -51,7 +51,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToNegativeGlobalYAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(0, -1);
+            this.CreateAndStore3DSpringFromOriginTo(0, -1, 0);
             
             this.Assert3x3RotationMatrix( 0, -1, 0,
                                           1,  0, 0,

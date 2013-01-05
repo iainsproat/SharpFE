@@ -31,11 +31,11 @@ namespace SharpFE.Core.Tests.Stiffness
             SUT = spring.StiffnessBuilder;
         }
         
-        protected void CreateAndStore2DSpringFromOriginTo(double x, double y)
+        protected void CreateAndStore2DSpringFromOriginTo(double x, double z)
         {
             nodeFactory = new NodeFactory(ModelType.Truss2D);
-            start = nodeFactory.Create(0, 0);
-            end = nodeFactory.Create(x, y);
+            start = nodeFactory.CreateForTruss(0, 0);
+            end = nodeFactory.CreateForTruss(x, z);
             
             elementFactory = new ElementFactory();
             this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);

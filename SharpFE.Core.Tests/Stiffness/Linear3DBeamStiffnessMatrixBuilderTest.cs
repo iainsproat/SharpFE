@@ -21,9 +21,9 @@ namespace SharpFE.Core.Tests.Stiffness
         [SetUp]
         public void SetUp()
         {
-        	nodeFactory = new NodeFactory(ModelType.Truss2D);
-            start = nodeFactory.Create(0, 0);
-            end = nodeFactory.Create(1, 0);
+        	nodeFactory = new NodeFactory(ModelType.Frame2D);
+            start = nodeFactory.CreateForTruss(0, 0);
+            end = nodeFactory.CreateForTruss(1, 0);
             elementFactory = new ElementFactory();
 			material = new GenericElasticMaterial(0, 2, 0, 3);
 			section = new SolidRectangle(5, 1);

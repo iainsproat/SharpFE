@@ -52,12 +52,55 @@ namespace SharpFE
         /// <returns>The force vector which has been created</returns>
         public ForceVector Create(double valueOfXComponent)
         {
-            if (this.modelType != ModelType.Truss1D && this.modelType != ModelType.Beam1D)
+            if (this.modelType != ModelType.Truss1D)
             {
-                throw new InvalidOperationException("Can only create a Force with an x-value when a 1D system is in use");
+                throw new InvalidOperationException("Can only use this method to create a force along the x-axis when a 1D system is in use");
             }
             
             ForceVector newForce = new ForceVector(valueOfXComponent);
+            if (this.repository != null)
+            {
+                this.repository.Add(newForce);
+            }
+            
+            return newForce;
+        }
+        
+        public ForceVector CreateMoment(double valueOfMomentAboutYY)
+        {
+        	if (this.modelType != ModelType.Beam1D)
+        	{
+        		throw new InvalidOperationException("Can only use this method to create a moment about the YY-axis when a 1D Beam system is in use");
+        	}
+        	
+        	ForceVector newForce = new ForceVector(0, 0, 0, 0, valueOfMomentAboutYY, 0);
+        	if (this.repository != null)
+        	{
+        		this.repository.Add(newForce);
+        	}
+        	
+        	return newForce;
+        }
+        
+        /// <summary>
+        /// Creates a new force for a 2D ModelType
+        /// </summary>
+        /// <param name="valueOfXComponent">The component of the force along the global x-axis</param>
+        /// <param name="valueOfYComponent">The component of the force along the global y-axis</param>
+        /// <returns>The force vector which has been created</returns>
+        public ForceVector Create(double valueOfXComponent, double valueOfYComponent)
+        {
+        	if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
+            {
+                throw new InvalidOperationException("Cannot create a boundary condition along the x-axis for this model type.");
+            }
+            
+            if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.Y))
+            {
+                throw new InvalidOperationException("Cannot create a boundary condition along the y-axis for this model type.");
+            }
+            
+            ForceVector newForce = new ForceVector(valueOfXComponent, valueOfYComponent);
             if (this.repository != null)
             {
                 this.repository.Add(newForce);
@@ -70,21 +113,21 @@ namespace SharpFE
         /// Creates a new force for a 2D ModelType
         /// </summary>
         /// <param name="valueOfXComponent">The component of the force along the global x-axis</param>
-        /// <param name="valueOfYComponent">The component of the force along the global y-axis</param>
+        /// <param name="valueOfZComponent">The component of the force along the global z-axis</param>
         /// <returns>The force vector which has been created</returns>
-        public ForceVector Create(double valueOfXComponent, double valueOfYComponent)
+        public ForceVector CreateForTruss(double valueOfXComponent, double valueOfZComponent)
         {
-            if (this.modelType == ModelType.Truss1D)
+        	if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
             {
-                throw new InvalidOperationException("Cannot create a Node with an x and y value in a 1D model");
+                throw new InvalidOperationException("Cannot create a boundary condition along the x-axis for this model type.");
             }
             
-            if (this.modelType == ModelType.Slab2D)
+            if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.Z))
             {
-                throw new InvalidOperationException("Cannot create a Force with an x and y translation values in a 2D slab model");
+                throw new InvalidOperationException("Cannot create a boundary condition along the z-axis for this model type.");
             }
             
-            ForceVector newForce = new ForceVector(valueOfXComponent, valueOfYComponent);
+            ForceVector newForce = new ForceVector(valueOfXComponent, 0,  valueOfZComponent);
             if (this.repository != null)
             {
                 this.repository.Add(newForce);

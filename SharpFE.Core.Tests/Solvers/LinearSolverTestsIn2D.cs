@@ -35,15 +35,15 @@ namespace SharpFE.Core.Tests.Solvers
 		}
 		
 		[Test]
-		public void AlongYAxis()
+		public void AlongZAxis()
 		{
 			Create2DSingleSpringModelAroundOrigin(0, 1);
 			FiniteElementResults results = SUT.Solve();
 			Assert.IsNotNull(results);
             Assert.AreEqual(0, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(0, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual(-0.01, results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual(-0.01, results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X, 0.001);
 		}
 		
@@ -55,9 +55,9 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(10, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(-10, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X, 0.001);
 		}
 		
@@ -69,9 +69,9 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(5.774, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(-5.774, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual((-4.0 / 3.0 / 100.0), results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual((-4.0 / 3.0 / 100.0), results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X);
 		}
 		
@@ -83,9 +83,9 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(-5.774, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(5.774, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual((-4.0 / 3.0 / 100.0), results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual((-4.0 / 3.0 / 100.0), results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X);
 		}
 		
@@ -97,9 +97,9 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(-10, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(10, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X, 0.001);
 		}
 		
@@ -111,9 +111,9 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(10, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(-10, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X, 0.001);
 		}
 		
@@ -125,25 +125,25 @@ namespace SharpFE.Core.Tests.Solvers
             
 			Assert.IsNotNull(results);
             Assert.AreEqual(-10, results.GetReaction(node1).X, 0.001);
-            Assert.AreEqual(10, results.GetReaction(node1).Y, 0.001);
+            Assert.AreEqual(10, results.GetReaction(node1).Z, 0.001);
             Assert.AreEqual(10, results.GetReaction(node2).X, 0.001);
-            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Y, 0.001);
+            Assert.AreEqual(-0.02, results.GetDisplacement(node2).Z, 0.001);
             Assert.AreEqual(0, results.GetDisplacement(node2).X, 0.001);
 		}
 		
-		private void Create2DSingleSpringModelAroundOrigin(double x, double y)
+		private void Create2DSingleSpringModelAroundOrigin(double x, double z)
 		{
 			model = new FiniteElementModel(ModelType.Truss2D);
-			node1 = model.NodeFactory.Create(0, 0);
-			node2 = model.NodeFactory.Create(x, y);
+			node1 = model.NodeFactory.CreateForTruss(0, 0);
+			node2 = model.NodeFactory.CreateForTruss(x, z);
 
 			spring1 = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 1000);
 			
 			model.ConstrainNode(node1, DegreeOfFreedom.X);
-			model.ConstrainNode(node1, DegreeOfFreedom.Y);
+			model.ConstrainNode(node1, DegreeOfFreedom.Z);
 			model.ConstrainNode(node2, DegreeOfFreedom.X);
 			
-			force1 = model.ForceFactory.Create(0, -10);
+			force1 = model.ForceFactory.CreateForTruss(0, -10);
 			model.ApplyForceToNode(force1, node2);
 			
 			SUT = new LinearSolver(model);

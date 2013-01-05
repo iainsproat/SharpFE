@@ -50,7 +50,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalYAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(0, 1);
+            this.CreateAndStore3DSpringFromOriginTo(0, 1, 0);
             
             this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                             0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
@@ -69,7 +69,7 @@ namespace SharpFE.Core.Tests.Stiffness
         [Test]
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToNegativeGlobalYAxis()
         {
-            this.CreateAndStore2DSpringFromOriginTo(0, -1);
+            this.CreateAndStore3DSpringFromOriginTo(0, -1, 0);
             
             this.Assert12x12StiffnessMatrix(0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                             0,  1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0,
