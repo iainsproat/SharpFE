@@ -30,7 +30,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         public override ElementStiffnessMatrix GetStiffnessMatrix()
         {
-        	LinearConstantSpring spring = this.CastElementToSpring();
+        	LinearConstantSpring spring = this.CastElementTo<LinearConstantSpring>();
 			
 			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
             matrix.At(spring.StartNode, DegreeOfFreedom.X, spring.StartNode, DegreeOfFreedom.X, this.SpringConstant);
@@ -39,17 +39,6 @@ namespace SharpFE.Stiffness
             matrix.At(spring.EndNode, DegreeOfFreedom.X, spring.EndNode, DegreeOfFreedom.X, this.SpringConstant);
             
             return matrix;
-        }
-        
-        private LinearConstantSpring CastElementToSpring()
-        {
-        	LinearConstantSpring spring = this.Element as LinearConstantSpring;
-			if (spring == null)
-			{
-				throw new NotImplementedException("LinearElasticSpring has only been implemented for Spring finite elements");
-			}
-			
-			return spring;
         }
 	}
 }

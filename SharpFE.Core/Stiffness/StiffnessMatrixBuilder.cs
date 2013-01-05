@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using MathNet.Numerics.LinearAlgebra.Double;
 	using MathNet.Numerics.LinearAlgebra.Generic;
+	using SharpFE;
 	
 	public abstract class StiffnessMatrixBuilder : IStiffnessMatrixBuilder
 	{
@@ -87,6 +88,42 @@
 			rotationMatrix = (Matrix)rotationMatrix.NormalizeRows(2);
 			return rotationMatrix;
 		}
+		
+		protected T CastElementTo<T>() where T : FiniteElement
+        {
+        	T convertedElement = this.Element as T;
+			if (convertedElement == null)
+			{
+				throw new NotImplementedException(String.Format(
+					"We expected the element of type {0} to be convertable to a type {1}, but it didn't work.",
+					this.Element.GetType().FullName,
+					typeof(T).FullName));
+			}
+			
+			return convertedElement;
+        }
+		
+		protected IMaterial GetMaterial()
+        {        	
+        	IHasMaterial hasMaterial = this.Element as IHasMaterial;
+			if (hasMaterial == null)
+			{
+				throw new NotImplementedException("StiffnessMatrixBuilder expects finite elements to implement IHasMaterial");
+			}
+			
+			return hasMaterial.Material;
+        }
+		
+		protected ICrossSection GetCrossSection()
+        {
+        	IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
+			if (hasCrossSection == null)
+			{
+				throw new NotImplementedException("StiffnessMatrixBuilder expects finite elements to implement IHasConstantCrossSection");
+			}
+			
+			return hasCrossSection.CrossSection;
+        }
 		
 		protected void ThrowIfNotInitialized()
 		{

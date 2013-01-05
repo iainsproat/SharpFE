@@ -73,6 +73,7 @@
     <Compile Include="Solvers\LinearSolverTest.cs" />
     <Compile Include="Solvers\LinearSolverTestsIn2D.cs" />
     <Compile Include="Solvers\StiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
     <Compile Include="Stiffness\StiffnessHelpers.cs" />

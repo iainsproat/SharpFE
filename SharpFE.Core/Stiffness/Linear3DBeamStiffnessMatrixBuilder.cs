@@ -16,14 +16,12 @@ namespace SharpFE.Stiffness
 		
 		public override ElementStiffnessMatrix GetStiffnessMatrix()
 		{
-			Linear3DBeam beam = this.CastElementToBeam();
+			Linear3DBeam beam = this.CastElementTo<Linear3DBeam>();
 			
 			IMaterial material = this.GetMaterial();
 			ICrossSection section = this.GetCrossSection();
 			
-			double length = beam.OriginalLength;
-			
-			
+			double length = beam.OriginalLength;					
 			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
 			
 			double axialStiffness = section.Area * material.YoungsModulus / length;
@@ -53,74 +51,41 @@ namespace SharpFE.Stiffness
             matrix.At(beam.EndNode,   DegreeOfFreedom.XX, beam.StartNode, DegreeOfFreedom.XX, -torsionalStiffness);
             matrix.At(beam.EndNode,   DegreeOfFreedom.XX, beam.EndNode,   DegreeOfFreedom.XX,  torsionalStiffness);
             
-			double bendingStiffnessAboutY = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
-			double startToEndNodeRelationshipForBendingStiffnessAboutY = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
-			matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY,  bendingStiffnessAboutY);
-            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, -bendingStiffnessAboutY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, -bendingStiffnessAboutY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY,  bendingStiffnessAboutY);
+			double bendingStiffnessAboutYY = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
+			double startToEndNodeRelationshipForBendingStiffnessAboutYY = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
+			matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY);
+            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, startToEndNodeRelationshipForBendingStiffnessAboutYY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, startToEndNodeRelationshipForBendingStiffnessAboutYY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY);
             
-			double bendingStiffnessAboutZ = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
-			double startToEndNodeRelationshipForBendingStiffnessAboutZ = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
-			matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZ);
-            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZ);
+			double bendingStiffnessAboutZZ = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
+			double startToEndNodeRelationshipForBendingStiffnessAboutZZ = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
+			matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
+            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
             
-			double bendingAboutZshearInY = 6.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / (length * length);
-			matrix.At(beam.StartNode, DegreeOfFreedom.Y,  beam.StartNode, DegreeOfFreedom.ZZ,  bendingAboutZshearInY);
-            matrix.At(beam.StartNode, DegreeOfFreedom.Y,  beam.EndNode,   DegreeOfFreedom.ZZ, -bendingAboutZshearInY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.Y,  beam.StartNode, DegreeOfFreedom.ZZ, -bendingAboutZshearInY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.Y,  beam.EndNode,   DegreeOfFreedom.ZZ,  bendingAboutZshearInY);
-			matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.Y,   bendingAboutZshearInY);
-            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.Y,  -bendingAboutZshearInY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.Y,  -bendingAboutZshearInY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.Y,   bendingAboutZshearInY);
+			double bendingAboutZZshearInY = 6.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / (length * length);
+			matrix.At(beam.StartNode, DegreeOfFreedom.Y,  beam.StartNode, DegreeOfFreedom.ZZ,  bendingAboutZZshearInY);
+            matrix.At(beam.StartNode, DegreeOfFreedom.Y,  beam.EndNode,   DegreeOfFreedom.ZZ,  bendingAboutZZshearInY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.Y,  beam.StartNode, DegreeOfFreedom.ZZ, -bendingAboutZZshearInY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.Y,  beam.EndNode,   DegreeOfFreedom.ZZ, -bendingAboutZZshearInY);
+			matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.Y,   bendingAboutZZshearInY);
+            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.Y,  -bendingAboutZZshearInY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.Y,   bendingAboutZZshearInY);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.Y,  -bendingAboutZZshearInY);
             
-			double bendingAboutYShearInZ = 6.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / (length * length);
-			matrix.At(beam.StartNode, DegreeOfFreedom.Z,  beam.StartNode, DegreeOfFreedom.YY, -bendingAboutYShearInZ);
-            matrix.At(beam.StartNode, DegreeOfFreedom.Z,  beam.EndNode,   DegreeOfFreedom.YY,  bendingAboutYShearInZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.Z,  beam.StartNode, DegreeOfFreedom.YY,  bendingAboutYShearInZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.Z,  beam.EndNode,   DegreeOfFreedom.YY, -bendingAboutYShearInZ);
-			matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.Z,  -bendingAboutYShearInZ);
-            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.Z,   bendingAboutYShearInZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.Z,   bendingAboutYShearInZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.Z,  -bendingAboutYShearInZ);
+			double bendingAboutYYShearInZ = 6.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / (length * length);
+			matrix.At(beam.StartNode, DegreeOfFreedom.Z,  beam.StartNode, DegreeOfFreedom.YY, -bendingAboutYYShearInZ);
+            matrix.At(beam.StartNode, DegreeOfFreedom.Z,  beam.EndNode,   DegreeOfFreedom.YY, -bendingAboutYYShearInZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.Z,  beam.StartNode, DegreeOfFreedom.YY,  bendingAboutYYShearInZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.Z,  beam.EndNode,   DegreeOfFreedom.YY,  bendingAboutYYShearInZ);
+			matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.Z,  -bendingAboutYYShearInZ);
+            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.Z,   bendingAboutYYShearInZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.Z,  -bendingAboutYYShearInZ);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.Z,   bendingAboutYYShearInZ);
             
             return matrix;
 		}
-		
-		private IMaterial GetMaterial()
-        {        	
-        	IHasMaterial hasMaterial = this.Element as IHasMaterial;
-			if (hasMaterial == null)
-			{
-				throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder expects finite elements to implement IHasMaterial");
-			}
-			
-			return hasMaterial.Material;
-        }
-		
-		private ICrossSection GetCrossSection()
-        {
-        	IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
-			if (hasCrossSection == null)
-			{
-				throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder expects finite elements to implement IHasConstantCrossSection");
-			}
-			
-			return hasCrossSection.CrossSection;
-        }
-		
-		private Linear3DBeam CastElementToBeam()
-        {
-        	Linear3DBeam beam = this.Element as Linear3DBeam;
-			if (beam == null)
-			{
-				throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder has only been implemented for Linear3DBeam finite elements");
-			}
-			
-			return beam;
-        }
 	}
 }

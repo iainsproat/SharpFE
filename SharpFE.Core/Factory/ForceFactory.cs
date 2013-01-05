@@ -66,14 +66,14 @@ namespace SharpFE
             return newForce;
         }
         
-        public ForceVector CreateMoment(double valueOfMomentAboutYY)
+        public ForceVector CreateFor1DBeam(double valueOfZComponent, double valueOfMomentAboutYY)
         {
         	if (this.modelType != ModelType.Beam1D)
         	{
-        		throw new InvalidOperationException("Can only use this method to create a moment about the YY-axis when a 1D Beam system is in use");
+        		throw new InvalidOperationException("Can only use this method when a 1D Beam system is in use");
         	}
         	
-        	ForceVector newForce = new ForceVector(0, 0, 0, 0, valueOfMomentAboutYY, 0);
+        	ForceVector newForce = new ForceVector(0, 0, valueOfZComponent, 0, valueOfMomentAboutYY, 0);
         	if (this.repository != null)
         	{
         		this.repository.Add(newForce);

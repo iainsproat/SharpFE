@@ -55,7 +55,7 @@
     <Compile Include="Elements\FiniteElement.cs" />
     <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Elements\Linear3DBeam.cs" />
-    <Compile Include="Elements\LinearMajorAxisBeam.cs" />
+    <Compile Include="Elements\Linear1DBeam.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\LinearMajorAxisBeamStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\StiffnessMatrixBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,9 +13,9 @@ namespace SharpFE.Stiffness
 		
 		public override ElementStiffnessMatrix GetStiffnessMatrix()
 		{
-			IMaterial material = this.GetMaterialFromElement();
-			ICrossSection crossSection = this.GetCrossSectionFromElement();
-			FiniteElement1D element1D = this.CastElementToFiniteElement1D();
+			IMaterial material = this.GetMaterial();
+			ICrossSection crossSection = this.GetCrossSection();
+			FiniteElement1D element1D = this.CastElementTo<FiniteElement1D>();
 			
 			double stiffness = material.YoungsModulus * crossSection.Area / element1D.OriginalLength;
 			
@@ -27,27 +27,5 @@ namespace SharpFE.Stiffness
             
             return matrix;
 		}
-		
-		private IMaterial GetMaterialFromElement()
-        {        	
-        	IHasMaterial hasMaterial = this.Element as IHasMaterial;
-			if (hasMaterial == null)
-			{
-				throw new NotImplementedException("LinearElasticMaterialCrossSectionStiffnessBuilder expects finite elements to implement IHasMaterial");
-			}
-			
-			return hasMaterial.Material;
-        }
-		
-		private ICrossSection GetCrossSectionFromElement()
-        {
-        	IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
-			if (hasCrossSection == null)
-			{
-				throw new NotImplementedException("LinearElasticMaterialCrossSectionStiffnessBuilder expects finite elements to implement IHasConstantCrossSection");
-			}
-			
-			return hasCrossSection.CrossSection;
-        }
 	}
 }

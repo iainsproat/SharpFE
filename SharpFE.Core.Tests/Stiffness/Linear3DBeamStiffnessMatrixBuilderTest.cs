@@ -1,6 +1,4 @@
-﻿
-
-namespace SharpFE.Core.Tests.Stiffness
+﻿namespace SharpFE.Core.Tests.Stiffness
 {
 	using System;
 	using NUnit.Framework;
@@ -25,8 +23,8 @@ namespace SharpFE.Core.Tests.Stiffness
             start = nodeFactory.CreateForTruss(0, 0);
             end = nodeFactory.CreateForTruss(1, 0);
             elementFactory = new ElementFactory();
-			material = new GenericElasticMaterial(0, 2, 0, 3);
-			section = new SolidRectangle(5, 1);
+			material = new GenericElasticMaterial(0, 1, 0, 1);
+			section = new SolidRectangle(1, 1);
             beam = elementFactory.CreateLinear3DBeam(start, end, material, section);
             SUT = this.beam.StiffnessBuilder;
         }
@@ -34,30 +32,23 @@ namespace SharpFE.Core.Tests.Stiffness
 		[Test]
         public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
         {
-            StiffnessHelpers.Assert12x12StiffnessMatrix(SUT, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            -1, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0);
-        }
-        
-		[Test]
-        public void ElementHasAStiffnessAgainstBending()
-        {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void ElementHasAStiffnessAgainstShear()
-        {
-            Assert.Ignore();
+            double a = 1.0 / 3.0;
+			double b = a / 2.0;
+			double c = 0.1408333;
+			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
+			                                             1,  0,    0,    0,  0,    0,      -1,  0,    0,    0,  0,    0,
+			                                             0,  1,    0,    0,  0,    0.5,     0, -1,    0,    0,  0,    0.5,
+			                                             0,  0,    1,    0, -0.5,  0,       0,  0,   -1,    0, -0.5,  0,
+			                                             0,  0,    0,    c,  0,    0,       0,  0,    0,   -c,  0,    0,
+			                                             0,  0,   -0.5,  0,  a,    0,       0,  0,    0.5,  0,  b,    0,
+			                                             0,  0.5,  0,    0,  0,    a,       0, -0.5,  0,    0,  0,    b,
+			                                            
+			                                            -1,  0,    0,    0,  0,    0,       1,  0,    0,    0,  0,    0,
+			                                             0, -1,    0,    0,  0,   -0.5,     0,  1,    0,    0,  0,   -0.5,
+			                                             0,  0,   -1,    0,  0.5,  0,       0,  0,    1,    0,  0.5,  0,
+			                                             0,  0,    0,   -c,  0,    0,       0,  0,    0,    c,  0,    0,
+			                                             0,  0,   -0.5,  0,  b,    0,       0,  0,    0.5,  0,  a,    0,
+			                                             0,  0.5,  0,    0,  0,    b,       0, -0.5,  0,    0,  0,    a);
         }
         
         [Test]

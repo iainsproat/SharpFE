@@ -20,7 +20,7 @@ namespace SharpFE.Stiffness
 		/// <returns></returns>
 		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{
-			FiniteElement1D fe1d = this.CastElementToFiniteElement1D();
+			FiniteElement1D fe1d = this.CastElementTo<FiniteElement1D>();
 			
 			IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = this.Element.SupportedNodalDegreeOfFreedoms;
 			KeyedVector<NodalDegreeOfFreedom> B = new KeyedVector<NodalDegreeOfFreedom>(supportedNodalDegreeOfFreedoms);
@@ -32,16 +32,5 @@ namespace SharpFE.Stiffness
 			
 			return B;
 		}
-		
-		protected FiniteElement1D CastElementToFiniteElement1D()
-        {        	
-        	FiniteElement1D fe1d = this.Element as FiniteElement1D;
-			if (fe1d == null)
-			{
-				throw new NotImplementedException("LinearStiffnessMatrixBuilder has only been implemented for finite elements derived from FiniteElement1D");
-			}
-			
-			return fe1d;
-        }
 	}
 }

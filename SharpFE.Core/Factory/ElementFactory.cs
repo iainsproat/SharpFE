@@ -65,6 +65,17 @@ namespace SharpFE
         	return newTruss;
         }
         
+        public Linear1DBeam CreateLinear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+        {
+        	Linear1DBeam newBeam = new Linear1DBeam(start, end, material, crossSection);
+        	if (this.repository != null)
+        	{
+        		this.repository.Add(newBeam);
+        	}
+        	
+        	return newBeam;
+        }
+        
         public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
         	Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
