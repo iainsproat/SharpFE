@@ -38,24 +38,6 @@ namespace SharpFE.Core.Tests.Elements
         }
         
         [Test]
-        public void NodesCanBeFoundAtEachEndOfElement()
-        {
-            Assert.IsNotNull(SUT.StartNode);
-            Assert.IsNotNull(SUT.EndNode);
-        }
-        
-        [Test]
-        public void CanGetAllNodesOfElement()
-        {
-            IList<FiniteElementNode> result = SUT.Nodes;
-            
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(start, result[0]);
-            Assert.AreEqual(end, result[1]);
-        }
-        
-        [Test]
         public void Has_initialized_all_supported_degrees_of_freedom()
         {
         	IList<NodalDegreeOfFreedom> result = SUT.SupportedNodalDegreeOfFreedoms;
@@ -68,7 +50,29 @@ namespace SharpFE.Core.Tests.Elements
         {
             Assert.AreEqual(2, SUT.SpringConstant);
         }
-  
-
+        
+        [Test]
+        public void Can_determine_if_equal()
+        {
+        	Assert.IsTrue(SUT.Equals(SUT));
+        	
+        	LinearConstantSpring equal = elementFactory.CreateLinearConstantSpring(start, end, 2);
+        	Assert.IsTrue(SUT.Equals(equal));
+        	
+        	LinearConstantSpring notEqual = elementFactory.CreateLinearConstantSpring(start, end, 4);
+        	Assert.IsFalse(SUT.Equals(notEqual));
+        }
+        
+        [Test]
+        public void HashCode_changes_with_stiffness_value()
+        {
+        	int SUTOriginalHash = SUT.GetHashCode();
+        	
+        	LinearConstantSpring equal = elementFactory.CreateLinearConstantSpring(start, end, 2);
+        	Assert.AreEqual(SUTOriginalHash, equal.GetHashCode());
+        	
+        	LinearConstantSpring unequal = elementFactory.CreateLinearConstantSpring(start, end, 4);
+        	Assert.AreNotEqual(SUTOriginalHash, unequal.GetHashCode());
+        }
     }
 }

@@ -46,5 +46,40 @@
 					return false;
 			}
 		}
+		
+		#region Equals and GetHashCode implementation
+        public override bool Equals(object obj)
+		{
+			LinearTruss other = obj as LinearTruss;
+			if (other == null)
+				return false;
+			return base.Equals(other) && object.Equals(this.Material, other.Material) && object.Equals(this.CrossSection, other.CrossSection);
+		}
+        
+		public override int GetHashCode()
+		{
+			int hashCode = 0;
+			unchecked {
+				hashCode += base.GetHashCode();
+				hashCode += 1000000007 * this.Material.GetHashCode();
+				hashCode += 1000000022 * this.CrossSection.GetHashCode();
+			}
+			return hashCode;
+		}
+        
+		public static bool operator ==(LinearTruss lhs, LinearTruss rhs)
+		{
+			if (ReferenceEquals(lhs, rhs))
+				return true;
+			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+				return false;
+			return lhs.Equals(rhs);
+		}
+        
+		public static bool operator !=(LinearTruss lhs, LinearTruss rhs)
+		{
+			return !(lhs == rhs);
+		}
+        #endregion
 	}
 }

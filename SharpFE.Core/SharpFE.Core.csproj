@@ -57,6 +57,7 @@
     <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Elements\Linear3DBeam.cs" />
     <Compile Include="Elements\Linear1DBeam.cs" />
+    <Compile Include="Elements\LinearConstantStrainTriangle.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
@@ -64,12 +65,14 @@
     <Compile Include="FiniteElementModel.cs" />
     <Compile Include="FiniteElementResults.cs" />
     <Compile Include="GeometryDimensionality.cs" />
+    <Compile Include="Helpers\Geometry.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
     <Compile Include="Materials\GenericElasticMaterial.cs" />
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="MathNetExtensions\KeyedRowColumnMatrix.cs" />
     <Compile Include="MathNetExtensions\KeyedVector.cs" />
     <Compile Include="MathNetExtensions\VectorExtensions.cs" />
     <Compile Include="MathNetExtensions\KeyedMatrix.cs" />
@@ -92,11 +95,12 @@
     <Compile Include="Stiffness\ElementStiffnessMatrixFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\Linear1DStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\StiffnessMatrixBuilder.cs" />
+    <Compile Include="Strain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />

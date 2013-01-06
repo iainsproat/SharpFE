@@ -78,6 +78,41 @@ namespace SharpFE.Elements
 			}
 		}
 		
+		#region Equals and GetHashCode implementation
+		public override bool Equals(object obj)
+		{
+			FiniteElement1D other = obj as FiniteElement1D;
+			if (other == null)
+				return false;
+			return base.Equals(other);
+		}
+		
+		public override int GetHashCode()
+		{
+			int hashCode = 0;
+			unchecked
+			{
+				hashCode += base.GetHashCode();
+			}
+			return hashCode;
+		}
+		
+		public static bool operator ==(FiniteElement1D lhs, FiniteElement1D rhs)
+		{
+			if (ReferenceEquals(lhs, rhs))
+				return true;
+			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+				return false;
+			return lhs.Equals(rhs);
+		}
+		
+		public static bool operator !=(FiniteElement1D lhs, FiniteElement1D rhs)
+		{
+			return !(lhs == rhs);
+		}
+		#endregion
+
+		
 		/// <summary>
 		/// Checks as to whether a new node can actually be added
 		/// </summary>
@@ -94,11 +129,6 @@ namespace SharpFE.Elements
 			if (this.Nodes.Count > 1)
 			{
 				throw new ArgumentException("Cannot add more than 2 nodes");
-			}
-			
-			if (this.Nodes.Contains(nodeToAdd))
-			{
-				throw new ArgumentException("Node is already part of this element");
 			}
 			
 			// TODO check for proximity of nodes

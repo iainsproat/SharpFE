@@ -56,7 +56,8 @@
 			private set;
 		}
 		
-		public abstract KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
+		public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
+		public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
 		public abstract ElementStiffnessMatrix GetLocalStiffnessMatrix();
 		
 		/// <summary>

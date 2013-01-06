@@ -132,10 +132,11 @@ namespace SharpFE
 		public override int GetHashCode()
 		{
 			int hashCode = 0;
+			int i = 0;
 			unchecked {
 				foreach(FiniteElementNode node in this.nodeStore)
 				{
-					hashCode += 1000000007 * node.GetHashCode();
+					hashCode += (1000000000 + i++) * node.GetHashCode();
 				}
 			}
 			return hashCode;
@@ -200,6 +201,13 @@ namespace SharpFE
 		/// <param name="nodeToAdd">The node to add to the element</param>
 		internal void AddNode(FiniteElementNode nodeToAdd)
 		{
+			Guard.AgainstNullArgument(nodeToAdd, "nodeToAdd");
+			
+			if (this.Nodes.Contains(nodeToAdd))
+			{
+				throw new ArgumentException("Node is already part of this element");
+			}
+			
 			this.ThrowIfNodeCannotBeAdded(nodeToAdd);
 			this.nodeStore.Add(nodeToAdd);
 		}

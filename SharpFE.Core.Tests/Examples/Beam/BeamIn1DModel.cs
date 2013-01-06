@@ -6,7 +6,7 @@
 using System;
 using NUnit.Framework;
 
-namespace SharpFE.Core.Tests.Examples.Beam
+namespace SharpFE.Examples.Beam
 {
 	[TestFixture]
 	public class BeamIn1DModel

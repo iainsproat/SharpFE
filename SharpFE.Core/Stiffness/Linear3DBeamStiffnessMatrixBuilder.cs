@@ -15,7 +15,12 @@ namespace SharpFE.Stiffness
 			// empty
 		}
 		
-		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
+		public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
+		{
+			throw new NotImplementedException();
+		}
+		
+		public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{
 			throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
 		}

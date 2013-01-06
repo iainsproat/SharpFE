@@ -51,5 +51,40 @@ namespace SharpFE
 					return false;
 			}
 		}
+        
+        #region Equals and GetHashCode implementation
+        public override bool Equals(object obj)
+		{
+			LinearConstantSpring other = obj as LinearConstantSpring;
+			if (other == null)
+				return false;
+			return base.Equals(other) && object.Equals(this.SpringConstant, other.SpringConstant);
+		}
+        
+		public override int GetHashCode()
+		{
+			int hashCode = 0;
+			unchecked {
+				hashCode += base.GetHashCode();
+				hashCode += 1000000007 * SpringConstant.GetHashCode();
+			}
+			return hashCode;
+		}
+        
+		public static bool operator ==(LinearConstantSpring lhs, LinearConstantSpring rhs)
+		{
+			if (ReferenceEquals(lhs, rhs))
+				return true;
+			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+				return false;
+			return lhs.Equals(rhs);
+		}
+        
+		public static bool operator !=(LinearConstantSpring lhs, LinearConstantSpring rhs)
+		{
+			return !(lhs == rhs);
+		}
+        #endregion
+
     }
 }

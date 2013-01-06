@@ -16,7 +16,8 @@ namespace SharpFE.Stiffness
 	public interface IStiffnessMatrixBuilder
 	{
 		FiniteElement Element { get; }
-		KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
+		KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
+		KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
 		ElementStiffnessMatrix GetLocalStiffnessMatrix();
 		ElementStiffnessMatrix GlobalStiffnessMatrix { get; }
 		
