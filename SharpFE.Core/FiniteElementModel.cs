@@ -221,6 +221,20 @@ namespace SharpFE
             return response;
         }
         
+        public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
+        {
+            Guard.AgainstNullArgument(node1, "node1");
+            Guard.AgainstNullArgument(node2, "node2");
+            
+            IList<FiniteElement> response = this.elements.GetAllElementsDirectlyConnecting(node1, node2);
+            if (response == null)
+            {
+            	return new List<FiniteElement>(0);
+            }
+            
+            return response;
+        }
+        
         /// <summary>
         /// This gets a force component value for each of the node and degree of freedom combinations of known forces.  
         /// The index of each value corresponds to the index of each <see cref="NodalDegreeOfFreedom" /> returned by DegreeOfFreedomWithKnownForce.
@@ -235,7 +249,6 @@ namespace SharpFE
             NodalDegreeOfFreedom currentTuple;
             ForceVector nodalForce;
             
-            // TODO Parallel?
             for (int i = 0; i < numberOfKnownForces; i++)
             {
                 currentTuple = knownForces[i];

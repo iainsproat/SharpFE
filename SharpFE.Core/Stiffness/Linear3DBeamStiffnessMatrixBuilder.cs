@@ -9,12 +9,18 @@ namespace SharpFE.Stiffness
 	/// </summary>
 	public class Linear3DBeamStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
+		public Linear3DBeamStiffnessMatrixBuilder(FiniteElement finiteElement)
+			:base(finiteElement)
+		{
+			// empty
+		}
+		
 		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{
 			throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
 		}
 		
-		public override ElementStiffnessMatrix GetStiffnessMatrix()
+		public override ElementStiffnessMatrix GetLocalStiffnessMatrix()
 		{
 			Linear3DBeam beam = this.CastElementTo<Linear3DBeam>();
 			

@@ -4,12 +4,18 @@
 
 	public class Linear1DBeamStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
+		public Linear1DBeamStiffnessMatrixBuilder(FiniteElement finiteElement)
+			:base(finiteElement)
+		{
+			// empty
+		}
+		
 		public override KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
 		{
 			throw new NotImplementedException();
 		}
 		
-		public override ElementStiffnessMatrix GetStiffnessMatrix()
+		public override ElementStiffnessMatrix GetLocalStiffnessMatrix()
 		{
 			Linear1DBeam beam = this.CastElementTo<Linear1DBeam>();
 			

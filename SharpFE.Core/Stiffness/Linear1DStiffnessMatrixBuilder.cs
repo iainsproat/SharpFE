@@ -8,7 +8,8 @@ namespace SharpFE.Stiffness
 	
 	public abstract class Linear1DStiffnessMatrixBuilder : StiffnessMatrixBuilder
 	{
-		public Linear1DStiffnessMatrixBuilder()
+		public Linear1DStiffnessMatrixBuilder(FiniteElement finiteElement)
+			:base(finiteElement)
 		{
 			// empty
 		}

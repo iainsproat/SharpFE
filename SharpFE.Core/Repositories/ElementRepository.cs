@@ -8,6 +8,7 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
@@ -41,6 +42,18 @@ namespace SharpFE
         public IList<FiniteElement> GetAllElementsConnectedTo(FiniteElementNode node)
         {
             return this.nodeToElementIndex.Get(node);
+        }
+        
+        public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
+        {
+        	Guard.AgainstNullArgument(node1, "node1");
+        	Guard.AgainstNullArgument(node2, "node2");
+        	
+        	IList<FiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
+        	IList<FiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
+        	return new List<FiniteElement>(elementsConnectedToNode1.Intersect(elementsConnectedToNode2));
+        	
+        	//TODO cache results, and also node2,node1 (which will be the same)
         }
         
         /// <summary>

@@ -11,8 +11,7 @@ namespace SharpFE.Elements
 	/// </summary>
 	public abstract class FiniteElement1D : FiniteElement
 	{
-		public FiniteElement1D(IStiffnessMatrixBuilder stiffnessProvider, FiniteElementNode node1, FiniteElementNode node2)
-			:base(stiffnessProvider)
+		public FiniteElement1D(FiniteElementNode node1, FiniteElementNode node2)
 		{
             this.AddNode(node1);
             this.AddNode(node2);

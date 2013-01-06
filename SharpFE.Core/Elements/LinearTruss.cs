@@ -13,7 +13,7 @@
 	public class LinearTruss : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
 	{
 		public LinearTruss(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
-			:base(new LinearTrussStiffnessMatrixBuilder(), start, end)
+			:base(start, end)
 		{
 			this.CrossSection = crossSection;
 			this.Material = material;

@@ -30,7 +30,6 @@
         public void It_can_be_constructed()
         {
         	Assert.IsNotNull(SUT);
-        	Assert.IsNotNull(SUT.StiffnessBuilder);
         	Assert.AreEqual(material, SUT.Material);
         	Assert.AreEqual(section, SUT.CrossSection);
         }

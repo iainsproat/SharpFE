@@ -26,7 +26,7 @@
 			material = new GenericElasticMaterial(0, 1, 0, 1);
 			section = new SolidRectangle(1, 1);
             beam = elementFactory.CreateLinear3DBeam(start, end, material, section);
-            SUT = this.beam.StiffnessBuilder;
+            SUT = new Linear3DBeamStiffnessMatrixBuilder(beam);
         }
         
 		[Test]
@@ -34,7 +34,7 @@
         {
             double a = 1.0 / 3.0;
 			double b = a / 2.0;
-			double c = 0.1408333;
+			double c = 0.1408333; //torsion
 			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
 			                                             1,  0,    0,    0,  0,    0,      -1,  0,    0,    0,  0,    0,
 			                                             0,  1,    0,    0,  0,    0.5,     0, -1,    0,    0,  0,    0.5,

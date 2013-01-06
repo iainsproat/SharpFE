@@ -21,25 +21,26 @@ namespace SharpFE.Core.Tests.Stiffness
         protected LinearConstantSpring spring;
         protected IStiffnessMatrixBuilder SUT;
         
+        [SetUp]
         public void SetUp()
         {
-            nodeFactory = new NodeFactory(ModelType.Truss1D);
-            start = nodeFactory.Create(0);
-            end = nodeFactory.Create(1);
-            elementFactory = new ElementFactory();
-            spring = elementFactory.CreateLinearConstantSpring(start, end, 2);
-            SUT = spring.StiffnessBuilder;
+            this.nodeFactory = new NodeFactory(ModelType.Truss1D);
+            this.start = nodeFactory.Create(0);
+            this.end = nodeFactory.Create(1);
+            this.elementFactory = new ElementFactory();
+            this.spring = elementFactory.CreateLinearConstantSpring(start, end, 2);
+            this.SUT = new LinearTrussStiffnessMatrixBuilder(spring);
         }
         
         protected void CreateAndStore2DSpringFromOriginTo(double x, double z)
         {
-            nodeFactory = new NodeFactory(ModelType.Truss2D);
-            start = nodeFactory.CreateForTruss(0, 0);
-            end = nodeFactory.CreateForTruss(x, z);
+            this.nodeFactory = new NodeFactory(ModelType.Truss2D);
+            this.start = nodeFactory.CreateForTruss(0, 0);
+            this.end = nodeFactory.CreateForTruss(x, z);
             
-            elementFactory = new ElementFactory();
-            this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);
-            this.SUT = this.spring.StiffnessBuilder;
+            this.elementFactory = new ElementFactory();
+            this.spring = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);
+            this.SUT = new LinearTrussStiffnessMatrixBuilder(this.spring);
         }
         
         protected void CreateAndStore3DSpringFromOriginTo(double x, double y, double z)
@@ -50,7 +51,7 @@ namespace SharpFE.Core.Tests.Stiffness
             
             elementFactory = new ElementFactory();
             this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);
-            this.SUT = this.spring.StiffnessBuilder;
+            this.SUT = new LinearTrussStiffnessMatrixBuilder(this.spring);
         }
         
         protected void Assert12x12StiffnessMatrix(params double[] expectedValues)

@@ -13,7 +13,7 @@ namespace SharpFE
 	{
 		
 		public Linear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
-			:base(new Linear3DBeamStiffnessMatrixBuilder(), start, end)
+			:base(start, end)
 		{
 			Guard.AgainstNullArgument(mat, "mat");
 			Guard.AgainstNullArgument(section, "section");

@@ -59,6 +59,8 @@ namespace SharpFE
         }
         #endregion
         
+        // TODO include an identifier, which is anything hashable and may be user defined.  The noderepository will have to check that the Ids do not conflict as they are added or edited.
+        
         /// <summary>
         /// Gets the original location of this node along the global x-axis.
         /// </summary>

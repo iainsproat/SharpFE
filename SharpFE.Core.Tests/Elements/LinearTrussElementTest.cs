@@ -35,5 +35,8 @@ namespace SharpFE.Core.Tests.Elements
 		{
 			Assert.IsNotNull(SUT);
 		}
+		
+		//TODO equality
+		//TODO hashing
 	}
 }

@@ -25,23 +25,15 @@ namespace SharpFE
         /// <param name="node2">The node at the end of the spring.</param>
         /// <param name="springConstant">The value which defines the constant stiffness of the spring.</param>
         internal LinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
-            : base(new LinearConstantSpringStiffnessMatrixBuilder(springConstant), node1, node2)
+            : base(node1, node2)
         {
-        	// empty
+        	this.SpringConstant = springConstant;
         }
         
         public double SpringConstant
         {
-        	get
-        	{
-        		LinearConstantSpringStiffnessMatrixBuilder les = this.StiffnessBuilder as LinearConstantSpringStiffnessMatrixBuilder;
-        		if (les == null)
-        		{
-        			throw new InvalidOperationException("The expected StiffnessProvider for the ConstantSpring class is that of a LinearElasticSpring.  This does not seem to be the case");
-        		}
-        		
-        		return les.SpringConstant;
-        	}
+        	get;
+        	private set;
         }
         
         public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)

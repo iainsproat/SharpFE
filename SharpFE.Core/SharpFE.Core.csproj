@@ -88,9 +88,9 @@
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
-    <Compile Include="Solvers\StiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\ElementStiffnessMatrixFactory.cs" />
+    <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DStiffnessMatrixBuilder.cs" />

@@ -91,7 +91,6 @@ namespace SharpFE
             NodalDegreeOfFreedom rowKey;
             NodalDegreeOfFreedom columnKey;
             
-            // TODO Parallel?
             for (int i = 0; i < numberValidRowKeys; i++)
             {
                 rowKey = validRowKeys[i];

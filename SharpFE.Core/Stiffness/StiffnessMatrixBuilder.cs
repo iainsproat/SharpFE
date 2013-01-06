@@ -8,12 +8,14 @@
 	
 	public abstract class StiffnessMatrixBuilder : IStiffnessMatrixBuilder
 	{
-		public StiffnessMatrixBuilder()
-		{
-			// empty
-		}
+		/// <summary>
+		/// The global stiffness matrix of this element
+		/// </summary>
+		private ElementStiffnessMatrix stiffnessMatrix;
 		
-		public void Initialize(FiniteElement finiteElement)
+		private int hashAtWhichElementStiffnessMatrixWasLastBuilt;
+		
+		public StiffnessMatrixBuilder(FiniteElement finiteElement)
 		{
 			Guard.AgainstNullArgument(finiteElement, "finiteElement");
 			this.Element = finiteElement;
@@ -27,6 +29,27 @@
 			private set;
 		}
 		
+		/// <summary>
+		/// Gets the stiffness matrix of this element.
+		/// </summary>
+		public ElementStiffnessMatrix GlobalStiffnessMatrix
+		{
+			get
+			{
+				if (this.Element.IsDirty(this.hashAtWhichElementStiffnessMatrixWasLastBuilt))
+				{
+					this.BuildGlobalStiffnessMatrix();
+				}
+				
+				return this.stiffnessMatrix;
+			}
+			
+			private set
+			{
+				this.stiffnessMatrix = value;
+			}
+		}
+		
 		protected bool HasBeenInitialized
 		{
 			get;
@@ -34,7 +57,36 @@
 		}
 		
 		public abstract KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
-		public abstract ElementStiffnessMatrix GetStiffnessMatrix();
+		public abstract ElementStiffnessMatrix GetLocalStiffnessMatrix();
+		
+		/// <summary>
+		/// Gets the exact stiffness value for a given node and degree of freedom combinations.
+		/// </summary>
+		/// <param name="rowNode">The node defining the row (force equations)</param>
+		/// <param name="rowDegreeOfFreedom">The degree of freedom defining the row (force equations)</param>
+		/// <param name="columnNode">The node defining the column (displacement equations)</param>
+		/// <param name="columnDegreeOfFreedom">the degree of freedom defining the column (displacement equations)</param>
+		/// <returns>A value representing the stiffness at the given locations</returns>
+		/// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
+		public double GetGlobalStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
+		{
+			if (rowNode == null)
+			{
+				throw new ArgumentNullException("rowNode");
+			}
+			
+			if (columnNode == null)
+			{
+				throw new ArgumentNullException("columnNode");
+			}
+			
+			if (this.Element.IsDirty(this.hashAtWhichElementStiffnessMatrixWasLastBuilt))
+			{
+				this.BuildGlobalStiffnessMatrix();
+			}
+			
+			return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+		}
 		
 		/// <summary>
 		/// Prepares and generates the stiffness matrix.
@@ -42,19 +94,20 @@
 		/// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
 		/// It sets the stiffnessMatrixHasBeenGenerated flag to true.
 		/// </summary>
-		public ElementStiffnessMatrix BuildGlobalStiffnessMatrix() 
+		public void BuildGlobalStiffnessMatrix() 
 		{
 			this.ThrowIfNotInitialized();
 			
-			Matrix k = this.GetStiffnessMatrix();
+			Matrix k = this.GetLocalStiffnessMatrix();
 			Matrix t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
 			
 			//FIXME these multiplications assume the keys of both matrices are ordered and identical
 			Matrix kt = (Matrix)k.Multiply(t); // K*T
 			Matrix ttransposed = (Matrix)t.Transpose(); // T^
 			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			ElementStiffnessMatrix result = new ElementStiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
-			return result;
+			this.stiffnessMatrix = new ElementStiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
+			
+			this.hashAtWhichElementStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
 		}
 		
 		/// <summary>
@@ -94,7 +147,7 @@
         	T convertedElement = this.Element as T;
 			if (convertedElement == null)
 			{
-				throw new NotImplementedException(String.Format(
+				throw new InvalidCastException(String.Format(
 					"We expected the element of type {0} to be convertable to a type {1}, but it didn't work.",
 					this.Element.GetType().FullName,
 					typeof(T).FullName));

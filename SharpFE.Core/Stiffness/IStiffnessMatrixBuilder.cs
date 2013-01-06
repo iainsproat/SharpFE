@@ -11,16 +11,17 @@ namespace SharpFE.Stiffness
 	using System;
 	using MathNet.Numerics.LinearAlgebra.Double;
 	/// <summary>
-	/// Builds the stiffness matrix for a finite element
+	/// Builds the stiffness matrix for a single finite element
 	/// </summary>
 	public interface IStiffnessMatrixBuilder
 	{
-		void Initialize(FiniteElement finiteElement);
 		FiniteElement Element { get; }
 		KeyedVector<NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
-		ElementStiffnessMatrix GetStiffnessMatrix();
+		ElementStiffnessMatrix GetLocalStiffnessMatrix();
+		ElementStiffnessMatrix GlobalStiffnessMatrix { get; }
 		
-		ElementStiffnessMatrix BuildGlobalStiffnessMatrix();
+		double GetGlobalStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
+		void BuildGlobalStiffnessMatrix();
 		Matrix CalculateElementRotationMatrix();
 	}
 }

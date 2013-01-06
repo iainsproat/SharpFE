@@ -69,13 +69,6 @@ namespace SharpFE.Core.Tests.Elements
             Assert.AreEqual(2, SUT.SpringConstant);
         }
   
-        [Test]
-        public void CanGetStiffnessAt()
-        {
-            double result = SUT.GetStiffnessAt(start, DegreeOfFreedom.X, start, DegreeOfFreedom.X);
-            Assert.AreEqual(2, result);
-            result = SUT.GetStiffnessAt(start, DegreeOfFreedom.X, end, DegreeOfFreedom.X);
-            Assert.AreEqual(-2, result);
-        }
+
     }
 }

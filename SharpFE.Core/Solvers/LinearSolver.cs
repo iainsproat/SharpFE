@@ -9,7 +9,7 @@ namespace SharpFE
     using System;
     using System.Collections.Generic;
     using MathNet.Numerics.LinearAlgebra.Double;
-    using SharpFE;
+    using SharpFE.Stiffness;
 
     /// <summary>
     /// Carries out a simple, linear analysis to solve a static, implicit finite element problem.
@@ -24,7 +24,7 @@ namespace SharpFE
         /// <summary>
         /// A helper class to build the stiffness matrices from the model
         /// </summary>
-        private StiffnessMatrixBuilder matrixBuilder;
+        private GlobalModelStiffnessMatrixBuilder matrixBuilder;
         
         #region Constructors
         /// <summary>
@@ -32,7 +32,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="modelToSolve">The model on which to run the analysis</param>
         public LinearSolver(FiniteElementModel modelToSolve)
-            : this(modelToSolve, new StiffnessMatrixBuilder(modelToSolve))
+            : this(modelToSolve, new GlobalModelStiffnessMatrixBuilder(modelToSolve))
         {
             // empty
         }
@@ -42,7 +42,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="modelToSolve">The model on which to run the analysis</param>
         /// <param name="stiffnessMatrixBuilder">The class which generates the stiffness matrices for solving.</param>
-        public LinearSolver(FiniteElementModel modelToSolve, StiffnessMatrixBuilder stiffnessMatrixBuilder)
+        public LinearSolver(FiniteElementModel modelToSolve, GlobalModelStiffnessMatrixBuilder stiffnessMatrixBuilder)
         {
             Guard.AgainstNullArgument(modelToSolve, "modelToSolve");
             Guard.AgainstNullArgument(stiffnessMatrixBuilder, "stiffnessMatrixBuilder");

@@ -10,6 +10,7 @@ namespace SharpFE.Core.Tests.Solvers
     using NUnit.Framework;
     using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE;
+    using SharpFE.Stiffness;
     
     [TestFixture]
     public class StiffnessMatrixBuilderTest
@@ -20,7 +21,7 @@ namespace SharpFE.Core.Tests.Solvers
         FiniteElementNode node3;
         LinearConstantSpring spring1;
         LinearConstantSpring spring2;
-        StiffnessMatrixBuilder SUT;
+        GlobalModelStiffnessMatrixBuilder SUT;
         
         [SetUp]
         public void Setup()
@@ -36,7 +37,7 @@ namespace SharpFE.Core.Tests.Solvers
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node3, DegreeOfFreedom.X);
             
-            SUT = new StiffnessMatrixBuilder(model);
+            SUT = new GlobalModelStiffnessMatrixBuilder(model);
         }
         
         [Test]

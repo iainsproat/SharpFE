@@ -11,7 +11,7 @@ namespace SharpFE
 	public class Linear1DBeam : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
 	{
 		public Linear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
-			:base(new Linear1DBeamStiffnessMatrixBuilder(), start, end)
+			:base(start, end)
 		{
 			Guard.AgainstNullArgument(mat, "mat");
 			Guard.AgainstNullArgument(section, "section");
