@@ -50,6 +50,7 @@
     <Compile Include="CrossSections\IHasCrossSection.cs" />
     <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="Elements\LinearBeam.cs" />
     <Compile Include="Elements\LinearConstantSpring.cs" />
     <Compile Include="Elements\ElementStiffnessMatrix.cs" />
     <Compile Include="Elements\FiniteElement.cs" />

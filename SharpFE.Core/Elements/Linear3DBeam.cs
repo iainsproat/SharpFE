@@ -9,28 +9,13 @@ namespace SharpFE
 	/// <summary>
 	/// Beam which carries moment and shear force in both major and minor axes as well as axial force and torsion.
 	/// </summary>
-	public class Linear3DBeam : FiniteElement1D, IHasConstantCrossSection, IHasMaterial
+	public class Linear3DBeam : LinearBeam
 	{
 		
 		public Linear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
-			:base(start, end)
+			:base(start, end, mat, section)
 		{
-			Guard.AgainstNullArgument(mat, "mat");
-			Guard.AgainstNullArgument(section, "section");
-			this.Material = mat;
-			this.CrossSection = section;
-		}
-		
-		public IMaterial Material
-		{
-			get;
-			private set;
-		}
-		
-		public ICrossSection CrossSection
-		{
-			get;
-			private set;
+			// empty
 		}
 		
 		public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)

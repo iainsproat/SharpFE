@@ -8,28 +8,12 @@ namespace SharpFE
 	/// This is a linear 1D finite element.
 	/// It only calculates major axis bending moment and major-axis shear force.
 	/// </summary>
-	public class Linear1DBeam : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
+	public class Linear1DBeam : LinearBeam
 	{
 		public Linear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
-			:base(start, end)
+			:base(start, end, mat, section)
 		{
-			Guard.AgainstNullArgument(mat, "mat");
-			Guard.AgainstNullArgument(section, "section");
-			
-			this.Material = mat;
-			this.CrossSection = section;
-		}
-		
-		public IMaterial Material
-		{
-			get;
-			private set;
-		}
-		
-		public ICrossSection CrossSection
-		{
-			get;
-			private set;
+			// empty
 		}
 		
 		public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
