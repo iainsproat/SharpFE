@@ -125,6 +125,7 @@
 			int numberOfRowsInRotationMatrix = rotationMatrix.RowCount;
 			int numberOfColumnsInRotationMatrix = rotationMatrix.ColumnCount;
 			
+			//FIXME only works for beam elements
 			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, rotationMatrix);
 			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(3, 3, 3, 3, identityMatrix);
 			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, rotationMatrix);

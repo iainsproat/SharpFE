@@ -1,18 +1,24 @@
-﻿namespace SharpFE.Core.Tests.Elements
-{
-	using System;
-	using NUnit.Framework;
-	using SharpFE;
+﻿//-----------------------------------------------------------------------
+// <copyright file="SpringElementTest.cs" company="SharpFE">
+//     Copyright Iain Sproat, 2012.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
+using NUnit.Framework;
+using SharpFE;
 
-	public class Linear3DBeamTest
-	{
-		private NodeFactory nodeFactory;
+namespace SharpFE.Core.Tests.Elements
+{
+    [TestFixture]
+    public class Linear1DBeamElementTest
+    {
+    	private NodeFactory nodeFactory;
         private ElementFactory elementFactory;
         private FiniteElementNode start;
         private FiniteElementNode end;
         private GenericElasticMaterial material;
         private SolidRectangle section;
-        private Linear3DBeam SUT;
+        private Linear1DBeam SUT;
         
         [SetUp]
         public void SetUp()
@@ -23,26 +29,24 @@
             elementFactory = new ElementFactory();
 			material = new GenericElasticMaterial(0, 0.1, 0, 0);
 			section = new SolidRectangle(0.1, 1);
-            SUT = elementFactory.CreateLinear3DBeam(start, end, material, section);
+            SUT = elementFactory.CreateLinear1DBeam(start, end, material, section);
         }
         
-		[Test]
+        [Test]
         public void It_can_be_constructed()
         {
         	Assert.IsNotNull(SUT);
-        	Assert.AreEqual(material, SUT.Material);
-        	Assert.AreEqual(section, SUT.CrossSection);
         }
         
         [Test]
         public void HasCorrectSupportedDOF()
         {
-        	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.X));
-        	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Y));
+        	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.X));
+        	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Y));
         	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Z));
-        	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.XX));
+        	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.XX));
         	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.YY));
-        	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.ZZ));
+        	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.ZZ));
         }
         
         [Test]
@@ -50,5 +54,5 @@
         {
             Assert.Ignore();
         }
-	}
+    }
 }

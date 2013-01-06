@@ -31,7 +31,7 @@
 			private set;
 		}
 		
-		public override bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+		public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
 		{
 			switch(degreeOfFreedom)
 			{

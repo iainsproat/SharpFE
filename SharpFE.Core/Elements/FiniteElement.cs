@@ -192,7 +192,7 @@ namespace SharpFE
 		/// </summary>
 		/// <param name="degreeOfFreedom"></param>
 		/// <returns></returns>
-		public abstract bool IsASupportedLocalStiffnessDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
+		public abstract bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
 		
 		/// <summary>
 		/// Adds a new node to the element.
