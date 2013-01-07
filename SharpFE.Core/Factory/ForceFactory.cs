@@ -135,5 +135,24 @@ namespace SharpFE
             
             return newForce;
         }
+        
+        /// <summary>
+        /// Creates a new force for a 2D ModelType
+        /// </summary>
+        /// <param name="valueOfXComponent">The component of the force along the global x-axis</param>
+        /// <param name="valueOfZComponent">The component of the force along the global z-axis</param>
+        /// <returns>The force vector which has been created</returns>
+        public ForceVector Create(double valueOfXComponent, double valueOfYComponent, double valueOfZComponent, double valueOfXXComponent, double valueOfYYComponent, double valueOfZZComponent)
+        {
+        	//TODO
+            
+            ForceVector newForce = new ForceVector(valueOfXComponent, valueOfYComponent,  valueOfZComponent, valueOfXXComponent, valueOfYYComponent, valueOfZZComponent);
+            if (this.repository != null)
+            {
+                this.repository.Add(newForce);
+            }
+            
+            return newForce;
+        }
     }
 }

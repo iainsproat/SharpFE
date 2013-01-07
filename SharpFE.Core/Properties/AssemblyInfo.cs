@@ -17,11 +17,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpFE")]
-[assembly: AssemblyDescription("SharpFE is a small, adaptable and embeddable library for the quick linear, implicit finite element analysis of static structures.")]
+[assembly: AssemblyDescription("SharpFE is a small, adaptable and embeddable library for the quick implicit finite element analysis of static structures.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ramboll UK Ltd.")]
+[assembly: AssemblyCompany("Iain Sproat")]
 [assembly: AssemblyProduct("SharpFE")]
-[assembly: AssemblyCopyright("Copyright 2012")]
+[assembly: AssemblyCopyright("Copyright 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("0.0.1")]
+[assembly: AssemblyVersion("0.0.2")]
 
 // The assembly should be CLS compliant for use across the .Net framework
 [assembly: CLSCompliant(true)]

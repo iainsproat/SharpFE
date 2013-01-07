@@ -90,7 +90,7 @@ namespace SharpFE
         /// <param name="columnKey">The key which defines the first column to start copying from</param>
         /// <param name="columnCount">The number of columns to copy</param>
         /// <returns>A matrix which is a submatrix of this KeyedMatrix</returns>
-        public KeyedMatrix<TKey> SubMatrix(TKey rowKey, int rowCount, TKey columnKey, int columnCount)
+        public new KeyedMatrix<TKey> SubMatrix(TKey rowKey, int rowCount, TKey columnKey, int columnCount)
         {
         	return (KeyedMatrix<TKey>)base.SubMatrix(rowKey, rowCount, columnKey, columnCount);
         }
@@ -101,7 +101,7 @@ namespace SharpFE
         /// <param name="rowsToInclude">A list of the keys of rows to include in the new matrix</param>
         /// <param name="columnsToInclude">A list of the keys of columns to include in the new matrix</param>
         /// <returns>A KeyedMatrix which contains values from the requested sub-matrix</returns>
-        public KeyedMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
+        public new KeyedMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
         {
         	return (KeyedMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
         }
