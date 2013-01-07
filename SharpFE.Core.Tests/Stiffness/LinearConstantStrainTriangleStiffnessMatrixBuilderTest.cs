@@ -19,7 +19,6 @@ namespace SharpFE.Core.Tests.Stiffness
         private FiniteElementNode node1;
         private FiniteElementNode node2;
         private GenericElasticMaterial material;
-        private SolidRectangle section;
         private LinearConstantStrainTriangle triangle;
         private LinearConstantStrainTriangleStiffnessMatrixBuilder SUT;
         
@@ -31,7 +30,7 @@ namespace SharpFE.Core.Tests.Stiffness
             node1 = nodeFactory.Create(2, 0);
             node2 = nodeFactory.Create(1, 1);
             elementFactory = new ElementFactory();
-			material = new GenericElasticMaterial(0, 1, 0, 1);
+			material = new GenericElasticMaterial(0, 1, 0.1, 0);
             triangle = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, 0.1);
             SUT = new LinearConstantStrainTriangleStiffnessMatrixBuilder(triangle);
         }
