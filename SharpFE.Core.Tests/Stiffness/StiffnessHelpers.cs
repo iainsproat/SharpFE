@@ -12,7 +12,7 @@
 		
 		public static void Assert18x18StiffnessMatrix(IStiffnessMatrixBuilder SUT, params double[] expectedValues)
         {
-            Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 18, 18, expectedValues);
+			Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 18, 18, expectedValues);
         }
 	}
 }

@@ -20,7 +20,7 @@
 			throw new NotImplementedException();
 		}
 		
-		public override ElementStiffnessMatrix GetLocalStiffnessMatrix()
+		public override StiffnessMatrix GetLocalStiffnessMatrix()
 		{
 			Linear1DBeam beam = this.CastElementTo<Linear1DBeam>();
 			
@@ -28,7 +28,7 @@
 			ICrossSection section = this.GetCrossSection();
 			
 			double length = beam.OriginalLength;					
-			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+			StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
 			
 			double shearStiffnessInZ = 12.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / (length * length * length);
             matrix.At(beam.StartNode, DegreeOfFreedom.Z, beam.StartNode, DegreeOfFreedom.Z,  shearStiffnessInZ);

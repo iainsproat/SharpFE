@@ -25,7 +25,7 @@ namespace SharpFE.Stiffness
 			throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
 		}
 		
-		public override ElementStiffnessMatrix GetLocalStiffnessMatrix()
+		public override StiffnessMatrix GetLocalStiffnessMatrix()
 		{
 			Linear3DBeam beam = this.CastElementTo<Linear3DBeam>();
 			
@@ -33,7 +33,7 @@ namespace SharpFE.Stiffness
 			ICrossSection section = this.GetCrossSection();
 			
 			double length = beam.OriginalLength;					
-			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+			StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
 			
 			double axialStiffness = section.Area * material.YoungsModulus / length;
             matrix.At(beam.StartNode, DegreeOfFreedom.X, beam.StartNode, DegreeOfFreedom.X,  axialStiffness);

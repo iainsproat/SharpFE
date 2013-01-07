@@ -44,12 +44,12 @@ namespace SharpFE.Stiffness
 			return B;
 		}
 		
-		public override ElementStiffnessMatrix GetLocalStiffnessMatrix()
+		public override StiffnessMatrix GetLocalStiffnessMatrix()
 		{
 			FiniteElement1D element1D = this.CastElementTo<FiniteElement1D>();
 			double stiffness = this.CalculateStiffnessConstant(element1D);
 			
-			ElementStiffnessMatrix matrix = new ElementStiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+			StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
 			matrix.At(element1D.StartNode, DegreeOfFreedom.X, element1D.StartNode, DegreeOfFreedom.X, stiffness);
 			matrix.At(element1D.StartNode, DegreeOfFreedom.X, element1D.EndNode, DegreeOfFreedom.X, -stiffness);
 			matrix.At(element1D.EndNode, DegreeOfFreedom.X, element1D.StartNode, DegreeOfFreedom.X, -stiffness);

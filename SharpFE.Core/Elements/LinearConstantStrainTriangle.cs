@@ -11,18 +11,21 @@ namespace SharpFE
 	/// <summary>
 	/// Triangular shaped element which calculates membrane forces only
 	/// </summary>
-	public class LinearConstantStrainTriangle : FiniteElement, IHasMaterial, IHasCrossSection
+	public class LinearConstantStrainTriangle : FiniteElement, IHasMaterial
 	{
-		public LinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial mat, ICrossSection section)
+		public LinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial mat, double t)
 		{
 			this.AddNode(node0);
 			this.AddNode(node1);
 			this.AddNode(node2);
 			
 			Guard.AgainstNullArgument(mat, "mat");
-			Guard.AgainstNullArgument(section, "section");
+			Guard.AgainstBadArgument(
+				() => { return t <= 0; },
+				"thickness has to be greater than zero",
+				"t");
 			this.Material = mat;
-			this.CrossSection = section;
+			this.Thickness = t;
 		}
 		
 		public IMaterial Material
@@ -31,7 +34,7 @@ namespace SharpFE
 			private set;
 		}
 		
-		public ICrossSection CrossSection
+		public double Thickness
 		{
 			get;
 			private set;

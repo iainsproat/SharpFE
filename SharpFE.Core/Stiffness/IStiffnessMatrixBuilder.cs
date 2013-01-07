@@ -18,8 +18,8 @@ namespace SharpFE.Stiffness
 		FiniteElement Element { get; }
 		KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
 		KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
-		ElementStiffnessMatrix GetLocalStiffnessMatrix();
-		ElementStiffnessMatrix GlobalStiffnessMatrix { get; }
+		StiffnessMatrix GetLocalStiffnessMatrix();
+		StiffnessMatrix GlobalStiffnessMatrix { get; }
 		
 		double GetGlobalStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
 		void BuildGlobalStiffnessMatrix();

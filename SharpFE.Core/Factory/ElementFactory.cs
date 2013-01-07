@@ -87,9 +87,9 @@ namespace SharpFE
         	return newBeam;
         }
         
-        public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
+        public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
         {
-        	LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, crossSection);
+        	LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
         	if (this.repository != null)
         	{
         		this.repository.Add(newTriangle);

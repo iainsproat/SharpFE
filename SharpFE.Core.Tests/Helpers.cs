@@ -26,11 +26,12 @@ namespace SharpFE.Core.Tests
             {
                 throw new ArgumentException(String.Format("You have not provided the correct number of values to check for in the matrix.  " +
                                                           "You provided a expected Row count of {0} and an expected column count of {1}.  " +
-                                                          "We would have expected {2} values, but you provided {3}",
+                                                          "We would have expected {2} values, but you provided {3}.\n\r{4}",
                                                           expectedRowCount,
                                                           expectedColumnCount,
                                                           expectedRowCount * expectedColumnCount,
-                                                          expectedValues.Length));
+                                                          expectedValues.Length,
+                                                         actual));
             }
             
             Assert.IsNotNull(actual);

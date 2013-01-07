@@ -18,7 +18,6 @@ namespace SharpFE.Core.Tests.Elements
         private FiniteElementNode node1;
         private FiniteElementNode node2;
 		private GenericElasticMaterial material;
-		private SolidRectangle section;
         private LinearConstantStrainTriangle SUT;
         
         [SetUp]
@@ -29,9 +28,8 @@ namespace SharpFE.Core.Tests.Elements
             node1 = nodeFactory.Create(3, 1);
             node2 = nodeFactory.Create(2, 2);
 			material = new GenericElasticMaterial(0, 0.1, 0, 0);
-			section = new SolidRectangle(0.1, 1);
             elementFactory = new ElementFactory();
-            SUT = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, section);
+            SUT = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, 0.1);
         }
         
 		[Test]
@@ -40,7 +38,7 @@ namespace SharpFE.Core.Tests.Elements
 			Assert.IsNotNull(SUT);
 			Assert.AreEqual(3, SUT.Nodes.Count);
 			Assert.AreEqual(material, SUT.Material);
-			Assert.AreEqual(section, SUT.CrossSection);
+			Assert.AreEqual(0.1, SUT.Thickness);
 		}
 		
 		[Test]

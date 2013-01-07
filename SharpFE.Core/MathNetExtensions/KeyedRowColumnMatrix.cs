@@ -204,6 +204,24 @@ namespace SharpFE
             this.At(rowIndex, columnIndex, value);
         }
         
+        public KeyedRowColumnMatrix<TColumnKey, TRowKey> TransposeMatrix()
+        {
+        	return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(base.Transpose(), this.ColumnKeys, this.RowKeys);
+        }
+        
+        public KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> Multiply<TOtherRowKey, TOtherColumnKey>(KeyedRowColumnMatrix<TOtherRowKey, TOtherColumnKey> other)
+        {
+        	//TODO check that TColumnKey and TOtherRowKey match exactly.
+        	Matrix<double> result = base.Multiply(other);
+        	return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
+        }
+        
+        public KeyedRowColumnMatrix<TRowKey, TColumnKey> MultiplyScalar(double scalar)
+        {
+        	Matrix<double> result = base.Multiply(scalar);
+        	return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(result, this.RowKeys, this.ColumnKeys);
+        }
+        
         /// <summary>
         /// Replaces the keys with the provided lists.
         /// First checks that the lists are reasonably valid (does not check for duplicate keys, however)

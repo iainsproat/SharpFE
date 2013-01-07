@@ -11,7 +11,7 @@
 		/// <summary>
 		/// The global stiffness matrix of this element
 		/// </summary>
-		private ElementStiffnessMatrix stiffnessMatrix;
+		private StiffnessMatrix stiffnessMatrix;
 		
 		private int hashAtWhichElementStiffnessMatrixWasLastBuilt;
 		
@@ -32,7 +32,7 @@
 		/// <summary>
 		/// Gets the stiffness matrix of this element.
 		/// </summary>
-		public ElementStiffnessMatrix GlobalStiffnessMatrix
+		public StiffnessMatrix GlobalStiffnessMatrix
 		{
 			get
 			{
@@ -58,7 +58,7 @@
 		
 		public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
 		public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
-		public abstract ElementStiffnessMatrix GetLocalStiffnessMatrix();
+		public abstract StiffnessMatrix GetLocalStiffnessMatrix();
 		
 		/// <summary>
 		/// Gets the exact stiffness value for a given node and degree of freedom combinations.
@@ -95,7 +95,7 @@
 		/// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
 		/// It sets the stiffnessMatrixHasBeenGenerated flag to true.
 		/// </summary>
-		public void BuildGlobalStiffnessMatrix() 
+		public void BuildGlobalStiffnessMatrix()
 		{
 			this.ThrowIfNotInitialized();
 			
@@ -106,7 +106,7 @@
 			Matrix kt = (Matrix)k.Multiply(t); // K*T
 			Matrix ttransposed = (Matrix)t.Transpose(); // T^
 			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			this.stiffnessMatrix = new ElementStiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
+			this.stiffnessMatrix = new StiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
 			
 			this.hashAtWhichElementStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
 		}
@@ -114,7 +114,7 @@
 		/// <summary>
 		/// Builds the rotational matrix from local coordinates to global coordinates.
 		/// </summary>
-		private Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates() //FIXME only valid for beam elements
+		private Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
 		{
 			this.ThrowIfNotInitialized();
 			
@@ -123,14 +123,13 @@
 			
 			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
-			int numberOfRowsInRotationMatrix = rotationMatrix.RowCount;
-			int numberOfColumnsInRotationMatrix = rotationMatrix.ColumnCount;
+			int numberOfNodes = this.Element.Nodes.Count; //assumes no duplicate nodes
 			
-			//FIXME only works for beam elements
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(0, numberOfRowsInRotationMatrix, 0, numberOfColumnsInRotationMatrix, rotationMatrix);
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(3, 3, 3, 3, identityMatrix);
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(6, numberOfRowsInRotationMatrix, 6, numberOfColumnsInRotationMatrix, rotationMatrix);
-			elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(9, 3, 9, 3, identityMatrix);
+			for (int i = 0; i < numberOfNodes; i++)
+			{
+				elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(i*6, 3, i*6, 3, rotationMatrix);
+				elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(i*6+3, 3, i*6+3, 3, identityMatrix);
+			}
 			
 			return elementRotationMatrixFromLocalToGlobalCoordinates;
 		}
@@ -145,8 +144,8 @@
 		}
 		
 		protected T CastElementTo<T>() where T : FiniteElement
-        {
-        	T convertedElement = this.Element as T;
+		{
+			T convertedElement = this.Element as T;
 			if (convertedElement == null)
 			{
 				throw new InvalidCastException(String.Format(
@@ -156,29 +155,29 @@
 			}
 			
 			return convertedElement;
-        }
+		}
 		
 		protected IMaterial GetMaterial()
-        {        	
-        	IHasMaterial hasMaterial = this.Element as IHasMaterial;
+		{
+			IHasMaterial hasMaterial = this.Element as IHasMaterial;
 			if (hasMaterial == null)
 			{
 				throw new NotImplementedException("StiffnessMatrixBuilder expects finite elements to implement IHasMaterial");
 			}
 			
 			return hasMaterial.Material;
-        }
+		}
 		
 		protected ICrossSection GetCrossSection()
-        {
-        	IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
+		{
+			IHasConstantCrossSection hasCrossSection = this.Element as IHasConstantCrossSection;
 			if (hasCrossSection == null)
 			{
 				throw new NotImplementedException("StiffnessMatrixBuilder expects finite elements to implement IHasConstantCrossSection");
 			}
 			
 			return hasCrossSection.CrossSection;
-        }
+		}
 		
 		protected void ThrowIfNotInitialized()
 		{

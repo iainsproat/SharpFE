@@ -32,8 +32,7 @@ namespace SharpFE.Core.Tests.Stiffness
             node2 = nodeFactory.Create(1, 1);
             elementFactory = new ElementFactory();
 			material = new GenericElasticMaterial(0, 1, 0, 1);
-			section = new SolidRectangle(1, 1);
-            triangle = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, section);
+            triangle = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, 0.1);
             SUT = new LinearConstantStrainTriangleStiffnessMatrixBuilder(triangle);
         }
         
@@ -45,27 +44,45 @@ namespace SharpFE.Core.Tests.Stiffness
         }
         
         [Test]
-        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
+        public void CanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
         {
             double a = 1.0 / 3.0;
 			double b = a / 2.0;
 			double c = 0.1408333; //torsion
 			
-			Assert.Ignore(); //TODO
 			StiffnessHelpers.Assert18x18StiffnessMatrix(SUT,
-			                                             1,  0,    0,    0,  0,    0,      -1,  0,    0,    0,  0,    0,
-			                                             0,  1,    0,    0,  0,    0.5,     0, -1,    0,    0,  0,    0.5,
-			                                             0,  0,    1,    0, -0.5,  0,       0,  0,   -1,    0, -0.5,  0,
-			                                             0,  0,    0,    c,  0,    0,       0,  0,    0,   -c,  0,    0,
-			                                             0,  0,   -0.5,  0,  a,    0,       0,  0,    0.5,  0,  b,    0,
-			                                             0,  0.5,  0,    0,  0,    a,       0, -0.5,  0,    0,  0,    b,
+			                                             1,  0,    0,    0,  0,    0,      -1,  0,    0,    0,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  1,    0,    0,  0,    0.5,     0, -1,    0,    0,  0,    0.5,    0, 0, 0, 0, 0, 0,
+			                                             0,  0,    1,    0, -0.5,  0,       0,  0,   -1,    0, -0.5,  0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,    0,    c,  0,    0,       0,  0,    0,   -c,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,   -0.5,  0,  a,    0,       0,  0,    0.5,  0,  b,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0.5,  0,    0,  0,    a,       0, -0.5,  0,    0,  0,    b,      0, 0, 0, 0, 0, 0,
 			                                            
-			                                            -1,  0,    0,    0,  0,    0,       1,  0,    0,    0,  0,    0,
-			                                             0, -1,    0,    0,  0,   -0.5,     0,  1,    0,    0,  0,   -0.5,
-			                                             0,  0,   -1,    0,  0.5,  0,       0,  0,    1,    0,  0.5,  0,
-			                                             0,  0,    0,   -c,  0,    0,       0,  0,    0,    c,  0,    0,
-			                                             0,  0,   -0.5,  0,  b,    0,       0,  0,    0.5,  0,  a,    0,
-			                                             0,  0.5,  0,    0,  0,    b,       0, -0.5,  0,    0,  0,    a);
+			                                            -1,  0,    0,    0,  0,    0,       1,  0,    0,    0,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0, -1,    0,    0,  0,   -0.5,     0,  1,    0,    0,  0,   -0.5,    0, 0, 0, 0, 0, 0,
+			                                             0,  0,   -1,    0,  0.5,  0,       0,  0,    1,    0,  0.5,  0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,    0,   -c,  0,    0,       0,  0,    0,    c,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,   -0.5,  0,  b,    0,       0,  0,    0.5,  0,  a,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0.5,  0,    0,  0,    b,       0, -0.5,  0,    0,  0,    a,       0, 0, 0, 0, 0, 0,
+			                                            
+			                                            -1,  0,    0,    0,  0,    0,       1,  0,    0,    0,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0, -1,    0,    0,  0,   -0.5,     0,  1,    0,    0,  0,   -0.5,    0, 0, 0, 0, 0, 0,
+			                                             0,  0,   -1,    0,  0.5,  0,       0,  0,    1,    0,  0.5,  0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,    0,   -c,  0,    0,       0,  0,    0,    c,  0,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0,   -0.5,  0,  b,    0,       0,  0,    0.5,  0,  a,    0,      0, 0, 0, 0, 0, 0,
+			                                             0,  0.5,  0,    0,  0,    b,       0, -0.5,  0,    0,  0,    a,       0, 0, 0, 0, 0, 0);
+        }
+        
+        [Test]
+        public void ShapeFunctions()
+        {
+        	Assert.Ignore();
+        }
+        
+        [Test]
+        public void StrainDisplacement()
+        {
+        	Assert.Ignore();
         }
         
         [Test]

@@ -52,7 +52,6 @@
     <Compile Include="DegreeOfFreedom.cs" />
     <Compile Include="Elements\LinearBeam.cs" />
     <Compile Include="Elements\LinearConstantSpring.cs" />
-    <Compile Include="Elements\ElementStiffnessMatrix.cs" />
     <Compile Include="Elements\FiniteElement.cs" />
     <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Elements\Linear3DBeam.cs" />
@@ -92,6 +91,7 @@
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
+    <Compile Include="Stiffness\ElementStiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />

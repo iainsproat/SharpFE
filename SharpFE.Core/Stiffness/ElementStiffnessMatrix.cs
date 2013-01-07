@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace SharpFE
+namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
@@ -15,13 +15,13 @@ namespace SharpFE
     /// ElementStiffnessMatrix is a KeyedMatrix which uses NodalDegreeOfFreedom structs as the keys.
     /// It is designed to be used for holding data about stiffnesses of finite elements.
     /// </summary>
-    public class ElementStiffnessMatrix : KeyedMatrix<NodalDegreeOfFreedom>
+    public class StiffnessMatrix : KeyedMatrix<NodalDegreeOfFreedom>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class.
         /// </summary>
         /// <param name="keys">The keys which will be used to look up rows and columns of this square matrix. One unique key is expected per row.</param>
-        public ElementStiffnessMatrix(IList<NodalDegreeOfFreedom> keys)
+        public StiffnessMatrix(IList<NodalDegreeOfFreedom> keys)
             : this(keys, keys)
         {
             // empty
@@ -32,7 +32,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
         /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
-        public ElementStiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns)
+        public StiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns)
             : base(keysForRows, keysForColumns)
         {
             // empty
@@ -44,7 +44,7 @@ namespace SharpFE
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
         /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
         /// <param name="initialValueOfAllElements">The value to which we assign to each element of the matrix</param>
-        public ElementStiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns, double initialValueOfAllElements)
+        public StiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns, double initialValueOfAllElements)
             : base(keysForRows, keysForColumns, initialValueOfAllElements)
         {
             // empty
@@ -56,7 +56,7 @@ namespace SharpFE
         /// <param name="matrix">The matrix which holds the data to copy into this new matrix</param>
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
         /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
-        public ElementStiffnessMatrix(Matrix<double> matrix, IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns)
+        public StiffnessMatrix(Matrix<double> matrix, IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns)
             : base(matrix, keysForRows, keysForColumns)
         {
             // empty
@@ -67,7 +67,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="matrix">The matrix which holds the keys and data to copy into this new matrix</param>
         /// <remarks>Undertakes a deep clone of the data of the matrix, but only a shallow clone of the keys</remarks>
-        public ElementStiffnessMatrix(ElementStiffnessMatrix matrix)
+        public StiffnessMatrix(StiffnessMatrix matrix)
             : base(matrix)
         {
             // empty
@@ -136,7 +136,7 @@ namespace SharpFE
         /// <returns>A deep clone of the data of this matrix, but only a shallow clone of the keys</returns>
         public override Matrix<double> Clone()
         {
-            return new ElementStiffnessMatrix(this);
+            return new StiffnessMatrix(this);
         }
         
         /// <summary>
@@ -168,7 +168,7 @@ namespace SharpFE
         /// <returns>A list of all the row keys which have Node properties which equal the given node</returns>
         private IList<NodalDegreeOfFreedom> GetAllRowKeysWithMatchingNode(FiniteElementNode nodeToMatch)
         {
-            return ElementStiffnessMatrix.GetAllRowKeysWithMatchingNode(this.RowKeys, nodeToMatch);
+            return StiffnessMatrix.GetAllRowKeysWithMatchingNode(this.RowKeys, nodeToMatch);
         }
         
         /// <summary>
@@ -178,7 +178,7 @@ namespace SharpFE
         /// <returns>A list of all the column keys which have Node properties which equal the given node</returns>
         private IList<NodalDegreeOfFreedom> GetAllColumnKeysWithMatchingNode(FiniteElementNode nodeToMatch)
         {
-            return ElementStiffnessMatrix.GetAllRowKeysWithMatchingNode(this.ColumnKeys, nodeToMatch);
+            return StiffnessMatrix.GetAllRowKeysWithMatchingNode(this.ColumnKeys, nodeToMatch);
         }
     }
 }
