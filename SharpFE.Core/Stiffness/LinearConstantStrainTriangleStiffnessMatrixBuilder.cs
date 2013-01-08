@@ -98,7 +98,7 @@ namespace SharpFE.Stiffness
 			double elementVolume = triangle.Thickness * triangle.Area;
 			KeyedMatrix<Strain> E = this.MaterialMatrix();
 			KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> B = this.GetStrainDisplacementMatrix();
-			KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> BT = B.TransposeMatrix();
+			KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> BT = B.Transpose();
 			
 			KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> BTE = BT.Multiply<Strain, Strain>(E);
 			

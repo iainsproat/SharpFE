@@ -72,6 +72,7 @@
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="MathNetExtensions\KeyCompatibilityValidator.cs" />
     <Compile Include="MathNetExtensions\KeyedRowColumnMatrix.cs" />
     <Compile Include="MathNetExtensions\KeyedVector.cs" />
     <Compile Include="MathNetExtensions\VectorExtensions.cs" />

@@ -63,17 +63,15 @@ namespace SharpFE.Stiffness
             matrix.At(beam.EndNode,   DegreeOfFreedom.XX, beam.EndNode,   DegreeOfFreedom.XX,  torsionalStiffness);
             
 			double bendingStiffnessAboutYY = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
-			double startToEndNodeRelationshipForBendingStiffnessAboutYY = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundYY / length;
 			matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY);
-            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, startToEndNodeRelationshipForBendingStiffnessAboutYY);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, startToEndNodeRelationshipForBendingStiffnessAboutYY);
+            matrix.At(beam.StartNode, DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY / 2.0);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY / 2.0);
             matrix.At(beam.EndNode,   DegreeOfFreedom.YY, beam.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY);
             
 			double bendingStiffnessAboutZZ = 4.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
-			double startToEndNodeRelationshipForBendingStiffnessAboutZZ = 2.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / length;
 			matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
-            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZZ);
-            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, startToEndNodeRelationshipForBendingStiffnessAboutZZ);
+            matrix.At(beam.StartNode, DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ / 2.0);
+            matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ / 2.0);
             matrix.At(beam.EndNode,   DegreeOfFreedom.ZZ, beam.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
             
 			double bendingAboutZZshearInY = 6.0 * material.YoungsModulus * section.SecondMomentOfAreaAroundZZ / (length * length);

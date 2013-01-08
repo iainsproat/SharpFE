@@ -73,6 +73,14 @@ namespace SharpFE
             // empty
         }
         
+        public KeyedMatrix<TKey> Multiply(KeyedMatrix<TKey> other)
+        {
+            //TODO check that this column keys and the other row keys match exactly, including order.
+            //If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            Matrix<double> result = ((Matrix<double>)this).Multiply((Matrix<double>)other);
+        	return new KeyedMatrix<TKey>(result, this.RowKeys, other.ColumnKeys);
+        }
+        
         /// <summary>
         /// Clones this matrix
         /// </summary>
@@ -80,6 +88,18 @@ namespace SharpFE
         public override Matrix<double> Clone()
         {
             return new KeyedMatrix<TKey>(this);
+        }
+        
+        public new KeyedMatrix<TKey> Inverse()
+        {
+            Matrix<double> result = ((Matrix<double>)this).Inverse();
+            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
+        }
+        
+        public new KeyedMatrix<TKey> Transpose()
+        {
+            Matrix<double> result = ((Matrix<double>)this).Transpose();
+            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
         /// <summary>

@@ -10,7 +10,6 @@ namespace SharpFE
 	using System.Text;
 	using System.Collections.Generic;
 	using MathNet.Numerics.LinearAlgebra.Double;
-	using MathNet.Numerics.LinearAlgebra.Generic;
 	using SharpFE.Stiffness;
 
 	/// <summary>

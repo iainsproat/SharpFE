@@ -30,7 +30,7 @@
         }
         
 		[Test]
-        public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
+        public void CanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
         {
             double a = 1.0 / 3.0;
 			double b = a / 2.0;

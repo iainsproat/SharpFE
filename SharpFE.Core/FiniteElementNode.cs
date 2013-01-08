@@ -7,7 +7,6 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
     
     /// <summary>
     /// A finite element node is a fundamental part of a finite element mesh.
@@ -87,15 +86,6 @@ namespace SharpFE
         {
             get;
             private set;
-        }
-        
-        public Vector AsVector()
-        {
-        	Vector result = new DenseVector(3);
-        	result[0] = this.OriginalX;
-        	result[1] = this.OriginalY;
-        	result[2] = this.OriginalZ;
-        	return result;
         }
         
         #region Equals and GetHashCode implementation

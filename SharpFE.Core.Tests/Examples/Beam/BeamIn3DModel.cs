@@ -33,8 +33,8 @@ namespace SharpFE.Examples.Beam
             model.ConstrainNode(node4, DegreeOfFreedom.XX);
             model.ConstrainNode(node4, DegreeOfFreedom.ZZ);
 
-            IMaterial material = new GenericElasticMaterial(0, 2000, 0.2, 1000);
-            ICrossSection section = new SolidRectangle(0.5, 0.1);
+            IMaterial material = new GenericElasticMaterial(0, 1, 0, 1);
+            ICrossSection section = new SolidRectangle(1, 1);
             
             model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section);
             model.ElementFactory.CreateLinear3DBeam(node2,node3,material,section);
@@ -88,13 +88,13 @@ namespace SharpFE.Examples.Beam
             model.ConstrainNode(node5, DegreeOfFreedom.YY);
             model.ConstrainNode(node5, DegreeOfFreedom.ZZ);
     
-            IMaterial material = new GenericElasticMaterial(0, 2000, 0.2, 1000);
-            ICrossSection section = new SolidRectangle(0.5, 0.1);
+            IMaterial material = new GenericElasticMaterial(0, 1, 0, 1);
+            ICrossSection section = new SolidRectangle(1, 1);
             
             model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section);
-            model.ElementFactory.CreateLinear3DBeam(node2,node3,material,section);
-            model.ElementFactory.CreateLinear3DBeam(node3,node4,material,section);
-            model.ElementFactory.CreateLinear3DBeam(node4,node5,material,section);
+            model.ElementFactory.CreateLinear3DBeam(node2, node3, material, section);
+            model.ElementFactory.CreateLinear3DBeam(node3, node4, material, section);
+            model.ElementFactory.CreateLinear3DBeam(node4, node5, material, section);
             
             ForceVector force = model.ForceFactory.Create(10, 0, 0,0,0,0);
             model.ApplyForceToNode(force, node3);
@@ -102,12 +102,10 @@ namespace SharpFE.Examples.Beam
             IFiniteElementSolver solver = new LinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
-            DisplacementVector displacement = results.GetDisplacement(node2);
+            DisplacementVector displacement = results.GetDisplacement(node4);
             Assert.AreNotEqual(0.0, displacement.X);
             Assert.AreEqual(0.0, displacement.Y, 0.001);
         }
-
     }
-    
 }
 

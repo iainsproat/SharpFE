@@ -3,7 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using MathNet.Numerics.LinearAlgebra.Double;
-	using MathNet.Numerics.LinearAlgebra.Generic;
+//	using MathNet.Numerics.LinearAlgebra.Generic;
 	using SharpFE;
 	
 	public abstract class StiffnessMatrixBuilder : IStiffnessMatrixBuilder
@@ -14,7 +14,6 @@
 		private StiffnessMatrix _globalStiffnessMatrix;
 		
 		private int hashAtWhichGlobalStiffnessMatrixWasLastBuilt;
-		private int hashAtWhichLocalStiffnessMatrixWasLastBuilt;
 		
 		public StiffnessMatrixBuilder(FiniteElement finiteElement)
 		{
@@ -108,14 +107,14 @@
 		{
 			this.ThrowIfNotInitialized();
 			
-			Matrix k = this.GetLocalStiffnessMatrix();
-			Matrix t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
+			StiffnessMatrix k = this.GetLocalStiffnessMatrix();
+			KeyedMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
 			
 			//FIXME these multiplications assume the keys of both matrices are ordered and identical
-			Matrix kt = (Matrix)k.Multiply(t); // K*T
-			Matrix ttransposed = (Matrix)t.Transpose(); // T^
-			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			this._globalStiffnessMatrix = new StiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
+			KeyedMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
+			KeyedMatrix<NodalDegreeOfFreedom> ttransposed = t.Transpose(); // T^
+			KeyedMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
+			this._globalStiffnessMatrix = new StiffnessMatrix(ttransposedkt);
 			
 			this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
 		}
@@ -123,14 +122,14 @@
 		/// <summary>
 		/// Builds the rotational matrix from local coordinates to global coordinates.
 		/// </summary>
-		private Matrix BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
+		private KeyedMatrix<NodalDegreeOfFreedom> BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
 		{
 			this.ThrowIfNotInitialized();
 			
 			Matrix rotationMatrix = this.CalculateElementRotationMatrix();
 			Matrix identityMatrix = DenseMatrix.Identity(3);
 			
-			Matrix elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
+			KeyedMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
 			int numberOfNodes = this.Element.Nodes.Count; //assumes no duplicate nodes
 			
@@ -147,9 +146,50 @@
 		{
 			this.ThrowIfNotInitialized();
 			
-			Matrix rotationMatrix = (Matrix)DenseMatrix.CreateFromRows(new List<Vector<double>>(3) { this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis });
+			Matrix rotationMatrix = CreateFromRows(this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis);
 			rotationMatrix = (Matrix)rotationMatrix.NormalizeRows(2);
 			return rotationMatrix;
+		}
+		
+		private Matrix CreateFromRows(Vector axis1, Vector axis2, Vector axis3)
+		{
+		    Guard.AgainstBadArgument(() => { return axis1.Count != 3; },
+		                             "All axes should be 3D, i.e. have 3 items",
+		                             "axis1");
+		    Guard.AgainstBadArgument(() => { return axis2.Count != 3; },
+		                             "All axes should be 3D, i.e. have 3 items",
+		                             "axis2");
+		    Guard.AgainstBadArgument(() => { return axis3.Count != 3; },
+		                             "All axes should be 3D, i.e. have 3 items",
+		                             "axis3");
+		    Guard.AgainstBadArgument(() => { return axis1.SumMagnitudes() == 0; },
+		                             string.Format("Axis should not be zero: {0}", axis1),
+		                             "axis1");
+		    Guard.AgainstBadArgument(() => { return axis2.SumMagnitudes() == 0; },
+		                             string.Format("Axis should not be zero: {0}", axis2),
+		                             "axis2");
+		    Guard.AgainstBadArgument(() => { return axis3.SumMagnitudes() == 0; },
+		                             string.Format("Axis should not be zero: {0}", axis3),
+		                             "axis3");
+		    
+		    Vector axis1Norm = (Vector)axis1.Normalize(2);
+		    Vector axis2Norm = (Vector)axis2.Normalize(2);
+		    Vector axis3Norm = (Vector)axis3.Normalize(2);
+		    
+		    IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z };
+		    
+		    KeyedMatrix<DegreeOfFreedom> result = new KeyedMatrix<DegreeOfFreedom>(dof);
+		    result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[0]);
+		    result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[1]);
+		    result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[2]);
+		    result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[0]);
+		    result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[1]);
+		    result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[2]);
+		    result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[0]);
+		    result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[1]);
+		    result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[2]);
+		    
+		    return result;
 		}
 		
 		protected T CastElementTo<T>() where T : FiniteElement

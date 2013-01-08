@@ -43,28 +43,28 @@ namespace SharpFE.Core.Tests.Solvers
         [Test]
         public void KnownForcesKnownDisplacementsMatrixCanBeGenerated()
         {
-            Matrix result = SUT.BuildKnownForcesKnownDisplacementStiffnessMatrix();
+            StiffnessMatrix result = SUT.BuildKnownForcesKnownDisplacementStiffnessMatrix();
             Helpers.AssertMatrix(result, 1, 2, -3, -2);
         }
         
         [Test]
         public void KnownForcesUnknownDisplacementsMatrixCanBeGenerated()
         {
-            Matrix result = SUT.BuildKnownForcesUnknownDisplacementStiffnessMatrix();
+            StiffnessMatrix result = SUT.BuildKnownForcesUnknownDisplacementStiffnessMatrix();
             Helpers.AssertMatrix(result, 1, 1, 5);
         }
         
         [Test]
         public void UnknownForcesKnownDisplacementsMatrixCanBeGenerated()
         {
-            Matrix result = SUT.BuildUnknownForcesKnownDisplacementStiffnessMatrix();
+            StiffnessMatrix result = SUT.BuildUnknownForcesKnownDisplacementStiffnessMatrix();
             Helpers.AssertMatrix(result, 2, 2, 3, 0, 0, 2);
         }
         
         [Test]
         public void UnknownForcesUnknownDisplacementsMatrixCanBeGenerated()
         {
-            Matrix result = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
+            StiffnessMatrix result = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
             Helpers.AssertMatrix(result, 2, 1, -3, -2);
         }
     }

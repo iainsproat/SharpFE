@@ -92,34 +92,32 @@ namespace SharpFE
         /// </summary>
         /// <param name="nodalDegreeOfFreedoms">A list of all the <see cref="NodalDegreeOfFreedom">Nodal Degree of Freedoms</see> for which we wish to get a force.</param>
         /// <returns>A vector of forces at each node for each degree of freedom on that node.</returns>
-        public Vector GetCombinedForcesFor(IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms)
+        public KeyedVector<NodalDegreeOfFreedom> GetCombinedForcesFor(IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms)
         {
             Guard.AgainstNullArgument(nodalDegreeOfFreedoms, "nodalDegreeOfFreedoms");
             
             int numberOfItems = nodalDegreeOfFreedoms.Count;
-            Vector result = new DenseVector(numberOfItems);
+            KeyedVector<NodalDegreeOfFreedom> result = new KeyedVector<NodalDegreeOfFreedom>(nodalDegreeOfFreedoms);
             IDictionary<FiniteElementNode, ForceVector> cache = new Dictionary<FiniteElementNode, ForceVector>();
             ForceVector combinedForceOnNode;
-            NodalDegreeOfFreedom item;
-            for (int i = 0; i < numberOfItems; i++)
+            ;
+            foreach (NodalDegreeOfFreedom item in nodalDegreeOfFreedoms)
             {
-                item = nodalDegreeOfFreedoms[i];
-                
                 if (item == null || item.Node == null)
                 {
                     // garbage in, garbage out!
-                    result[i] = 0;
+                    result[item] = 0;
                     continue;
                 }
                 
                 if (cache.ContainsKey(item.Node))
                 {
                     combinedForceOnNode = cache[item.Node];
-                    result[i] = combinedForceOnNode.GetValue(item.DegreeOfFreedom);
+                    result[item] = combinedForceOnNode.GetValue(item.DegreeOfFreedom);
                 }
                 else
                 {
-                    result[i] = this.GetCombinedForceFor(item, out combinedForceOnNode);
+                    result[item] = this.GetCombinedForceFor(item, out combinedForceOnNode);
                     cache.Add(item.Node, combinedForceOnNode);
                 }
             }

@@ -8,7 +8,6 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using MathNet.Numerics.LinearAlgebra.Generic;
 
     /// <summary>
@@ -62,6 +61,12 @@ namespace SharpFE.Stiffness
             // empty
         }
         
+        public StiffnessMatrix(KeyedMatrix<NodalDegreeOfFreedom> matrix)
+            : base(matrix)
+        {
+            // empty
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class.
         /// </summary>
@@ -79,7 +84,7 @@ namespace SharpFE.Stiffness
         /// <param name="nodeRowKey">The rows of the returned matrix relate to <see cref="NodalDegreeOfFreedom">NodalDegreeOfFreedoms</see>, where the Node property of these NodalDegreeOfFreedom equals the nodeRowKey</param>
         /// <param name="nodeColumnKey">the node which defines the columns of the submatrix</param>
         /// <returns>A submatrix of the stiffness matrix</returns>
-        public Matrix<double> SubMatrix(FiniteElementNode nodeRowKey, FiniteElementNode nodeColumnKey)
+        public StiffnessMatrix SubMatrix(FiniteElementNode nodeRowKey, FiniteElementNode nodeColumnKey)
         {
             // TODO guard against bad parameters
             IList<NodalDegreeOfFreedom> validRowKeys = this.GetAllRowKeysWithMatchingNode(nodeRowKey);
@@ -87,17 +92,13 @@ namespace SharpFE.Stiffness
             int numberValidRowKeys = validRowKeys.Count;
             int numberValidColumnKeys = validColumnKeys.Count;
             
-            Matrix<double> result = new DenseMatrix(numberValidRowKeys, numberValidColumnKeys);
-            NodalDegreeOfFreedom rowKey;
-            NodalDegreeOfFreedom columnKey;
+            StiffnessMatrix result = new StiffnessMatrix(validRowKeys, validColumnKeys);
             
-            for (int i = 0; i < numberValidRowKeys; i++)
+            foreach (NodalDegreeOfFreedom rowKey in validRowKeys)
             {
-                rowKey = validRowKeys[i];
-                for (int j = 0; j < numberValidColumnKeys; j++)
+                foreach (NodalDegreeOfFreedom columnKey in validColumnKeys)
                 {
-                    columnKey = validColumnKeys[j];
-                    result.At(i, j, this.At(rowKey, columnKey));
+                    result.At(rowKey, columnKey, this.At(rowKey, columnKey));
                 }
             }
             

@@ -25,11 +25,7 @@ namespace SharpFE.Core.Tests.Elements
         [SetUp]
         public void SetUp()
         {
-            nodeFactory = new NodeFactory(ModelType.Truss3D);
-            start = nodeFactory.Create(1, 2, 4);
-            end = nodeFactory.Create(2, 1, 6);
-            elementFactory = new ElementFactory();
-            SUT = elementFactory.CreateLinearConstantSpring(start, end, 0);
+            this.CreateFiniteElement1D(1, 2, 4, 2, 1, 6);
         }
         
         [Test]
@@ -56,9 +52,28 @@ namespace SharpFE.Core.Tests.Elements
         }
         
         [Test]
+        public void It_can_calculate_the_yAxis_for_vertical_beam()
+        {
+            this.CreateFiniteElement1D(-10, 0, 0, -10, 0, 10);
+            
+            Vector axisY = SUT.LocalYAxis;
+            
+            Assert.AreNotEqual(0, axisY.SumMagnitudes());
+        }
+        
+        [Test]
         public void It_can_calculate_the_zAxis()
         {
         	Assert.Ignore();
+        }
+        
+        private void CreateFiniteElement1D(double startX, double startY, double startZ, double endX, double endY, double endZ)
+        {
+            nodeFactory = new NodeFactory(ModelType.Truss3D);
+            start = nodeFactory.Create(startX, startY, startZ);
+            end = nodeFactory.Create(endX, endY, endZ);
+            elementFactory = new ElementFactory();
+            SUT = elementFactory.CreateLinearConstantSpring(start, end, 0);
         }
 	}
 }

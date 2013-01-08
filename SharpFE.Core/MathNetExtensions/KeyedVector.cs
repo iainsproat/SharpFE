@@ -23,8 +23,20 @@
 		{
         	this.CheckAndAddKeys(keysForVector);
 		}
+		
+		public KeyedVector(IList<TKey> keysForVector, double initialValue)
+		    : base(keysForVector.Count, initialValue)
+		{
+		    this.CheckAndAddKeys(keysForVector);
+		}
         
         public KeyedVector(Vector vector, IList<TKey> keysForVector)
+        	:base(vector)
+        {
+        	this.CheckAndAddKeys(keysForVector);
+        }
+        
+        public KeyedVector(Vector<double> vector, IList<TKey> keysForVector)
         	:base(vector)
         {
         	this.CheckAndAddKeys(keysForVector);
@@ -54,6 +66,38 @@
                 this._keys = new List<TKey>(value);
             }
         }
+        
+        public KeyedVector<TKey> Add(KeyedVector<TKey> other)
+        {
+            //TODO check that keys of this vector and the keys of the other vector match exactly.
+            //If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
+            
+            Vector<double> result = ((Vector<double>)this).Add((Vector<double>)other);
+            return new KeyedVector<TKey>(result, this.Keys);
+        }
+        
+        public override string ToString()
+		{
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("[");
+            int max = this.Keys.Count;
+            for (int i = 0; i < max; i++)
+            {
+                sb.Append("<");
+                sb.Append(this.Keys[i].ToString());
+                sb.Append(", ");
+                sb.Append(this[i].ToString());
+                sb.Append(">");
+                if (i+1 != max)
+                {
+                    sb.AppendLine();
+                }
+            }
+            
+            sb.Append("]");
+            return sb.ToString();
+		}
+
         
         /// <summary>
         /// Determines the row index in the matrix

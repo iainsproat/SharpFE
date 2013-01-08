@@ -50,7 +50,7 @@ namespace SharpFE.Core.Tests.Stiffness
 			double b = a / 2.0;
 			double c = 0.1408333; //torsion
 			
-//			Assert.Ignore();
+			Assert.Ignore();
 			// FIXME calculate and verify actual values.  The below values are just placeholders for now!
 			StiffnessHelpers.Assert24x24StiffnessMatrix(SUT,
 			                                             1,  0,    0,    0,  0,    0,      -1,  0,    0,    0,  0,    0,      0, 0, 0, 0, 0, 0,    0, 0, 0, 0, 0, 0,

@@ -204,22 +204,37 @@ namespace SharpFE
             this.At(rowIndex, columnIndex, value);
         }
         
-        public KeyedRowColumnMatrix<TColumnKey, TRowKey> TransposeMatrix()
+        public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Transpose()
         {
         	return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(base.Transpose(), this.ColumnKeys, this.RowKeys);
         }
         
+        public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Inverse()
+        {
+            Matrix<double> result = ((Matrix<double>)this).Inverse();
+            return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(result, this.ColumnKeys, this.RowKeys);
+        }
+        
         public KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> Multiply<TOtherRowKey, TOtherColumnKey>(KeyedRowColumnMatrix<TOtherRowKey, TOtherColumnKey> other)
         {
-        	//TODO check that TColumnKey and TOtherRowKey match exactly.
+        	//TODO check that this column keys and the other row keys match exactly, including order.
+            //If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
         	Matrix<double> result = base.Multiply(other);
         	return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
         }
         
-        public KeyedRowColumnMatrix<TRowKey, TColumnKey> MultiplyScalar(double scalar)
+        public new KeyedRowColumnMatrix<TRowKey, TColumnKey> Multiply(double scalar)
         {
         	Matrix<double> result = base.Multiply(scalar);
         	return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(result, this.RowKeys, this.ColumnKeys);
+        }
+        
+        public KeyedVector<TRowKey> Multiply(KeyedVector<TColumnKey> rightSide)
+        {
+            //TODO check that column keys of the matrix and the keys of the vector match exactly.
+            //If the keys match but are in the wrong order, swap the vector items and keys to match exactly
+            Vector<double> result = base.Multiply(rightSide);
+            return new KeyedVector<TRowKey>(result, this.RowKeys);
         }
         
         /// <summary>

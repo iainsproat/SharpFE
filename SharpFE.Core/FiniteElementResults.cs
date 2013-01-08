@@ -8,7 +8,6 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// Stores collections of values which represent the results of a single finite element analysis procedure
@@ -130,20 +129,15 @@ namespace SharpFE
         /// </summary>
         /// <param name="identifiers">The node and degree of freedom combinations.  The order of this list matches the order of the values in the corresponding parameter</param>
         /// <param name="displacements">The value of the displacements.  The order of this vector matches the order of the identifiers in the corresponding parameter</param>
-        public void AddMultipleDisplacements(IList<NodalDegreeOfFreedom> identifiers, Vector displacements)
+        public void AddMultipleDisplacements(KeyedVector<NodalDegreeOfFreedom> displacements)
         {
-            Guard.AgainstNullArgument(identifiers, "identifiers");
             Guard.AgainstNullArgument(displacements, "displacements");
             
-            int numberOfUnknownDisplacements = displacements.Count;
-            if (numberOfUnknownDisplacements != identifiers.Count)
-            {
-                throw new InvalidOperationException("The displacement identifiers do not match the number of unknown displacements we have calculated");
-            }
+            int numberOfDisplacements = displacements.Count;
             
-            for (int i = 0; i < numberOfUnknownDisplacements; i++)
+            for (int i = 0; i < numberOfDisplacements; i++)
             {
-                this.AddDisplacement(identifiers[i], displacements[i]);
+                this.AddDisplacement(displacements.Keys[i], displacements[i]);
             }
         }
         
@@ -152,20 +146,15 @@ namespace SharpFE
         /// </summary>
         /// <param name="identifiers">The node and degree of freedom combinations.  The order of this list matches the order of the values in the corresponding parameter.</param>
         /// <param name="reactions">The value of the reactions.  The order of this vector matches the order of the identifiers in the corresponding parameter.</param>
-        public void AddMultipleReactions(IList<NodalDegreeOfFreedom> identifiers, Vector reactions)
+        public void AddMultipleReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
         {
-            Guard.AgainstNullArgument(identifiers, "identifiers");
             Guard.AgainstNullArgument(reactions, "reactions");
             
-            int numberOfUnknownDisplacements = reactions.Count;
-            if (numberOfUnknownDisplacements != identifiers.Count)
-            {
-                throw new InvalidOperationException("The displacement identifiers do not match the number of unknown displacements we have calculated");
-            }
+            int numberOfReactions = reactions.Count;
             
-            for (int i = 0; i < numberOfUnknownDisplacements; i++)
+            for (int i = 0; i < numberOfReactions; i++)
             {
-                this.AddReaction(identifiers[i], reactions[i]);
+                this.AddReaction(reactions.Keys[i], reactions[i]);
             }
         }
     }

@@ -72,7 +72,7 @@ namespace SharpFE
 		{
 			get
 			{
-				Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[3].AsVector(), this.Nodes[0].AsVector(), this.LocalXAxis);
+				Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[3], this.Nodes[0], this.LocalXAxis);
 				result = (Vector)result.Negate();
 				return result;
 			}

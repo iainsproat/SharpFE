@@ -67,20 +67,30 @@ namespace SharpFE.Core.Tests
         [Test]
         public void GetKnownForceVector()
         {
-            Vector result = SUT.KnownForceVector();
+            KeyedVector<NodalDegreeOfFreedom> result = SUT.KnownForceVector();
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(20, result[0]);
+            
+            // can be accessed by a key
+            NodalDegreeOfFreedom ndof1 = new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X);
+            Assert.AreEqual(20, result[ndof1]);
         }
         
         [Test]
         public void GetKnownDisplacementVector()
         {
-            Vector result = SUT.KnownDisplacementVector();
+            KeyedVector<NodalDegreeOfFreedom> result = SUT.KnownDisplacementVector();
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(0, result[0]);
             Assert.AreEqual(0, result[1]);
+            
+            // can be accessed by a key
+            NodalDegreeOfFreedom ndof1 = new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X);
+            NodalDegreeOfFreedom ndof2 = new NodalDegreeOfFreedom(node3, DegreeOfFreedom.X);
+            Assert.AreEqual(0, result[ndof1]);
+            Assert.AreEqual(0, result[ndof2]);
         }
         
         [Test]

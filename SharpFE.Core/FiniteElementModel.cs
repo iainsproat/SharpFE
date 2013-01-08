@@ -8,7 +8,6 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;    
     using SharpFE;
 
     /// <summary>
@@ -240,20 +239,17 @@ namespace SharpFE
         /// The index of each value corresponds to the index of each <see cref="NodalDegreeOfFreedom" /> returned by DegreeOfFreedomWithKnownForce.
         /// </summary>
         /// <returns>Vector of values of all the known force components.</returns>
-        public Vector KnownForceVector() // TODO expand for different loadcases and construction stages
+        public KeyedVector<NodalDegreeOfFreedom> KnownForceVector()
         {
             IList<NodalDegreeOfFreedom> knownForces = this.DegreesOfFreedomWithKnownForce;
             
-            int numberOfKnownForces = knownForces.Count;
-            Vector result = new DenseVector(numberOfKnownForces);
-            NodalDegreeOfFreedom currentTuple;
+            KeyedVector<NodalDegreeOfFreedom> result = new KeyedVector<NodalDegreeOfFreedom>(knownForces);
             ForceVector nodalForce;
             
-            for (int i = 0; i < numberOfKnownForces; i++)
+            foreach (NodalDegreeOfFreedom currentNodalDegreeOfFreedom in knownForces)
             {
-                currentTuple = knownForces[i];
-                nodalForce = this.forces.GetCombinedForceOn(currentTuple.Node);
-                result[i] = nodalForce.GetValue(currentTuple.DegreeOfFreedom);
+                nodalForce = this.forces.GetCombinedForceOn(currentNodalDegreeOfFreedom.Node);
+                result[currentNodalDegreeOfFreedom] = nodalForce.GetValue(currentNodalDegreeOfFreedom.DegreeOfFreedom);
             }
             
             return result;
@@ -264,12 +260,12 @@ namespace SharpFE
         /// The index of each value corresponds to the index of each <see cref="NodalDegreeOfFreedom" /> returned by DegreeOfFreedomWithKnownDisplacement.
         /// </summary>
         /// <returns>Vector of values of all the known displacement components.</returns>
-        public Vector KnownDisplacementVector() // TODO expand for different loadcases and construction stages
+        public KeyedVector<NodalDegreeOfFreedom> KnownDisplacementVector()
         {
             IList<NodalDegreeOfFreedom> knownDisplacements = this.nodes.ConstrainedNodalDegreeOfFreedoms;
             int numberOfKnownDisplacements = knownDisplacements.Count;
             
-            return new DenseVector(numberOfKnownDisplacements, 0.0); // TODO allow for non-zero displacements
+            return new KeyedVector<NodalDegreeOfFreedom>(knownDisplacements, 0.0); // TODO allow for non-zero initial displacements
         }
         
         /// <summary>
@@ -289,7 +285,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="nodalDegreeOfFreedoms">A list of all the <see cref="NodalDegreeOfFreedom">Nodal Degree of Freedoms</see> for which we wish to get a force.</param>
         /// <returns>A vector of forces at each node for each degree of freedom on that node.</returns>
-        public Vector GetCombinedForcesFor(IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms)
+        public KeyedVector<NodalDegreeOfFreedom> GetCombinedForcesFor(IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms)
         {
             return this.forces.GetCombinedForcesFor(nodalDegreeOfFreedoms);
         }

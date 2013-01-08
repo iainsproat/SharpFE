@@ -6,7 +6,6 @@
  */
 using System;
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra.Double;
 using NUnit.Framework;
 
 namespace SharpFE.Core.Tests
@@ -59,12 +58,12 @@ namespace SharpFE.Core.Tests
 			identifiers.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y));
 			identifiers.Add(new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y));
 			
-			Vector displacements = new DenseVector(3);
+			KeyedVector<NodalDegreeOfFreedom> displacements = new KeyedVector<NodalDegreeOfFreedom>(identifiers);
 			displacements[0] = 10;
 			displacements[1] = 12;
 			displacements[2] = 13;
 			
-			SUT.AddMultipleDisplacements(identifiers, displacements);
+			SUT.AddMultipleDisplacements(displacements);
 			
 			Assert.AreEqual(10, SUT.GetDisplacement(node).X);
 			Assert.AreEqual(12, SUT.GetDisplacement(node).Y);
@@ -79,12 +78,12 @@ namespace SharpFE.Core.Tests
 			identifiers.Add(nDof);
 			identifiers.Add(nDof);
 			
-			Vector displacements = new DenseVector(2);
+			KeyedVector<NodalDegreeOfFreedom> displacements = new KeyedVector<NodalDegreeOfFreedom>(identifiers);
 			displacements[0] = 10;
 			displacements[1] = 11;
 
 			
-			SUT.AddMultipleDisplacements(identifiers, displacements);
+			SUT.AddMultipleDisplacements(displacements);
 			
 			Assert.AreEqual(11, SUT.GetDisplacement(node).X);
 		}
