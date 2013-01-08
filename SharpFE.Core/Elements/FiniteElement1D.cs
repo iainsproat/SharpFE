@@ -145,7 +145,7 @@ namespace SharpFE.Elements
 		/// <returns>A vector representing the 'up' direction.</returns>
 		private Vector UpDirection() // HACK
 		{
-			if (this.LocalXAxis[0] == 0 && this.LocalXAxis[1] == 0 && (this.LocalXAxis[2] == 1 || this.LocalXAxis[2] == -1))
+			if (this.LocalXAxis[0] == 0 && this.LocalXAxis[1] == 0 && this.LocalXAxis[2] != 0)
 			{
 				// localXAxis is in global Z axis direction which will give poor results so assume the local upright direction is in global -x direction
 				return new DenseVector(new double[] { -1, 0, 0 });
