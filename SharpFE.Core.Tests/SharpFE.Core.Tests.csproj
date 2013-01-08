@@ -56,6 +56,7 @@
     <Compile Include="Elements\LinearTrussElementTest.cs" />
     <Compile Include="Elements\LinearConstantSpringTest.cs" />
     <Compile Include="Examples\Beam\BeamIn1DModel.cs" />
+    <Compile Include="Examples\Beam\BeamIn3DModel.cs" />
     <Compile Include="Examples\Membrane\Triangle.cs" />
     <Compile Include="Examples\Truss\SpringIn1DModel.cs" />
     <Compile Include="Examples\Truss\SpringIn2DModel.cs" />

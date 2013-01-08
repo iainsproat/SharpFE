@@ -43,7 +43,10 @@ namespace SharpFE.Elements
 		{
 			get
 			{
-				return this.EndNode.OriginalX - this.StartNode.OriginalX;
+				double lengthX = this.EndNode.OriginalX - this.StartNode.OriginalX;
+				double lengthY = this.EndNode.OriginalY - this.StartNode.OriginalY;
+				double lengthZ = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
+				return Math.Sqrt(lengthX * lengthX + lengthY * lengthY + lengthZ * lengthZ);
 			}
 		}
 		

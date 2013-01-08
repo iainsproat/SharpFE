@@ -11,9 +11,10 @@
 		/// <summary>
 		/// The global stiffness matrix of this element
 		/// </summary>
-		private StiffnessMatrix stiffnessMatrix;
+		private StiffnessMatrix _globalStiffnessMatrix;
 		
-		private int hashAtWhichElementStiffnessMatrixWasLastBuilt;
+		private int hashAtWhichGlobalStiffnessMatrixWasLastBuilt;
+		private int hashAtWhichLocalStiffnessMatrixWasLastBuilt;
 		
 		public StiffnessMatrixBuilder(FiniteElement finiteElement)
 		{
@@ -29,6 +30,14 @@
 			private set;
 		}
 		
+		public StiffnessMatrix LocalStiffnessMatrix
+		{
+			get
+			{
+				return this.GetLocalStiffnessMatrix();
+			}
+		}
+		
 		/// <summary>
 		/// Gets the stiffness matrix of this element.
 		/// </summary>
@@ -36,17 +45,17 @@
 		{
 			get
 			{
-				if (this.Element.IsDirty(this.hashAtWhichElementStiffnessMatrixWasLastBuilt))
+				if (this.Element.IsDirty(this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt))
 				{
 					this.BuildGlobalStiffnessMatrix();
 				}
 				
-				return this.stiffnessMatrix;
+				return this._globalStiffnessMatrix;
 			}
 			
 			private set
 			{
-				this.stiffnessMatrix = value;
+				this._globalStiffnessMatrix = value;
 			}
 		}
 		
@@ -81,7 +90,7 @@
 				throw new ArgumentNullException("columnNode");
 			}
 			
-			if (this.Element.IsDirty(this.hashAtWhichElementStiffnessMatrixWasLastBuilt))
+			if (this.Element.IsDirty(this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt))
 			{
 				this.BuildGlobalStiffnessMatrix();
 			}
@@ -106,9 +115,9 @@
 			Matrix kt = (Matrix)k.Multiply(t); // K*T
 			Matrix ttransposed = (Matrix)t.Transpose(); // T^
 			Matrix ttransposedkt = (Matrix)ttransposed.Multiply(kt); // (T^)*K*T
-			this.stiffnessMatrix = new StiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
+			this._globalStiffnessMatrix = new StiffnessMatrix(ttransposedkt, this.Element.SupportedNodalDegreeOfFreedoms, this.Element.SupportedNodalDegreeOfFreedoms);
 			
-			this.hashAtWhichElementStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
+			this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
 		}
 		
 		/// <summary>
