@@ -83,6 +83,7 @@
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\StiffnessHelpers.cs" />
     <Compile Include="Stiffness\StiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderTestBase.cs" />

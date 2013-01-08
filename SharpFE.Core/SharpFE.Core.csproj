@@ -97,6 +97,7 @@
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilder.cs" />
