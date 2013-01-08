@@ -97,5 +97,16 @@ namespace SharpFE
         	
         	return newTriangle;
         }
+        
+        public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
+        {
+        	LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
+        	if (this.repository != null)
+        	{
+        		this.repository.Add(newQuad);
+        	}
+        	
+        	return newQuad;
+        }
     }
 }

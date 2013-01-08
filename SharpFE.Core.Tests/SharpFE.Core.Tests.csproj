@@ -53,6 +53,7 @@
     <Compile Include="Elements\Linear3DBeamTest.cs" />
     <Compile Include="Elements\Linear1DBeamElementTest.cs" />
     <Compile Include="Elements\LinearConstantStrainTriangleTest.cs" />
+    <Compile Include="Elements\LinearConstantStressQuadrilateralTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
     <Compile Include="Elements\LinearConstantSpringTest.cs" />
     <Compile Include="Examples\Beam\BeamIn1DModel.cs" />

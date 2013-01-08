@@ -7,7 +7,7 @@ namespace SharpFE.Examples.Membrane
 	public class Triangle
 	{
 		[Test]
-		public void FourTriangleWall()
+		public void TwoTriangleWall()
 		{
 			FiniteElementModel model = new FiniteElementModel(ModelType.Full3D); // we will create and analyze a 2D slab system
 			FiniteElementNode node1 = model.NodeFactory.Create(0.0, 0.0, 0.0); // create a node at the origin

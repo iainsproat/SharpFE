@@ -1,23 +1,25 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="BeamIn1DModel.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpFE
 {
+	using System;
+	using MathNet.Numerics.LinearAlgebra.Double;
+	
 	/// <summary>
-	/// Triangular shaped element which calculates membrane forces only
+	/// An implementation of Quad4
 	/// </summary>
-	public class LinearConstantStrainTriangle : FiniteElement, IHasMaterial
+	public class LinearConstantStressQuadrilateral : FiniteElement, IHasMaterial
 	{
-		public LinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial mat, double t)
+		public LinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial mat, double t)
 		{
 			this.AddNode(node0);
 			this.AddNode(node1);
 			this.AddNode(node2);
+			this.AddNode(node3);
 			
 			Guard.AgainstNullArgument(mat, "mat");
 			Guard.AgainstBadArgument(
@@ -39,7 +41,6 @@ namespace SharpFE
 			get;
 			private set;
 		}
-		
 		
 		/// <summary>
 		/// Gets or sets the vector representing the local x axis
@@ -71,7 +72,7 @@ namespace SharpFE
 		{
 			get
 			{
-				Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[2].AsVector(), this.Nodes[0].AsVector(), this.LocalXAxis);
+				Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[3].AsVector(), this.Nodes[0].AsVector(), this.LocalXAxis);
 				result = (Vector)result.Negate();
 				return result;
 			}
@@ -81,7 +82,7 @@ namespace SharpFE
 		{
 			get
 			{
-				return Geometry.AreaTriangle(this.Nodes[0], this.Nodes[1], this.Nodes[2]);
+				return Geometry.AreaQuadrilateral(this.Nodes[0], this.Nodes[1], this.Nodes[2], this.Nodes[3]);
 			}
 		}
 		
@@ -101,11 +102,9 @@ namespace SharpFE
 			}
 		}
 		
-		
-		
 		protected override void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd)
 		{
-			if (this.Nodes.Count > 2)
+			if (this.Nodes.Count > 3)
 			{
 				throw new ArgumentException("Cannot add more than 3 nodes");
 			}

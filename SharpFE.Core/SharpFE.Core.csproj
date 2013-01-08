@@ -57,6 +57,7 @@
     <Compile Include="Elements\Linear3DBeam.cs" />
     <Compile Include="Elements\Linear1DBeam.cs" />
     <Compile Include="Elements\LinearConstantStrainTriangle.cs" />
+    <Compile Include="Elements\LinearConstantStressQuadrilateral.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
