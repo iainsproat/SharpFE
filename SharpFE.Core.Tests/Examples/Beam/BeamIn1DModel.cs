@@ -8,10 +8,10 @@ using NUnit.Framework;
 
 namespace SharpFE.Examples.Beam
 {
-	[TestFixture]
-	public class BeamIn1DModel
-	{
-		/// <summary>
+    [TestFixture]
+    public class BeamIn1DModel
+    {
+        /// <summary>
         /// Creates a cantilevered beam between two nodes spaced 1 metre apart.
         /// The beam is fully fixed at the first node and is free at the second node.
         /// We apply a downwards force at the second node
@@ -27,24 +27,24 @@ namespace SharpFE.Examples.Beam
             FiniteElementNode node2 = model.NodeFactory.Create(1.0); // create a second node at a distance 1 metre along the X axis
             
             // TODO
-            IMaterial material = new GenericElasticMaterial(0, 200000, 0, 0);
-			ICrossSection section = new SolidRectangle(0.5, 0.1);
-			
-			model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
+            ICrossSection section = new SolidRectangle(0.1, 0.1);
             
-            ForceVector force = model.ForceFactory.CreateFor1DBeam(-10.0, 0); // Create a force of 10 Newtons in the z direction
+            model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            
+            ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0); // Create a force of 10 Newtons in the z direction
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
             
             IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
             FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
             
             ReactionVector reaction = results.GetReaction(node1); //get the reaction at the first node
-            Assert.AreEqual(10, reaction.Z, 0.001);   // Check that we have calculated a reaction of 10 Newtons in the Z-axis
-            Assert.AreEqual(-10, reaction.YY, 0.001); // Check that we have calculated a reaction of -10 NewtonMetres around the YY axis.
+            Assert.AreEqual(10000, reaction.Z, 0.001);   // Check that we have calculated a reaction of 10 Newtons in the Z-axis
+            Assert.AreEqual(-10000, reaction.YY, 0.001); // Check that we have calculated a reaction of -10 NewtonMetres around the YY axis.
             
             DisplacementVector displacement = results.GetDisplacement(node2);  // get the displacement at the second node
-            Assert.AreNotEqual(0.0, displacement.Z); // TODO calculate the actual value, rather than just checking we have any value
-            Assert.AreNotEqual(0.0, displacement.YY); // TODO calculate the actual value, rather than just checking we have any value
+            Assert.AreEqual(-0.00192, displacement.Z, 0.0005);
+            Assert.AreEqual(2.86, displacement.YY);
         }
         
         /// <summary>
@@ -64,9 +64,9 @@ namespace SharpFE.Examples.Beam
             
             // TODO
             IMaterial material = new GenericElasticMaterial(0, 200000, 0, 0);
-			ICrossSection section = new SolidRectangle(0.5, 0.1);
-			
-			model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            ICrossSection section = new SolidRectangle(0.5, 0.1);
+            
+            model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
             
             ForceVector moment = model.ForceFactory.CreateFor1DBeam(0, 10); // Create a clockwise(?) moment of 10 Newtonmetres around the yy axis
             model.ApplyForceToNode(moment, node1); // Apply that moment to the first node
@@ -84,7 +84,7 @@ namespace SharpFE.Examples.Beam
             
             DisplacementVector displacement = results.GetDisplacement(node1);  // get the displacement at the second node
             Assert.AreEqual(0, displacement.Z, 0.001); // Check that there is no displacement at the node
-            double angleAtNode1 = displacement.YY; 
+            double angleAtNode1 = displacement.YY;
             
             displacement = results.GetDisplacement(node2);
             Assert.AreEqual(0, displacement.Z, 0.001);
@@ -108,7 +108,7 @@ namespace SharpFE.Examples.Beam
         public void PortalFrame()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D); // we will create and analyze a 3D frame system
-            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(-10,0); 
+            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(-10,0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
             model.ConstrainNode(node1, DegreeOfFreedom.YY);
@@ -121,30 +121,38 @@ namespace SharpFE.Examples.Beam
             model.ConstrainNode(node5, DegreeOfFreedom.X);
             model.ConstrainNode(node5, DegreeOfFreedom.Z);
             model.ConstrainNode(node5, DegreeOfFreedom.YY);
-    
-            IMaterial material = new GenericElasticMaterial(0, 2000, 0.2, 1000);
-            ICrossSection section = new SolidRectangle(0.5, 0.1);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
+            ICrossSection section = new SolidRectangle(0.1, 0.1);
             
             model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
             model.ElementFactory.CreateLinear1DBeam(node2,node3,material,section);
             model.ElementFactory.CreateLinear1DBeam(node3,node4,material,section);
             model.ElementFactory.CreateLinear1DBeam(node4,node5,material,section);
             
-            ForceVector force = model.ForceFactory.Create(0, 0, 10, 0, 0, 0);
+            ForceVector force = model.ForceFactory.Create(0, 0, 10000, 0, 0, 0);
             model.ApplyForceToNode(force, node3);
             
             IFiniteElementSolver solver = new LinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
             DisplacementVector node2Displacement = results.GetDisplacement(node2);
-            Assert.IsTrue(node2Displacement.X > 0);
+            Console.WriteLine(node2Displacement);
+            Assert.AreEqual(0.0972, node2Displacement.X, 0.001);
+            Assert.AreEqual(0, node2Displacement.X, 0.001);
             
             DisplacementVector node3Displacement = results.GetDisplacement(node3);
-            Assert.AreEqual(0, node3Displacement.X);
-            Assert.IsTrue(node3Displacement.Z > 0);
+            Assert.AreEqual(0, node3Displacement.X, 0.001);
+            Assert.AreEqual(0.243, node3Displacement.X, 0.001);
             
             DisplacementVector node4Displacement = results.GetDisplacement(node4);
-            Assert.IsTrue(node4Displacement.X < 0);
+            Assert.AreEqual(-0.0972, node4Displacement.X);
+            Assert.AreEqual(0, node4Displacement.X, 0.001);
+            
+            ReactionVector node1Reaction = results.GetReaction(node1);
+            Console.WriteLine(node1Reaction);
+            ReactionVector node5Reaction = results.GetReaction(node5);
+            Console.WriteLine(node5Reaction);
         }
-	}
+    }
 }
