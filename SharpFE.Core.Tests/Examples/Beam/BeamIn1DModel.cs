@@ -130,15 +130,21 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node3,node4,material,section);
             model.ElementFactory.CreateLinear1DBeam(node4,node5,material,section);
             
-            ForceVector force = model.ForceFactory.Create(10, 0, 0,0,0,0);
+            ForceVector force = model.ForceFactory.Create(0, 0, 10, 0, 0, 0);
             model.ApplyForceToNode(force, node3);
             
             IFiniteElementSolver solver = new LinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
-            DisplacementVector displacement = results.GetDisplacement(node2);
-            Assert.AreNotEqual(0.0, displacement.X);
-            Assert.AreEqual(0.0, displacement.Y, 0.001);
+            DisplacementVector node2Displacement = results.GetDisplacement(node2);
+            Assert.IsTrue(node2Displacement.X > 0);
+            
+            DisplacementVector node3Displacement = results.GetDisplacement(node3);
+            Assert.AreEqual(0, node3Displacement.X);
+            Assert.IsTrue(node3Displacement.Z > 0);
+            
+            DisplacementVector node4Displacement = results.GetDisplacement(node4);
+            Assert.IsTrue(node4Displacement.X < 0);
         }
 	}
 }
