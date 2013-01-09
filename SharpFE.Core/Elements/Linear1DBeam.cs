@@ -31,5 +31,32 @@
                     return false;
             }
         }
+        
+        /// <summary>
+        /// Elastic stiffness per metre length.
+        /// </summary>
+        public double StiffnessEA
+        {
+            get
+            {
+                return this.Material.YoungsModulus * this.CrossSection.Area;
+            }
+        }
+        
+        public double ShearStiffnessGAz
+        {
+            get
+            {
+                return this.Material.ShearModulusElasticity * this.CrossSection.Area ;
+            }
+        }
+        
+        public double BendingStiffnessEIy
+        {
+            get
+            {
+                return this.Material.YoungsModulus * this.CrossSection.SecondMomentOfAreaAroundYY;
+            }
+        }
     }
 }

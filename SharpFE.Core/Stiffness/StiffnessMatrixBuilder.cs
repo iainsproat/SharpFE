@@ -76,11 +76,6 @@
                 throw new ArgumentNullException("columnNode");
             }
             
-            if (this.Element.IsDirty(this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt))
-            {
-                this.BuildGlobalStiffnessMatrix();
-            }
-            
             return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
         }
         

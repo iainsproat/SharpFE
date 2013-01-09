@@ -117,8 +117,8 @@ namespace SharpFE.Stiffness
                 "columnKeys");
             
             StiffnessMatrix result = new StiffnessMatrix(rowKeys, columnKeys);
+            
             IList<FiniteElement> connectedElements;
-
             foreach (NodalDegreeOfFreedom row in rowKeys)
             {
                 foreach (NodalDegreeOfFreedom column in columnKeys)

@@ -51,7 +51,7 @@
     <Compile Include="Elements\FiniteElement1DTest.cs" />
     <Compile Include="Elements\FiniteElementTest.cs" />
     <Compile Include="Elements\Linear3DBeamTest.cs" />
-    <Compile Include="Elements\Linear1DBeamElementTest.cs" />
+    <Compile Include="Elements\Linear1DBeamTest.cs" />
     <Compile Include="Elements\LinearConstantStrainTriangleTest.cs" />
     <Compile Include="Elements\LinearConstantStressQuadrilateralTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
