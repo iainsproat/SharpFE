@@ -12,11 +12,6 @@ namespace SharpFE.Core.Tests.Stiffness
     [TestFixture]
     public class StiffnessMatrixBuilderTest : LinearConstantSpringStiffnessMatrixBuilderTestBase
     {
-        [SetUp]
-        public void Setup()
-        {
-            base.SetUp();
-        }
         
         [Test]
         public void CanCreateRotationMatrixForSpringAlignedToGlobalXAxis()

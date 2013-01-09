@@ -10,12 +10,12 @@ using MathNet.Numerics.LinearAlgebra.Generic;
 
 namespace SharpFE
 {
-	/// <summary>
-	/// Description of KeyedRowColumnMatrix.
-	/// </summary>
-	public class KeyedRowColumnMatrix<TRowKey, TColumnKey> : DenseMatrix
-	{
-		/// <summary>
+    /// <summary>
+    /// Description of KeyedRowColumnMatrix.
+    /// </summary>
+    public class KeyedRowColumnMatrix<TRowKey, TColumnKey> : DenseMatrix
+    {
+        /// <summary>
         /// The keys which identify the rows of this keyed matrix
         /// </summary>
         private IList<TRowKey> keysForRows;
@@ -77,7 +77,7 @@ namespace SharpFE
         {
             get
             {
-            	return ((List<TRowKey>)this.keysForRows).AsReadOnly();
+                return ((List<TRowKey>)this.keysForRows).AsReadOnly();
             }
             
             private set
@@ -93,7 +93,7 @@ namespace SharpFE
         {
             get
             {
-            	return ((List<TColumnKey>)this.keysForColumns).AsReadOnly();
+                return ((List<TColumnKey>)this.keysForColumns).AsReadOnly();
             }
             
             private set
@@ -206,7 +206,7 @@ namespace SharpFE
         
         public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Transpose()
         {
-        	return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(base.Transpose(), this.ColumnKeys, this.RowKeys);
+            return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(base.Transpose(), this.ColumnKeys, this.RowKeys);
         }
         
         public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Inverse()
@@ -217,22 +217,22 @@ namespace SharpFE
         
         public KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> Multiply<TOtherRowKey, TOtherColumnKey>(KeyedRowColumnMatrix<TOtherRowKey, TOtherColumnKey> other)
         {
-        	//TODO check that this column keys and the other row keys match exactly, including order.
-            //If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
-        	Matrix<double> result = base.Multiply(other);
-        	return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
+            ////TODO check that this column keys and the other row keys match exactly, including order.
+            // If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            Matrix<double> result = base.Multiply(other);
+            return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
         }
         
         public new KeyedRowColumnMatrix<TRowKey, TColumnKey> Multiply(double scalar)
         {
-        	Matrix<double> result = base.Multiply(scalar);
-        	return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(result, this.RowKeys, this.ColumnKeys);
+            Matrix<double> result = base.Multiply(scalar);
+            return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(result, this.RowKeys, this.ColumnKeys);
         }
         
         public KeyedVector<TRowKey> Multiply(KeyedVector<TColumnKey> rightSide)
         {
-            //TODO check that column keys of the matrix and the keys of the vector match exactly.
-            //If the keys match but are in the wrong order, swap the vector items and keys to match exactly
+            ////TODO check that column keys of the matrix and the keys of the vector match exactly.
+            // If the keys match but are in the wrong order, swap the vector items and keys to match exactly
             Vector<double> result = base.Multiply(rightSide);
             return new KeyedVector<TRowKey>(result, this.RowKeys);
         }
@@ -310,5 +310,5 @@ namespace SharpFE
             
             return this.ColumnKeys[columnIndex];
         }
-	}
+    }
 }

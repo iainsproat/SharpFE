@@ -96,11 +96,10 @@ namespace SharpFE
         {
             Guard.AgainstNullArgument(nodalDegreeOfFreedoms, "nodalDegreeOfFreedoms");
             
-            int numberOfItems = nodalDegreeOfFreedoms.Count;
             KeyedVector<NodalDegreeOfFreedom> result = new KeyedVector<NodalDegreeOfFreedom>(nodalDegreeOfFreedoms);
             IDictionary<FiniteElementNode, ForceVector> cache = new Dictionary<FiniteElementNode, ForceVector>();
             ForceVector combinedForceOnNode;
-            ;
+
             foreach (NodalDegreeOfFreedom item in nodalDegreeOfFreedoms)
             {
                 if (item == null || item.Node == null)

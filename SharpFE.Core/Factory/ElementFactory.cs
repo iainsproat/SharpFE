@@ -56,57 +56,57 @@ namespace SharpFE
         
         public LinearTruss CreateLinearTruss(FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
         {
-        	LinearTruss newTruss = new LinearTruss(node1, node2, material, crossSection);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newTruss);
-        	}
-        	
-        	return newTruss;
+            LinearTruss newTruss = new LinearTruss(node1, node2, material, crossSection);
+            if (this.repository != null)
+            {
+                this.repository.Add(newTruss);
+            }
+            
+            return newTruss;
         }
         
         public Linear1DBeam CreateLinear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
-        	Linear1DBeam newBeam = new Linear1DBeam(start, end, material, crossSection);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newBeam);
-        	}
-        	
-        	return newBeam;
+            Linear1DBeam newBeam = new Linear1DBeam(start, end, material, crossSection);
+            if (this.repository != null)
+            {
+                this.repository.Add(newBeam);
+            }
+            
+            return newBeam;
         }
         
         public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
-        	Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newBeam);
-        	}
-        	
-        	return newBeam;
+            Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
+            if (this.repository != null)
+            {
+                this.repository.Add(newBeam);
+            }
+            
+            return newBeam;
         }
         
         public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
         {
-        	LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newTriangle);
-        	}
-        	
-        	return newTriangle;
+            LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
+            if (this.repository != null)
+            {
+                this.repository.Add(newTriangle);
+            }
+            
+            return newTriangle;
         }
         
         public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
         {
-        	LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newQuad);
-        	}
-        	
-        	return newQuad;
+            LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
+            if (this.repository != null)
+            {
+                this.repository.Add(newQuad);
+            }
+            
+            return newQuad;
         }
     }
 }

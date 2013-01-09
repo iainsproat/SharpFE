@@ -19,7 +19,7 @@ namespace SharpFE.Core.Tests.Stiffness
 		private GenericElasticMaterial material;
 		private SolidRectangle section;
 		private Linear1DBeam beam;
-		private IStiffnessMatrixBuilder SUT;
+		private IStiffnessMatrixBuilder<Linear1DBeam> SUT;
 		
 		[SetUp]
 		public void SetUp()

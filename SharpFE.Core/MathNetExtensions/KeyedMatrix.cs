@@ -73,12 +73,12 @@ namespace SharpFE
             // empty
         }
         
-        public KeyedMatrix<TKey> Multiply(KeyedMatrix<TKey> other)
+        public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
-            //TODO check that this column keys and the other row keys match exactly, including order.
-            //If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            ////TODO check that this column keys and the other row keys match exactly, including order.
+            // If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
             Matrix<double> result = ((Matrix<double>)this).Multiply((Matrix<double>)other);
-        	return new KeyedMatrix<TKey>(result, this.RowKeys, other.ColumnKeys);
+            return new KeyedMatrix<TKey>(result, this.RowKeys, other.ColumnKeys);
         }
         
         /// <summary>
@@ -112,7 +112,7 @@ namespace SharpFE
         /// <returns>A matrix which is a submatrix of this KeyedMatrix</returns>
         public new KeyedMatrix<TKey> SubMatrix(TKey rowKey, int rowCount, TKey columnKey, int columnCount)
         {
-        	return (KeyedMatrix<TKey>)base.SubMatrix(rowKey, rowCount, columnKey, columnCount);
+            return (KeyedMatrix<TKey>)base.SubMatrix(rowKey, rowCount, columnKey, columnCount);
         }
         
         /// <summary>
@@ -123,7 +123,7 @@ namespace SharpFE
         /// <returns>A KeyedMatrix which contains values from the requested sub-matrix</returns>
         public new KeyedMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
         {
-        	return (KeyedMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
+            return (KeyedMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
         }
     }
 }

@@ -89,8 +89,6 @@ namespace SharpFE.Stiffness
             // TODO guard against bad parameters
             IList<NodalDegreeOfFreedom> validRowKeys = this.GetAllRowKeysWithMatchingNode(nodeRowKey);
             IList<NodalDegreeOfFreedom> validColumnKeys = this.GetAllColumnKeysWithMatchingNode(nodeColumnKey);
-            int numberValidRowKeys = validRowKeys.Count;
-            int numberValidColumnKeys = validColumnKeys.Count;
             
             StiffnessMatrix result = new StiffnessMatrix(validRowKeys, validColumnKeys);
             

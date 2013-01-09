@@ -170,11 +170,11 @@ namespace SharpFE
         /// <param name="degreeOfFreedomToConstrain">the degree of freedom in which to constrain the node.</param>
         public void ConstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToConstrain)
         {
-        	if (!this.ModelType.IsAllowedDegreeOfFreedomForBoundaryConditions(degreeOfFreedomToConstrain))
-        	{
-        		throw new ArgumentException("Cannot constrain this degree of freedom in this model type");
-        	}
-        	
+            if (!this.ModelType.IsAllowedDegreeOfFreedomForBoundaryConditions(degreeOfFreedomToConstrain))
+            {
+                throw new ArgumentException("Cannot constrain this degree of freedom in this model type");
+            }
+            
             this.nodes.ConstrainNode(node, degreeOfFreedomToConstrain);
         }
         
@@ -228,7 +228,7 @@ namespace SharpFE
             IList<FiniteElement> response = this.elements.GetAllElementsDirectlyConnecting(node1, node2);
             if (response == null)
             {
-            	return new List<FiniteElement>(0);
+                return new List<FiniteElement>(0);
             }
             
             return response;

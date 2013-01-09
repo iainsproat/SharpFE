@@ -1,64 +1,64 @@
 ﻿namespace SharpFE
 {
-	using System;
-	using System.Collections.Generic;
-	
-	using MathNet.Numerics.LinearAlgebra.Double;
-	using MathNet.Numerics.LinearAlgebra.Generic;
-	
-	/// <summary>
-	/// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
+    using System;
+    using System.Collections.Generic;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
+    using MathNet.Numerics.LinearAlgebra.Generic;
+    
+    /// <summary>
+    /// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
     /// This is roughly analagous to what a Dictionary is to a List.
-	/// </summary>
+    /// </summary>
     /// <typeparam name="TKey">The type of the instances which form the keys to this KeyedMatrix</typeparam>
-	public class KeyedVector<TKey> : DenseVector
-	{
-		/// <summary>
+    public class KeyedVector<TKey> : DenseVector
+    {
+        /// <summary>
         /// The keys which identify the items of this keyed vector
         /// </summary>
         private IList<TKey> _keys;
-        	
-		public KeyedVector(IList<TKey> keysForVector)
-        	: base(keysForVector.Count)
-		{
-        	this.CheckAndAddKeys(keysForVector);
-		}
-		
-		public KeyedVector(IList<TKey> keysForVector, double initialValue)
-		    : base(keysForVector.Count, initialValue)
-		{
-		    this.CheckAndAddKeys(keysForVector);
-		}
+            
+        public KeyedVector(IList<TKey> keysForVector)
+            : base(keysForVector.Count)
+        {
+            this.CheckAndAddKeys(keysForVector);
+        }
+        
+        public KeyedVector(IList<TKey> keysForVector, double initialValue)
+            : base(keysForVector.Count, initialValue)
+        {
+            this.CheckAndAddKeys(keysForVector);
+        }
         
         public KeyedVector(Vector vector, IList<TKey> keysForVector)
-        	:base(vector)
+            : base(vector)
         {
-        	this.CheckAndAddKeys(keysForVector);
+            this.CheckAndAddKeys(keysForVector);
         }
         
         public KeyedVector(Vector<double> vector, IList<TKey> keysForVector)
-        	:base(vector)
+            : base(vector)
         {
-        	this.CheckAndAddKeys(keysForVector);
+            this.CheckAndAddKeys(keysForVector);
         }
         
         public double this[TKey index]
         {
-        	get
-        	{
-        		return this[this.KeyIndex(index)];
-        	}
-        	set
-        	{
-        		this[this.KeyIndex(index)] = value;
-        	}
+            get
+            {
+                return this[this.KeyIndex(index)];
+            }
+            set
+            {
+                this[this.KeyIndex(index)] = value;
+            }
         }
         
         public IList<TKey> Keys
         {
             get
             {
-            	return ((List<TKey>)this._keys).AsReadOnly();
+                return ((List<TKey>)this._keys).AsReadOnly();
             }
             
             private set
@@ -69,15 +69,15 @@
         
         public KeyedVector<TKey> Add(KeyedVector<TKey> other)
         {
-            //TODO check that keys of this vector and the keys of the other vector match exactly.
-            //If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
+            ////TODO check that keys of this vector and the keys of the other vector match exactly.
+            // If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
             
             Vector<double> result = ((Vector<double>)this).Add((Vector<double>)other);
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
         public override string ToString()
-		{
+        {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("[");
             int max = this.Keys.Count;
@@ -86,9 +86,9 @@
                 sb.Append("<");
                 sb.Append(this.Keys[i].ToString());
                 sb.Append(", ");
-                sb.Append(this[i].ToString());
+                sb.Append(this[i]);
                 sb.Append(">");
-                if (i+1 != max)
+                if ((i + 1) != max)
                 {
                     sb.AppendLine();
                 }
@@ -96,7 +96,7 @@
             
             sb.Append("]");
             return sb.ToString();
-		}
+        }
 
         
         /// <summary>
@@ -111,7 +111,7 @@
         
         private TKey KeyFromIndex(int index)
         {
-        	return this._keys[index];
+            return this._keys[index];
         }
         
         /// <summary>
@@ -131,5 +131,5 @@
             // TODO check for duplicate keys
            this.Keys = keysForVector;
         }
-	}
+    }
 }

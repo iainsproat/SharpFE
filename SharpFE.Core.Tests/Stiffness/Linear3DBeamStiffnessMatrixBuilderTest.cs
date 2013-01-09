@@ -14,7 +14,7 @@
         private GenericElasticMaterial material;
         private SolidRectangle section;
         private Linear3DBeam beam;
-        private IStiffnessMatrixBuilder SUT;
+        private IStiffnessMatrixBuilder<Linear3DBeam> SUT;
         
         [SetUp]
         public void SetUp()

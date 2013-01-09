@@ -46,14 +46,14 @@ namespace SharpFE
         
         public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
         {
-        	Guard.AgainstNullArgument(node1, "node1");
-        	Guard.AgainstNullArgument(node2, "node2");
-        	
-        	IList<FiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
-        	IList<FiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
-        	return new List<FiniteElement>(elementsConnectedToNode1.Intersect(elementsConnectedToNode2));
-        	
-        	//TODO cache results, and also node2,node1 (which will be the same)
+            Guard.AgainstNullArgument(node1, "node1");
+            Guard.AgainstNullArgument(node2, "node2");
+            
+            IList<FiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
+            IList<FiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
+            return new List<FiniteElement>(elementsConnectedToNode1.Intersect(elementsConnectedToNode2));
+            
+            ////TODO cache results, and also node2,node1 (which will be the same)
         }
         
         /// <summary>

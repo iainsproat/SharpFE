@@ -62,9 +62,6 @@ namespace SharpFE
             KeyedVector<NodalDegreeOfFreedom> displacements = this.CalculateUnknownDisplacements();
             KeyedVector<NodalDegreeOfFreedom> reactions = this.CalculateUnknownReactions(displacements);
             
-            IList<NodalDegreeOfFreedom> displacementIdentifiers = this.model.DegreesOfFreedomWithUnknownDisplacement;
-            IList<NodalDegreeOfFreedom> reactionIdentifiers = this.model.DegreesOfFreedomWithUnknownForce;
-            
             reactions = this.CombineExternalForcesOnReactionNodesWithReactions(reactions);
             
             return this.CreateResults(displacements, reactions);

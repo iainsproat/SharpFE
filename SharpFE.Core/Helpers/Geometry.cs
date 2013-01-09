@@ -12,7 +12,7 @@ namespace SharpFE
     /// <summary>
     /// Description of Geometry.
     /// </summary>
-    public class Geometry
+    public static class Geometry
     {
         public static Vector VectorBetweenPointAndLine(FiniteElementNode point, FiniteElementNode pointOnLine, Vector vectorDefiningLine)
         {

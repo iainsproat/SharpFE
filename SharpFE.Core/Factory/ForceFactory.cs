@@ -68,18 +68,18 @@ namespace SharpFE
         
         public ForceVector CreateFor1DBeam(double valueOfZComponent, double valueOfMomentAboutYY)
         {
-        	if (this.modelType != ModelType.Beam1D)
-        	{
-        		throw new InvalidOperationException("Can only use this method when a 1D Beam system is in use");
-        	}
-        	
-        	ForceVector newForce = new ForceVector(0, 0, valueOfZComponent, 0, valueOfMomentAboutYY, 0);
-        	if (this.repository != null)
-        	{
-        		this.repository.Add(newForce);
-        	}
-        	
-        	return newForce;
+            if (this.modelType != ModelType.Beam1D)
+            {
+                throw new InvalidOperationException("Can only use this method when a 1D Beam system is in use");
+            }
+            
+            ForceVector newForce = new ForceVector(0, 0, valueOfZComponent, 0, valueOfMomentAboutYY, 0);
+            if (this.repository != null)
+            {
+                this.repository.Add(newForce);
+            }
+            
+            return newForce;
         }
         
         /// <summary>
@@ -90,7 +90,7 @@ namespace SharpFE
         /// <returns>The force vector which has been created</returns>
         public ForceVector Create(double valueOfXComponent, double valueOfYComponent)
         {
-        	if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
+            if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
             {
                 throw new InvalidOperationException("Cannot create a boundary condition along the x-axis for this model type.");
             }
@@ -117,7 +117,7 @@ namespace SharpFE
         /// <returns>The force vector which has been created</returns>
         public ForceVector CreateForTruss(double valueOfXComponent, double valueOfZComponent)
         {
-        	if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
+            if (!this.modelType.IsAllowedDegreeOfFreedomForBoundaryConditions(DegreeOfFreedom.X))
             {
                 throw new InvalidOperationException("Cannot create a boundary condition along the x-axis for this model type.");
             }
@@ -144,7 +144,7 @@ namespace SharpFE
         /// <returns>The force vector which has been created</returns>
         public ForceVector Create(double valueOfXComponent, double valueOfYComponent, double valueOfZComponent, double valueOfXXComponent, double valueOfYYComponent, double valueOfZZComponent)
         {
-        	//TODO
+            ////TODO
             
             ForceVector newForce = new ForceVector(valueOfXComponent, valueOfYComponent,  valueOfZComponent, valueOfXXComponent, valueOfYYComponent, valueOfZZComponent);
             if (this.repository != null)
