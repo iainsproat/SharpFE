@@ -77,6 +77,7 @@ namespace SharpFE
         
         /// <summary>
         /// Gets the component of translation around the XX-axis.
+        /// Units are radians.
         /// </summary>
         public double XX
         {
@@ -85,6 +86,7 @@ namespace SharpFE
         
         /// <summary>
         /// Gets the component of translation around the XX-axis.
+        /// Units are radians.
         /// </summary>
         public double YY
         {
@@ -93,6 +95,7 @@ namespace SharpFE
         
         /// <summary>
         /// Gets the component of translation around the XX-axis.
+        /// Units are radians.
         /// </summary>
         public double ZZ
         {

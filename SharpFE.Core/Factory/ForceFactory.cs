@@ -68,7 +68,7 @@ namespace SharpFE
         
         public ForceVector CreateFor1DBeam(double valueOfZComponent, double valueOfMomentAboutYY)
         {
-            if (this.modelType != ModelType.Beam1D)
+            if (!(this.modelType == ModelType.Beam1D || this.modelType == ModelType.Frame2D))
             {
                 throw new InvalidOperationException("Can only use this method when a 1D Beam system is in use");
             }
