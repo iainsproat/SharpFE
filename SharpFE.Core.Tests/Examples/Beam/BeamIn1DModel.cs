@@ -176,13 +176,12 @@ namespace SharpFE.Examples.Beam
             ReactionVector node3Reaction = results.GetReaction(node3);
             Console.WriteLine("node5Reaction : " + node3Reaction);
             
-            // FIXME the angles are incorrect!
-            //            Assert.AreEqual(0.00143, node1Displacement.YY, 0.00001);
             Assert.AreEqual(0, node2Displacement.XX, 0.001);
             Assert.AreEqual(-0.00096, node2Displacement.Z, 0.001);
-            //            Assert.AreEqual(-0.00143, node3Displacement.YY, 0.00001);
             Assert.AreEqual(5000, node1Reaction.Z, 0.001);
             Assert.AreEqual(5000, node3Reaction.Z, 0.001);
+            Assert.AreEqual(0.00143, node1Displacement.YY, 0.00001);
+            Assert.AreEqual(-0.00143, node3Displacement.YY, 0.00001);
         }
         
         /// <summary>
@@ -215,7 +214,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
             model.ApplyForceToNode(force, node2);
             
-            IFiniteElementSolver solver = new LinearSolver(model);
+            IFiniteElementSolver solver = new LinearSolverSVD(model);
             FiniteElementResults results = solver.Solve();
             
             DisplacementVector node1Displacement = results.GetDisplacement(node1);
