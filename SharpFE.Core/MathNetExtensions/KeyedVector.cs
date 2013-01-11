@@ -38,7 +38,25 @@
             this.CheckAndAddKeys(keysForVector);
         }
         
+        public KeyedVector(double[] array, IList<TKey> keysForVector)
+            : base(array)
+        {
+            this.CheckAndAddKeys(keysForVector);
+        }
+        
         public KeyedVector(Vector<double> vector, IList<TKey> keysForVector)
+            : base(vector)
+        {
+            this.CheckAndAddKeys(keysForVector);
+        }
+        
+        public KeyedVector(double[] array, params TKey[] keysForVector)
+            : base(array)
+        {
+            this.CheckAndAddKeys(keysForVector);
+        }
+        
+        public KeyedVector(Vector<double> vector, params TKey[] keysForVector)
             : base(vector)
         {
             this.CheckAndAddKeys(keysForVector);
@@ -75,6 +93,23 @@
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
+        public KeyedVector<TKey> CrossProduct(KeyedVector<TKey> other)
+        {
+            KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
+            kcv.ThrowIfInvalid();
+            
+            ////TODO If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
+             
+            Vector result = ((Vector)this).CrossProduct((Vector)other);
+            return new KeyedVector<TKey>(result, this.Keys);
+        }
+        
+        public new KeyedVector<TKey> Normalize(double p)
+        {
+            Vector<double> result = base.Normalize(p);
+            return new KeyedVector<TKey>(result, this.Keys);
+        }
+        
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -106,6 +141,11 @@
         private int KeyIndex(TKey key)
         {
             return this._keys[key];
+        }
+        
+        private void CheckAndAddKeys(TKey[] keysForVector)
+        {
+            this.CheckAndAddKeys(new List<TKey>(keysForVector));
         }
         
         /// <summary>

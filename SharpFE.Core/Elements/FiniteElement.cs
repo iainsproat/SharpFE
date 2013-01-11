@@ -56,7 +56,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the local x-axis of this finite element
         /// </summary>
-        public abstract Vector LocalXAxis
+        public abstract KeyedVector<DegreeOfFreedom> LocalXAxis
         {
             get;
         }
@@ -64,7 +64,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the local y-axis of this finite element.
         /// </summary>
-        public abstract Vector LocalYAxis
+        public abstract KeyedVector<DegreeOfFreedom> LocalYAxis
         {
             get;
         }
@@ -75,11 +75,11 @@ namespace SharpFE
         /// <remarks>
         /// Calculates the normalised cross-product of the x and y axes.
         /// </remarks>
-        public Vector LocalZAxis
+        public KeyedVector<DegreeOfFreedom> LocalZAxis
         {
             get
             {
-                return (Vector)this.LocalXAxis.CrossProduct(this.LocalYAxis).Normalize(2);
+                return this.LocalXAxis.CrossProduct(this.LocalYAxis).Normalize(2);
             }
         }
         
@@ -92,7 +92,8 @@ namespace SharpFE
             {
                 if (this.IsDirty(this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt))
                 {
-                    this.BuildSupportedGlobalNodalDegreeOfFreedoms();
+                    this.SupportedNodalDegreeOfFreedoms = this.BuildSupportedGlobalNodalDegreeOfFreedoms();
+                    this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
                 }
                 
                 return this._supportedNodalDegreeOfFreedoms;
@@ -247,7 +248,7 @@ namespace SharpFE
         /// Builds the list of possible nodal degree of freedoms for this element which are expected by the model
         /// </summary>
         /// <returns>A list of all the possible nodal degree of freedoms for this element</returns>
-        protected void BuildSupportedGlobalNodalDegreeOfFreedoms()
+        protected IList<NodalDegreeOfFreedom> BuildSupportedGlobalNodalDegreeOfFreedoms() ////TODO make abstract and require derived classes to implement for their specific requirements
         {
             IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
             foreach (FiniteElementNode node in this.nodeStore)
@@ -260,8 +261,7 @@ namespace SharpFE
                 nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ));
             }
             
-            this.SupportedNodalDegreeOfFreedoms = nodalDegreeOfFreedoms;
-            this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
+            return nodalDegreeOfFreedoms;
         }
         
         public bool IsDirty(int previousHash)

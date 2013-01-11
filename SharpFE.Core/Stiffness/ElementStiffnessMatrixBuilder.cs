@@ -125,32 +125,44 @@
         {
             this.ThrowIfNotInitialized();
             
-            Matrix rotationMatrix = this.CalculateElementRotationMatrix();
-            Matrix identityMatrix = DenseMatrix.Identity(3);
+            IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.XX, DegreeOfFreedom.YY, DegreeOfFreedom.ZZ };
+            
+            KeyedMatrix<DegreeOfFreedom> rotationMatrix = this.CalculateElementRotationMatrix();
+            KeyedMatrix<DegreeOfFreedom> identityMatrix = new KeyedMatrix<DegreeOfFreedom>(DenseMatrix.Identity(3), dof, dof);
             
             KeyedMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
-            int numberOfNodes = this.Element.Nodes.Count; // assumes no duplicate nodes
-            
-            for (int i = 0; i < numberOfNodes; i++)
+            int numberOfNodes = this.Element.Nodes.Count;
+            foreach(FiniteElementNode node in this.Element.Nodes)
             {
-                elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix(i * 6, 3, i * 6, 3, rotationMatrix);
-                elementRotationMatrixFromLocalToGlobalCoordinates.SetSubMatrix((i * 6) + 3, 3, (i * 6) + 3, 3, identityMatrix);
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
+                
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), 1.0);
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), 1.0);
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), 1.0);
             }
             
             return elementRotationMatrixFromLocalToGlobalCoordinates;
         }
         
-        internal Matrix CalculateElementRotationMatrix()
+        internal KeyedMatrix<DegreeOfFreedom> CalculateElementRotationMatrix()
         {
             this.ThrowIfNotInitialized();
             
-            Matrix rotationMatrix = CreateFromRows(this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis);
-            rotationMatrix = (Matrix)rotationMatrix.NormalizeRows(2);
+            KeyedMatrix<DegreeOfFreedom> rotationMatrix = CreateFromRows(this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis);
+            rotationMatrix = rotationMatrix.NormalizeRows(2);
             return rotationMatrix;
         }
         
-        private static Matrix CreateFromRows(Vector axis1, Vector axis2, Vector axis3)
+        private static KeyedMatrix<DegreeOfFreedom> CreateFromRows(KeyedVector<DegreeOfFreedom> axis1, KeyedVector<DegreeOfFreedom> axis2, KeyedVector<DegreeOfFreedom> axis3)
         {
             Guard.AgainstBadArgument(
                 () => { return axis1.Count != 3; },
@@ -186,22 +198,22 @@
                     axis3),
                 "axis3");
             
-            Vector axis1Norm = (Vector)axis1.Normalize(2);
-            Vector axis2Norm = (Vector)axis2.Normalize(2);
-            Vector axis3Norm = (Vector)axis3.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis1Norm = axis1.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis2Norm = axis2.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis3Norm = axis3.Normalize(2);
             
             IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z };
             
             KeyedMatrix<DegreeOfFreedom> result = new KeyedMatrix<DegreeOfFreedom>(dof);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[0]);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[1]);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[2]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[0]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[1]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[2]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[0]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[1]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[2]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[DegreeOfFreedom.Z]);
             
             return result;
         }

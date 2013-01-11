@@ -53,31 +53,31 @@ namespace SharpFE
         /// <summary>
         /// Gets or sets the vector representing the local x axis
         /// </summary>
-        public override Vector LocalXAxis
+        public override KeyedVector<DegreeOfFreedom> LocalXAxis
         {
             get
             {
                 double initialLengthProjectedInXAxis = this.EndNode.OriginalX - this.StartNode.OriginalX;
                 double initialLengthProjectedInYAxis = this.EndNode.OriginalY - this.StartNode.OriginalY;
                 double initialLengthProjectedInZAxis = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
-                DenseVector result = new DenseVector(new double[]
+
+                return new KeyedVector<DegreeOfFreedom>(new double[]
                                                      {
                                                          initialLengthProjectedInXAxis,
                                                          initialLengthProjectedInYAxis,
                                                          initialLengthProjectedInZAxis
-                                                     });
-                return (Vector)result;
+                                                     }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
         }
         
         /// <summary>
         /// Gets or sets the vector representing the direction of the local y axis
         /// </summary>
-        public override Vector LocalYAxis
+        public override KeyedVector<DegreeOfFreedom> LocalYAxis
         {
             get
             {
-                return (Vector)this.UpDirection().CrossProduct(this.LocalXAxis);
+                return this.UpDirection().CrossProduct(this.LocalXAxis);
             }
         }
         
@@ -143,17 +143,17 @@ namespace SharpFE
         /// In that case the up direction is aligned with global y axis.
         /// </summary>
         /// <returns>A vector representing the 'up' direction.</returns>
-        private Vector UpDirection() // HACK
+        private KeyedVector<DegreeOfFreedom> UpDirection() // HACK
         {
-            if (this.LocalXAxis[0] == 0 && this.LocalXAxis[1] == 0 && this.LocalXAxis[2] != 0)
+            if (this.LocalXAxis[DegreeOfFreedom.X] == 0 && this.LocalXAxis[DegreeOfFreedom.Y] == 0 && this.LocalXAxis[DegreeOfFreedom.Z] != 0)
             {
                 // localXAxis is in global Z axis direction which will give poor results so assume the local upright direction is in global -x direction
-                return new DenseVector(new double[] { -1, 0, 0 });
+                return new KeyedVector<DegreeOfFreedom>(new double[] { -1, 0, 0 }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
             else
             {
                 // make the global vertical the default
-                return new DenseVector(new double[] { 0, 0, 1 });
+                return new KeyedVector<DegreeOfFreedom>(new double[] { 0, 0, 1 }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
         }
     }

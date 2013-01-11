@@ -105,6 +105,12 @@ namespace SharpFE
             return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
+        public new KeyedMatrix<TKey> NormalizeRows(int p)
+        {
+            Matrix<double> result = ((Matrix<double>)this).NormalizeRows(p);
+            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
+        }
+        
         /// <summary>
         /// Creates a matrix which contains values from the requested sub-matrix
         /// </summary>

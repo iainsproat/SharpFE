@@ -45,20 +45,20 @@ namespace SharpFE
         /// <summary>
         /// Gets or sets the vector representing the local x axis
         /// </summary>
-        public override Vector LocalXAxis
+        public override KeyedVector<DegreeOfFreedom> LocalXAxis
         {
             get
             {
                 double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].OriginalX - this.Nodes[0].OriginalX;
                 double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].OriginalY - this.Nodes[0].OriginalY;
                 double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].OriginalZ - this.Nodes[0].OriginalZ;
-                DenseVector result = new DenseVector(new double[]
-                                                     {
-                                                         initialLengthOfSide1ProjectedInXAxis,
-                                                         initialLengthOfSide1ProjectedInYAxis,
-                                                         initialLengthOfSide1ProjectedInZAxis
-                                                     });
-                return (Vector)result;
+                return new KeyedVector<DegreeOfFreedom>(new double[]
+                                                        {
+                                                            initialLengthOfSide1ProjectedInXAxis,
+                                                            initialLengthOfSide1ProjectedInYAxis,
+                                                            initialLengthOfSide1ProjectedInZAxis
+                                                        },
+                                                        DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
         }
         
@@ -68,13 +68,12 @@ namespace SharpFE
         /// <remarks>
         /// Uses the right-angled vector from side1 to the third point as the Y-axis.
         /// </remarks>
-        public override Vector LocalYAxis
+        public override KeyedVector<DegreeOfFreedom> LocalYAxis
         {
             get
             {
                 Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[3], this.Nodes[0], this.LocalXAxis);
-                result = (Vector)result.Negate();
-                return result;
+                return new KeyedVector<DegreeOfFreedom>(result.Negate(), DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
         }
         
