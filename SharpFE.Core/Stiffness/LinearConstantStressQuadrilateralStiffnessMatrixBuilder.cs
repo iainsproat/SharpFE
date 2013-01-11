@@ -11,7 +11,7 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// Description of LinearConstantStressQuadrilateralStiffnessMatrixBuilder.
     /// </summary>
-    public class LinearConstantStressQuadrilateralStiffnessMatrixBuilder : StiffnessMatrixBuilder<LinearConstantStressQuadrilateral>
+    public class LinearConstantStressQuadrilateralStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<LinearConstantStressQuadrilateral>
     {
         public LinearConstantStressQuadrilateralStiffnessMatrixBuilder(LinearConstantStressQuadrilateral element)
             : base(element)

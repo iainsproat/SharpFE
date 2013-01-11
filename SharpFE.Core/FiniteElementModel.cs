@@ -14,7 +14,7 @@ namespace SharpFE
     /// A finite element model is composed of nodes connected by finite elements.
     /// These nodes can be constrained and can have forces applied to them.
     /// </summary>
-    public class FiniteElementModel
+    public class FiniteElementModel : IEquatable<FiniteElementModel>
     {
         /// <summary>
         /// The finite element nodes of this model
@@ -106,13 +106,31 @@ namespace SharpFE
             }
         }
         
+        public IList<NodalDegreeOfFreedom> AllDegreesOfFreedom
+        {
+            get
+            {
+                IList<DegreeOfFreedom> allowedBoundaryConditionDegreeOfFreedoms = this.ModelType.GetAllowedDegreesOfFreedomForBoundaryConditions();
+                IList<NodalDegreeOfFreedom> result = new List<NodalDegreeOfFreedom>(this.NodeCount * allowedBoundaryConditionDegreeOfFreedoms.Count);
+                foreach (FiniteElementNode node in this.nodes)
+                {
+                    foreach(DegreeOfFreedom dof in allowedBoundaryConditionDegreeOfFreedoms)
+                    {
+                        result.Add(new NodalDegreeOfFreedom(node, dof));
+                    }
+                }
+                
+                return result;
+            }
+        }
+        
         /// <summary>
         /// Gets a list of all the nodes and degrees of freedom which have a known force.
         /// </summary>
         /// <remarks>
-        /// This is exactly the same as the list of unknown displacements.  
-        /// The presence of a force on a node does not necessarily mean that it is known.  
-        /// For example, an external force applied to a fixed node does not mean that you will know the reaction of that node (without calculating it).  
+        /// This is exactly the same as the list of unknown displacements.
+        /// The presence of a force on a node does not necessarily mean that it is known.
+        /// For example, an external force applied to a fixed node does not mean that you will know the reaction of that node (without calculating it).
         /// Counter intuitively, a node without an external force applied to does actually have a known force - the force is zero.
         /// </remarks>
         public IList<NodalDegreeOfFreedom> DegreesOfFreedomWithKnownForce
@@ -235,7 +253,7 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// This gets a force component value for each of the node and degree of freedom combinations of known forces.  
+        /// This gets a force component value for each of the node and degree of freedom combinations of known forces.
         /// The index of each value corresponds to the index of each <see cref="NodalDegreeOfFreedom" /> returned by DegreeOfFreedomWithKnownForce.
         /// </summary>
         /// <returns>Vector of values of all the known force components.</returns>
@@ -289,5 +307,53 @@ namespace SharpFE
         {
             return this.forces.GetCombinedForcesFor(nodalDegreeOfFreedoms);
         }
+        
+        #region Equals and GetHashCode implementation
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked {
+                if (nodes != null)
+                    hashCode += 1000000007 * nodes.GetHashCode();
+                if (elements != null)
+                    hashCode += 1000000009 * elements.GetHashCode();
+                if (forces != null)
+                    hashCode += 1000000021 * forces.GetHashCode();
+                hashCode += 1000000033 * ModelType.GetHashCode();
+            }
+            return hashCode;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            FiniteElementModel other = obj as FiniteElementModel;
+            return this.Equals(other);
+        }
+        
+        public bool Equals(FiniteElementModel other)
+        {
+            if (other == null)
+                return false;
+            return object.Equals(this.nodes, other.nodes)
+                && object.Equals(this.elements, other.elements)
+                && object.Equals(this.forces, other.forces)
+                && this.ModelType == other.ModelType;
+        }
+        
+        public static bool operator ==(FiniteElementModel lhs, FiniteElementModel rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+                return true;
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+                return false;
+            return lhs.Equals(rhs);
+        }
+        
+        public static bool operator !=(FiniteElementModel lhs, FiniteElementModel rhs)
+        {
+            return !(lhs == rhs);
+        }
+        #endregion
+
     }
 }

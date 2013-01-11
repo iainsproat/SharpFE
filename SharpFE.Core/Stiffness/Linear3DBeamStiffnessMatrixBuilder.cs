@@ -7,7 +7,7 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// Description of Linear3DBeamStiffnessMatrixBuilder.
     /// </summary>
-    public class Linear3DBeamStiffnessMatrixBuilder : StiffnessMatrixBuilder<Linear3DBeam>
+    public class Linear3DBeamStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<Linear3DBeam>
     {
         public Linear3DBeamStiffnessMatrixBuilder(Linear3DBeam finiteElement)
             : base(finiteElement)

@@ -67,5 +67,57 @@ namespace SharpFE.Core.Tests.Solvers
             StiffnessMatrix result = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
             Helpers.AssertMatrix(result, 2, 1, -3, -2);
         }
+        
+        [Test]
+        public void Can_build_matrices_for_beam_frame()
+        {
+            model = new FiniteElementModel(ModelType.Frame2D);
+            
+            node1 = model.NodeFactory.CreateForTruss(0, 0);
+            node2 = model.NodeFactory.CreateForTruss(1, 0);
+            node3 = model.NodeFactory.CreateForTruss(2, 0);
+            
+            IMaterial material = new GenericElasticMaterial(0, 1, 0.3, 1);
+            ICrossSection section = new SolidRectangle(1, 1);
+            
+            Linear1DBeam beam1 = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            Linear1DBeam beam2 = model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            
+            model.ConstrainNode(node1, DegreeOfFreedom.X);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.X);
+            
+            SUT = new GlobalModelStiffnessMatrixBuilder(model);
+            
+            StiffnessMatrix globalModelStiffnessMatrix = SUT.BuildGlobalStiffnessMatrix();
+            StiffnessMatrix knownForcesKnownDisplacements = SUT.BuildKnownForcesKnownDisplacementStiffnessMatrix();
+            StiffnessMatrix knownForcesUnknownDisplacements = SUT.BuildKnownForcesUnknownDisplacementStiffnessMatrix();
+            StiffnessMatrix unknownForcesKnownDisplacements = SUT.BuildUnknownForcesKnownDisplacementStiffnessMatrix();
+            StiffnessMatrix unknownForcesUnknownDisplacements = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
+            
+            
+//            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(globalModelStiffnessMatrix));
+//            Console.WriteLine("Determinant = " + globalModelStiffnessMatrix.Determinant());
+//            Console.WriteLine("KnownForcesKnownDisplacements");
+//            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(knownForcesKnownDisplacements));
+//            Console.WriteLine();
+//            Console.WriteLine("KnownForcesUnknownDisplacements");
+//            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(knownForcesUnknownDisplacements));
+//            Console.WriteLine();
+//            Console.WriteLine("UnknownForcesKnownDisplacements");
+//            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(unknownForcesKnownDisplacements));
+//            Console.WriteLine();
+//            Console.WriteLine("UnknownForcesUnknownDisplacements");
+//            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(unknownForcesUnknownDisplacements));
+            
+            
+            Helpers.AssertMatrix(knownForcesKnownDisplacements, 6, 3,
+                                  0, -0.5,  0,
+                                 -1,  0,   -1,
+                                  0, -1,    0,
+                                  0, -0.5,  0,
+                                  0,  0,    0,
+                                  0,  0,    0);
+        }
     }
 }

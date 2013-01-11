@@ -10,6 +10,7 @@ namespace SharpFE
     using System.Collections.Generic;
     using System.Linq;
     using MathNet.Numerics.LinearAlgebra.Double;
+    using SharpFE.Cache;
 
     /// <summary>
     /// Stores elements and manages reverse indexes of values in element properties
@@ -25,6 +26,65 @@ namespace SharpFE
         /// A reverse index for quickly looking up other nodes to which finite element nodes are linked via finite elements.
         /// </summary>
         private Index<FiniteElementNode, FiniteElementNode> nodeToNodeIndex = new Index<FiniteElementNode, FiniteElementNode>();
+        
+        private Cache<ElementRepository.NodeTuple, IList<FiniteElement>> cacheConnectingElements = new Cache<ElementRepository.NodeTuple, IList<FiniteElement>>();
+        
+        private struct NodeTuple : IEquatable<NodeTuple>
+        {
+            private FiniteElementNode n1;
+            private FiniteElementNode n2;
+            
+            public NodeTuple(FiniteElementNode node1, FiniteElementNode node2)
+            {
+                this.n1 = node1;
+                this.n2 = node2;
+            }
+            
+            #region Equals and GetHashCode implementation
+            public override bool Equals(object obj)
+			{
+				return (obj is ElementRepository.NodeTuple) && Equals((ElementRepository.NodeTuple)obj);
+			}
+            
+            /// <summary>
+            /// Order of nodes is ignored
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+			public bool Equals(ElementRepository.NodeTuple other)
+			{
+				return object.Equals(this.n1, other.n1) && object.Equals(this.n2, other.n2)
+				    || object.Equals(this.n1, other.n2) && object.Equals(this.n2, other.n1);
+			}
+            
+			/// <summary>
+			/// Order of nodes is ignored
+			/// </summary>
+			/// <returns></returns>
+			public override int GetHashCode()
+			{
+				int hashCode = 0;
+				unchecked {
+					if (n1 != null)
+						hashCode += 1000000007 * n1.GetHashCode();
+					if (n2 != null)
+						hashCode += 1000000007 * n2.GetHashCode();
+				}
+				return hashCode;
+			}
+            
+			public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+			{
+				return lhs.Equals(rhs);
+			}
+            
+			public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+			{
+				return !(lhs == rhs);
+			}
+            #endregion
+
+        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementRepository" /> class.
@@ -49,11 +109,22 @@ namespace SharpFE
             Guard.AgainstNullArgument(node1, "node1");
             Guard.AgainstNullArgument(node2, "node2");
             
+            IList<FiniteElement> connectingElements;
+            
+            int currentValidHashForCache = this.GetHashCode();
+            ElementRepository.NodeTuple keyForCache = new ElementRepository.NodeTuple(node1, node2);
+            if (this.cacheConnectingElements.ContainsKey(keyForCache, currentValidHashForCache, out connectingElements))
+            {
+                return connectingElements;
+            }
+            
             IList<FiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
             IList<FiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
-            return new List<FiniteElement>(elementsConnectedToNode1.Intersect(elementsConnectedToNode2));
+            connectingElements = elementsConnectedToNode1.Intersect(elementsConnectedToNode2).ToList();
             
-            ////TODO cache results, and also node2,node1 (which will be the same)
+            this.cacheConnectingElements.Save(keyForCache, connectingElements, currentValidHashForCache);
+            
+            return connectingElements;
         }
         
         /// <summary>

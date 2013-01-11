@@ -6,6 +6,8 @@
     using MathNet.Numerics.LinearAlgebra.Double;
     using MathNet.Numerics.LinearAlgebra.Generic;
     
+    using SharpFE.MathNetExtensions;
+    
     /// <summary>
     /// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
     /// This is roughly analagous to what a Dictionary is to a List.
@@ -16,7 +18,7 @@
         /// <summary>
         /// The keys which identify the items of this keyed vector
         /// </summary>
-        private IList<TKey> _keys;
+        private IDictionary<TKey, int> _keys = new Dictionary<TKey, int>();
             
         public KeyedVector(IList<TKey> keysForVector)
             : base(keysForVector.Count)
@@ -58,19 +60,16 @@
         {
             get
             {
-                return ((List<TKey>)this._keys).AsReadOnly();
-            }
-            
-            private set
-            {
-                this._keys = new List<TKey>(value);
+                return new List<TKey>(this._keys.Keys);
             }
         }
         
         public KeyedVector<TKey> Add(KeyedVector<TKey> other)
         {
-            ////TODO check that keys of this vector and the keys of the other vector match exactly.
-            // If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
+            KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
+            kcv.ThrowIfInvalid();
+            
+            ////TODO If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
             
             Vector<double> result = ((Vector<double>)this).Add((Vector<double>)other);
             return new KeyedVector<TKey>(result, this.Keys);
@@ -106,12 +105,7 @@
         /// <returns>An integer representing the row index in the matrix</returns>
         private int KeyIndex(TKey key)
         {
-            return this._keys.IndexOf(key);
-        }
-        
-        private TKey KeyFromIndex(int index)
-        {
-            return this._keys[index];
+            return this._keys[key];
         }
         
         /// <summary>
@@ -128,8 +122,13 @@
                 "The number of items in the keys list should match the number of items of the underlying vector",
                 "keysForVector");
             
-            // TODO check for duplicate keys
-           this.Keys = keysForVector;
+            this._keys.Clear();
+            
+            int numKeys = keysForVector.Count;
+            for (int i = 0; i < numKeys; i++)
+            {
+                this._keys.Add(keysForVector[i], i);
+            }
         }
     }
 }

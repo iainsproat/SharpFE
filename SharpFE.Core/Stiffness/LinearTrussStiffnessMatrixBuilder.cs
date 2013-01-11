@@ -9,7 +9,7 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// Description of LinearElasticMaterialCrossSectionStiffnessBuilder.
     /// </summary>
-    public class LinearTrussStiffnessMatrixBuilder : StiffnessMatrixBuilder<FiniteElement1D>
+    public class LinearTrussStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<FiniteElement1D>
     {
         public LinearTrussStiffnessMatrixBuilder(FiniteElement1D finiteElement)
             : base(finiteElement)

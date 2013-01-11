@@ -19,7 +19,7 @@ namespace SharpFE.Core.Tests.Stiffness
 		private GenericElasticMaterial material;
 		private SolidRectangle section;
 		private Linear1DBeam beam;
-		private IStiffnessMatrixBuilder<Linear1DBeam> SUT;
+		private ElementStiffnessMatrixBuilder<Linear1DBeam> SUT;
 		
 		[SetUp]
 		public void SetUp()
@@ -35,19 +35,19 @@ namespace SharpFE.Core.Tests.Stiffness
 		}
 		
 		[Test]
-		public void CanCanCreateGlobalStiffnessMatrixForSpringAlignedToGlobalXAxis()
+		public void CanCreateGlobalStiffnessMatrixForBeamAlignedToGlobalXAxis()
 		{
 			double a = 1.0 / 3.0;
 			double b = a / 2.0;
 			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
+			                                            1, 0,  0,   0,  0,   0,  -1, 0,  0,   0,  0,   0,
 			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
 			                                            0, 0,  1,   0, -0.5, 0,   0, 0, -1,   0, -0.5, 0,
 			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
 			                                            0, 0, -0.5, 0,  a,   0,   0, 0,  0.5, 0,  b,   0,
 			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
 			                                            
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
+			                                           -1, 0,  0,   0,  0,   0,   1, 0,  0,   0,  0,   0,
 			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
 			                                            0, 0, -1,   0,  0.5, 0,   0, 0,  1,   0,  0.5, 0,
 			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,

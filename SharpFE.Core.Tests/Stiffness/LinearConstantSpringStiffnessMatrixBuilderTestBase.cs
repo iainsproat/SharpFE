@@ -19,7 +19,7 @@ namespace SharpFE.Core.Tests.Stiffness
         protected FiniteElementNode start;
         protected FiniteElementNode end;
         protected LinearConstantSpring spring;
-        protected IStiffnessMatrixBuilder<FiniteElement1D> SUT;
+        protected ElementStiffnessMatrixBuilder<FiniteElement1D> SUT;
         
         [SetUp]
         public void SetUp()

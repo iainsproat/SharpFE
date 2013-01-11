@@ -146,7 +146,7 @@ namespace SharpFE.Core.Tests.Solvers
 			force1 = model.ForceFactory.CreateForTruss(0, -10);
 			model.ApplyForceToNode(force1, node2);
 			
-			SUT = new LinearSolver(model);
+			SUT = new LinearSolverSVD(model);
 		}
 	}
 }

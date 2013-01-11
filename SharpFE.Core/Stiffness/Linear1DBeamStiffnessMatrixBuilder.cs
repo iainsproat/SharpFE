@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class Linear1DBeamStiffnessMatrixBuilder : StiffnessMatrixBuilder<Linear1DBeam>
+    public class Linear1DBeamStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<Linear1DBeam>
     {
         public Linear1DBeamStiffnessMatrixBuilder(Linear1DBeam finiteElement)
             : base(finiteElement)
@@ -24,6 +24,12 @@
         {
             double length = this.Element.OriginalLength;                    
             StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+            
+            double axialStiffness = this.Element.StiffnessEA / length;
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, axialStiffness);
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.EndNode, DegreeOfFreedom.X, -axialStiffness);
+            matrix.At(this.Element.EndNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, -axialStiffness);
+            matrix.At(this.Element.EndNode, DegreeOfFreedom.X, this.Element.EndNode, DegreeOfFreedom.X, axialStiffness);
             
             double shearStiffnessInZ = 12.0 * this.Element.BendingStiffnessEIy / (length * length * length);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.Z, this.Element.StartNode, DegreeOfFreedom.Z,  shearStiffnessInZ);

@@ -5,6 +5,7 @@
  * 
  */
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using MathNet.Numerics.LinearAlgebra.Generic;
 
@@ -32,7 +33,7 @@ namespace SharpFE.Core.Tests
                                                           expectedRowCount * expectedColumnCount,
                                                           expectedValues.Length,
                                                           actual.ColumnCount * actual.RowCount,
-                                                         actual));
+                                                          actual));
             }
             
             Assert.IsNotNull(actual);
@@ -50,6 +51,64 @@ namespace SharpFE.Core.Tests
                     currentArrayIndex++;
                 }
             }
+        }
+        
+        public static string PrettyPrintKeyedRowColumnMatrix<TRowKey, TColumnKey>(KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            if (matrix == null)
+            {
+                sb.Append("KeyedRowColumnMatrix<");
+                sb.Append(typeof(TRowKey).Name);
+                sb.Append(", ");
+                sb.Append(typeof(TColumnKey).Name);
+                sb.Append(">");
+                sb.Append(" is null");
+            }
+            else
+            {
+                PrettyPrintKeyedRowColumnMatrix(sb, matrix);
+            }
+            return sb.ToString();
+        }
+        
+        public static void PrettyPrintKeyedRowColumnMatrix<TRowKey, TColumnKey>(System.Text.StringBuilder sb, KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
+        {
+            sb.AppendLine(string.Format("KeyedRowColumnMatrix<{0}, {1}>", typeof(TRowKey).Name, typeof(TColumnKey).Name));
+            
+            sb.Append("Column Keys : ");
+            IList<TColumnKey> columnKeys = matrix.ColumnKeys;
+            PrettyPrintList<TColumnKey>(sb, columnKeys);
+            
+            IList<TRowKey> rowKeys = matrix.RowKeys;
+            sb.AppendLine();
+            sb.Append("Row Keys : ");
+            PrettyPrintList<TRowKey>(sb, rowKeys);
+            
+            sb.AppendLine();            
+            sb.Append(matrix);
+        }
+        
+        public static void PrettyPrintList<T>(System.Text.StringBuilder sb, IList<T> list)
+        {
+            sb.Append("[");
+            int numItems = list.Count;
+            for (int i = 0; i < numItems; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(",");
+                }
+                
+                sb.AppendLine();
+                sb.Append("    ");
+                sb.Append(list[i]);
+            }
+            if (numItems > 0)
+            {
+                sb.AppendLine();
+            }
+            sb.Append("]");
         }
     }
 }

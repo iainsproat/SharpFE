@@ -65,6 +65,8 @@
     <Compile Include="Factory\ForceFactoryTest.cs" />
     <Compile Include="Factory\NodeFactoryTest.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Maths\KeyCompatibilityValidatorTest.cs" />
+    <Compile Include="Maths\KeyedRowColumnMatrixTest.cs" />
     <Compile Include="Measures\ForceTest.cs" />
     <Compile Include="ModelTest.cs" />
     <Compile Include="NodalDegreeOfFreedomTest.cs" />
@@ -96,6 +98,7 @@
     <Folder Include="Examples\Truss" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
+    <Folder Include="Maths" />
     <Folder Include="Stiffness" />
     <Folder Include="Solvers" />
     <Folder Include="Repositories" />

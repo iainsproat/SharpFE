@@ -247,7 +247,7 @@ namespace SharpFE
         /// Builds the list of possible nodal degree of freedoms for this element which are expected by the model
         /// </summary>
         /// <returns>A list of all the possible nodal degree of freedoms for this element</returns>
-        protected void BuildSupportedGlobalNodalDegreeOfFreedoms() ////FIXME make abstract and move to derived classes.
+        protected void BuildSupportedGlobalNodalDegreeOfFreedoms()
         {
             IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
             foreach (FiniteElementNode node in this.nodeStore)

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Generic;
+using SharpFE.MathNetExtensions;
 
 namespace SharpFE
 {
@@ -18,12 +19,12 @@ namespace SharpFE
         /// <summary>
         /// The keys which identify the rows of this keyed matrix
         /// </summary>
-        private IList<TRowKey> keysForRows;
+        private IDictionary<TRowKey, int> keysForRows = new Dictionary<TRowKey, int>();
         
         /// <summary>
         /// The keys which identify the columns of this keyed matrix
         /// </summary>
-        private IList<TColumnKey> keysForColumns;
+        private IDictionary<TColumnKey, int> keysForColumns = new Dictionary<TColumnKey, int>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
@@ -77,12 +78,7 @@ namespace SharpFE
         {
             get
             {
-                return ((List<TRowKey>)this.keysForRows).AsReadOnly();
-            }
-            
-            private set
-            {
-                this.keysForRows = new List<TRowKey>(value);
+                return new List<TRowKey>(this.keysForRows.Keys);
             }
         }
         
@@ -93,12 +89,7 @@ namespace SharpFE
         {
             get
             {
-                return ((List<TColumnKey>)this.keysForColumns).AsReadOnly();
-            }
-            
-            private set
-            {
-                this.keysForColumns = new List<TColumnKey>(value);
+                return new List<TColumnKey>(this.keysForColumns.Keys);
             }
         }
         
@@ -110,42 +101,7 @@ namespace SharpFE
         {
             return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(this);
         }
-        
-        /// <summary>
-        /// Creates a matrix which contains the values of the requested submatrix
-        /// </summary>
-        /// <param name="rowKey">The key which defines the first row to start copying from</param>
-        /// <param name="rowCount">The number of rows to copy</param>
-        /// <param name="columnKey">The key which defines the first column to start copying from</param>
-        /// <param name="columnCount">The number of columns to copy</param>
-        /// <returns>A matrix which is a submatrix of this KeyedMatrix</returns>
-        public KeyedRowColumnMatrix<TRowKey, TColumnKey> SubMatrix(TRowKey rowKey, int rowCount, TColumnKey columnKey, int columnCount)
-        {
-            int rowIndex = this.RowIndex(rowKey);
-            int columnIndex = this.ColumnIndex(columnKey);
-            
-            IList<TRowKey> subMatrixRowKeys = new List<TRowKey>()
-            {
-                rowKey
-            };
-            IList<TColumnKey> subMatrixColumnKeys = new List<TColumnKey>()
-            {
-                columnKey
-            };
-            for (int i = 1; i < rowCount; i++)
-            {
-                subMatrixRowKeys.Add(this.RowKeyFromIndex(rowIndex + i));
-            }
-            
-            for (int i = 1; i < rowCount; i++)
-            {
-                subMatrixColumnKeys.Add(this.ColumnKeyFromIndex(rowIndex + i));
-            }
-            
-            Matrix<double> subMatrix = this.SubMatrix(rowIndex, rowCount, columnIndex, columnCount);
-            
-            return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(subMatrix, subMatrixRowKeys, subMatrixColumnKeys);
-        }
+
         
         /// <summary>
         /// Creates a matrix which contains values from the requested sub-matrix
@@ -176,6 +132,9 @@ namespace SharpFE
         /// <returns>The requested element</returns>
         public double At(TRowKey rowKey, TColumnKey columnKey)
         {
+            Guard.AgainstNullArgument(rowKey, "rowKey");
+            Guard.AgainstNullArgument(columnKey, "columnKey");
+            
             int rowIndex = this.RowIndex(rowKey);
             int columnIndex = this.ColumnIndex(columnKey);
             return this.At(rowIndex, columnIndex);
@@ -189,16 +148,38 @@ namespace SharpFE
         /// <param name="value">The value to set the element to</param>
         public void At(TRowKey rowKey, TColumnKey columnKey, double value)
         {
-            int rowIndex = this.RowIndex(rowKey);
-            if (rowIndex == -1)
+            Guard.AgainstNullArgument(rowKey, "rowKey");
+            Guard.AgainstNullArgument(columnKey, "columnKey");
+            
+            int rowIndex;
+            int columnIndex;
+            
+            try
             {
-                return;
+                rowIndex = this.RowIndex(rowKey);
+            }
+            catch(KeyNotFoundException knfe)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "A value could not be added to a matrix.  The key provided for the row does not exist in the matrix.  The key provided for the row is : {0}. We have not checked the key for the column, but it was : {1}",
+                    rowKey,
+                    columnKey),
+                                                    knfe);
             }
             
-            int columnIndex = this.ColumnIndex(columnKey);
-            if (columnIndex == -1)
+            try
             {
-                return;
+                columnIndex = this.ColumnIndex(columnKey);
+            }
+            catch(KeyNotFoundException knfe)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "A value could not be added to a matrix.  The key provided for the column does not exist in the matrix.  The key provided for the column is : {0}. However, the key for the row could be found, for reference it was : {1}",
+                    columnKey,
+                    rowKey),
+                                                    knfe);
             }
             
             this.At(rowIndex, columnIndex, value);
@@ -217,8 +198,10 @@ namespace SharpFE
         
         public KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> Multiply<TOtherRowKey, TOtherColumnKey>(KeyedRowColumnMatrix<TOtherRowKey, TOtherColumnKey> other)
         {
-            ////TODO check that this column keys and the other row keys match exactly, including order.
-            // If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            KeyCompatibilityValidator<TColumnKey, TOtherRowKey> kcv = new KeyCompatibilityValidator<TColumnKey, TOtherRowKey>(this.ColumnKeys, other.RowKeys);
+            kcv.ThrowIfInvalid();
+            
+            ////TODO If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
             Matrix<double> result = base.Multiply(other);
             return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
         }
@@ -231,8 +214,10 @@ namespace SharpFE
         
         public KeyedVector<TRowKey> Multiply(KeyedVector<TColumnKey> rightSide)
         {
-            ////TODO check that column keys of the matrix and the keys of the vector match exactly.
-            // If the keys match but are in the wrong order, swap the vector items and keys to match exactly
+            KeyCompatibilityValidator<TColumnKey, TColumnKey> kcv = new KeyCompatibilityValidator<TColumnKey, TColumnKey>(this.ColumnKeys, rightSide.Keys);
+            kcv.ThrowIfInvalid();
+            
+            ////TODO If the keys match but are in the wrong order, swap the vector items and keys to match exactly
             Vector<double> result = base.Multiply(rightSide);
             return new KeyedVector<TRowKey>(result, this.RowKeys);
         }
@@ -243,22 +228,33 @@ namespace SharpFE
         /// </summary>
         /// <param name="keysForRows">The keys to replace the RowKeys property with</param>
         /// <param name="keysForColumns">The keys to replace the ColumnKeys property with</param>
-        private void CheckAndAddKeys(IList<TRowKey> keysForRows, IList<TColumnKey> keysForColumns)
+        private void CheckAndAddKeys(IList<TRowKey> keysRows, IList<TColumnKey> keysColumns)
         {
-            Guard.AgainstNullArgument(keysForRows, "keysForRows");
-            Guard.AgainstNullArgument(keysForColumns, "keysForColumns");
+            Guard.AgainstNullArgument(keysRows, "keysRows");
+            Guard.AgainstNullArgument(keysColumns, "keysColumns");
             Guard.AgainstBadArgument(
-                () => { return this.RowCount != keysForRows.Count; },
+                () => { return this.RowCount != keysRows.Count; },
                 "The number of items in the rowKeys list should match the number of rows of the underlying matrix",
                 "keysForRows");
             Guard.AgainstBadArgument(
-                () => { return this.ColumnCount != keysForColumns.Count; },
+                () => { return this.ColumnCount != keysColumns.Count; },
                 "The number of items in the columnKeys list should match the number of rows of the underlying matrix",
                 "keysForColumns");
             
-            // TODO check for duplicate keys?
-            this.RowKeys = keysForRows;
-            this.ColumnKeys = keysForColumns;
+            this.keysForRows.Clear();
+            this.keysForColumns.Clear();
+            
+            int numRowKeys = keysRows.Count;
+            int numColKeys = keysColumns.Count;
+            for (int i = 0; i < numRowKeys; i++)
+            {
+                this.keysForRows.Add(keysRows[i], i);
+            }
+            
+            for (int j = 0; j < numColKeys; j++)
+            {
+                this.keysForColumns.Add(keysColumns[j], j);
+            }
         }
         
         /// <summary>
@@ -268,7 +264,18 @@ namespace SharpFE
         /// <returns>An integer representing the row index in the matrix</returns>
         private int RowIndex(TRowKey rowKey)
         {
-            return this.RowKeys.IndexOf(rowKey);
+            try
+            {
+                return this.keysForRows[rowKey];
+            }
+            catch(KeyNotFoundException knfe)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "We could not find the requested row in this matrix.  The key provided for the row was : {0}.",
+                    rowKey),
+                                                    knfe);
+            }
         }
         
         /// <summary>
@@ -278,37 +285,18 @@ namespace SharpFE
         /// <returns>An integer representing the column index in the matrix</returns>
         private int ColumnIndex(TColumnKey columnKey)
         {
-            return this.ColumnKeys.IndexOf(columnKey);
-        }
-        
-        /// <summary>
-        /// Determines the key which can be used to identify a row of the matrix
-        /// </summary>
-        /// <param name="rowIndex">The index of the row</param>
-        /// <returns>The key of the row</returns>
-        private TRowKey RowKeyFromIndex(int rowIndex)
-        {
-            Guard.AgainstBadArgument(
-                () => { return rowIndex > this.RowCount; },
-                "rowIndex cannot be greater than the number of rows of the matrix",
-                "rowIndex");
-            
-            return this.RowKeys[rowIndex];
-        }
-        
-        /// <summary>
-        /// Determines the key which can be used to identify a column of the matrix
-        /// </summary>
-        /// <param name="columnIndex">The index of the column</param>
-        /// <returns>The key of the column</returns>
-        private TColumnKey ColumnKeyFromIndex(int columnIndex)
-        {
-            Guard.AgainstBadArgument(
-                () => { return columnIndex > this.ColumnCount; },
-                "columnIndex cannot be greater than the number of columns of the matrix",
-                "columnIndex");
-            
-            return this.ColumnKeys[columnIndex];
+            try
+            {
+                return this.keysForColumns[columnKey];
+            }
+            catch(KeyNotFoundException knfe)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "We could not find the requested column within this matrix.  The key provided for the column was : {0}.",
+                    columnKey),
+                                                    knfe);
+            }
         }
     }
 }

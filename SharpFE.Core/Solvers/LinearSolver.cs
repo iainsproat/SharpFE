@@ -9,6 +9,7 @@ namespace SharpFE
     using System;
     using System.Collections.Generic;
     using SharpFE.Stiffness;
+    using MathNet.Numerics.LinearAlgebra.Double.Factorization;
 
     /// <summary>
     /// Carries out a simple, linear analysis to solve a static, implicit finite element problem.
@@ -100,18 +101,33 @@ namespace SharpFE
             KeyedVector<NodalDegreeOfFreedom> forcesDueToExternallyAppliedDisplacements = knownForcesKnownDisplacementsStiffnesses.Multiply(knownDisplacements); // K12 * Uk
             KeyedVector<NodalDegreeOfFreedom> externallyAppliedForces = knownForces.Add(forcesDueToExternallyAppliedDisplacements); // Fk + (K12 * Uk)
             
-            if (knownForcesUnknownDisplacementStiffnesses.Determinant() == 0)
+            double det = knownForcesUnknownDisplacementStiffnesses.Determinant();
+            if (det == 0)
             {
                 throw new InvalidOperationException(
                     string.Format(
                         System.Globalization.CultureInfo.InvariantCulture,
-                        "We are unable to solve this as we cannot inverse a matrix of zero determinant.\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
+                        "We are unable to solve this model as it is able to move as a rigid body without deforming in any way.  Are you missing any constraints?\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
                         knownForcesUnknownDisplacementStiffnesses));
             }
             
-            KeyedMatrix<NodalDegreeOfFreedom> inverse = knownForcesUnknownDisplacementStiffnesses.Inverse(); // K11^-1
-            KeyedVector<NodalDegreeOfFreedom> unknownDisplacements = inverse.Multiply(externallyAppliedForces); // K11^-1 * (Fk + (K12 * Uk))
+             // K11^-1 * (Fk + (K12 * Uk))
+            KeyedVector<NodalDegreeOfFreedom> unknownDisplacements = this.Solve(knownForcesUnknownDisplacementStiffnesses, externallyAppliedForces);
+            
             return unknownDisplacements;
+        }
+        
+        /// <summary>
+        /// Solves AX=B for X.
+        /// </summary>
+        /// <param name="A">The stiffness matrix</param>
+        /// <param name="B">The forces</param>
+        /// <returns></returns>
+        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix A, KeyedVector<NodalDegreeOfFreedom> B)
+        {
+            KeyedMatrix<NodalDegreeOfFreedom> inverse = A.Inverse();
+            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(B);
+            return X;
         }
         
         /// <summary>

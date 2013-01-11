@@ -12,7 +12,7 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// Description of LinearConstantStrainTriangleStiffnessMatrixBuilder.
     /// </summary>
-    public class LinearConstantStrainTriangleStiffnessMatrixBuilder : StiffnessMatrixBuilder<LinearConstantStrainTriangle>
+    public class LinearConstantStrainTriangleStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<LinearConstantStrainTriangle>
     {
         public LinearConstantStrainTriangleStiffnessMatrixBuilder(LinearConstantStrainTriangle element)
             : base(element)

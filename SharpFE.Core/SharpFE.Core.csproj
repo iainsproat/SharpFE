@@ -44,6 +44,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Cache\CachedResult.cs" />
     <Compile Include="CrossSections\Coordinate2D.cs" />
     <Compile Include="CrossSections\ICrossSection.cs" />
     <Compile Include="CrossSections\IHasConstantCrossSection.cs" />
@@ -93,17 +95,17 @@
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
-    <Compile Include="Stiffness\ElementStiffnessMatrix.cs" />
+    <Compile Include="Solvers\LinearSolverSVD.cs" />
+    <Compile Include="Stiffness\StiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\IStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessProvider.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\StiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\ElementStiffnessMatrixBuilder.cs" />
     <Compile Include="Strain.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +116,7 @@
     <Folder Include="Helpers" />
     <Folder Include="Materials" />
     <Folder Include="CrossSections" />
+    <Folder Include="Cache" />
     <Folder Include="Stiffness" />
     <Folder Include="Repositories" />
     <Folder Include="Solvers" />

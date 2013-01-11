@@ -11,7 +11,7 @@ namespace SharpFE
     /// <summary>
     /// Each node has up to six degrees of freedom.  This data type identifies the node and a one particular degree of freedom on that node.
     /// </summary>
-    public struct NodalDegreeOfFreedom : IEquatable<NodalDegreeOfFreedom>
+    public struct NodalDegreeOfFreedom : IEquatable<NodalDegreeOfFreedom>, IComparable<NodalDegreeOfFreedom>
     {
         /// <summary>
         /// The node to which the degree of freedom relates.
@@ -130,6 +130,31 @@ namespace SharpFE
                 "[{0}, {1}]",
                 this.targetNode,
                 this.dof);
+        }
+        
+        public int CompareTo(NodalDegreeOfFreedom other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            
+            if (this.Node == null)
+            {
+                if (other.Node == null)
+                {
+                    return 0;
+                }
+                return 1;
+            }
+            
+            int nodeComparison = this.Node.CompareTo(other.Node);
+            if (nodeComparison != 0)
+            {
+                return nodeComparison;
+            }
+            
+            return this.DegreeOfFreedom.CompareTo(other.DegreeOfFreedom);
         }
         #endregion
     }

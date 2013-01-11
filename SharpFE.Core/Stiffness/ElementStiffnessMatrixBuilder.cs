@@ -5,7 +5,7 @@
     using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE;
     
-    public abstract class StiffnessMatrixBuilder<T> : IStiffnessMatrixBuilder<T>
+    public abstract class ElementStiffnessMatrixBuilder<T> : IStiffnessProvider
         where T : FiniteElement
     {
         /// <summary>
@@ -13,9 +13,9 @@
         /// </summary>
         private StiffnessMatrix _globalStiffnessMatrix;
         
-        private int hashAtWhichGlobalStiffnessMatrixWasLastBuilt;
+        private int elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt;
         
-        protected StiffnessMatrixBuilder(T finiteElement)
+        protected ElementStiffnessMatrixBuilder(T finiteElement)
         {
             Guard.AgainstNullArgument(finiteElement, "finiteElement");
             this.Element = finiteElement;
@@ -36,9 +36,10 @@
         {
             get
             {
-                if (this.Element.IsDirty(this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt))
+                if (this.Element.IsDirty(this.elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt))
                 {
                     this.BuildGlobalStiffnessMatrix();
+                    this.elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
                 }
                 
                 return this._globalStiffnessMatrix;
@@ -85,11 +86,20 @@
         /// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
         /// It sets the stiffnessMatrixHasBeenGenerated flag to true.
         /// </summary>
-        public void BuildGlobalStiffnessMatrix()
+        private void BuildGlobalStiffnessMatrix()
         {
             this.ThrowIfNotInitialized();
             
             StiffnessMatrix k = this.GetLocalStiffnessMatrix();
+            if (k.Determinant() != 0)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
+                    this.Element,
+                    this.Element.GetType()));
+            }
+            
             KeyedMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
             
             ////FIXME these multiplications assume the keys of both matrices are ordered and identical
@@ -98,7 +108,14 @@
             KeyedMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
             this._globalStiffnessMatrix = new StiffnessMatrix(ttransposedkt);
             
-            this.hashAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
+            if (this._globalStiffnessMatrix.Determinant() != 0)
+            {
+                throw new InvalidOperationException(string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "The global stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
+                    this.Element,
+                    this.Element.GetType()));
+            }
         }
         
         /// <summary>
@@ -124,7 +141,7 @@
             return elementRotationMatrixFromLocalToGlobalCoordinates;
         }
         
-        public Matrix CalculateElementRotationMatrix()
+        internal Matrix CalculateElementRotationMatrix()
         {
             this.ThrowIfNotInitialized();
             

@@ -69,23 +69,5 @@ namespace SharpFE.Core.Tests
 			Assert.AreEqual(12, SUT.GetDisplacement(node).Y);
 			Assert.AreEqual(13, SUT.GetDisplacement(node1).Y);
 		}
-		
-		[Test]
-		public void DuplicateMultipleDisplacementsAreNotAdditive()
-		{
-			NodalDegreeOfFreedom nDof = new NodalDegreeOfFreedom(node, DegreeOfFreedom.X);
-			IList<NodalDegreeOfFreedom> identifiers = new List<NodalDegreeOfFreedom>(2);
-			identifiers.Add(nDof);
-			identifiers.Add(nDof);
-			
-			KeyedVector<NodalDegreeOfFreedom> displacements = new KeyedVector<NodalDegreeOfFreedom>(identifiers);
-			displacements[0] = 10;
-			displacements[1] = 11;
-
-			
-			SUT.AddMultipleDisplacements(displacements);
-			
-			Assert.AreEqual(11, SUT.GetDisplacement(node).X);
-		}
 	}
 }

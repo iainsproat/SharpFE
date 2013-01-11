@@ -10,6 +10,7 @@ namespace SharpFE
     using System.Collections.Generic;
     using MathNet.Numerics.LinearAlgebra.Double;
     using MathNet.Numerics.LinearAlgebra.Generic;
+    using SharpFE.MathNetExtensions;
 
     /// <summary>
     /// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
@@ -75,8 +76,10 @@ namespace SharpFE
         
         public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
-            ////TODO check that this column keys and the other row keys match exactly, including order.
-            // If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.ColumnKeys, other.RowKeys);
+            kcv.ThrowIfInvalid();
+            ////TODO If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
+            
             Matrix<double> result = ((Matrix<double>)this).Multiply((Matrix<double>)other);
             return new KeyedMatrix<TKey>(result, this.RowKeys, other.ColumnKeys);
         }
@@ -100,19 +103,6 @@ namespace SharpFE
         {
             Matrix<double> result = ((Matrix<double>)this).Transpose();
             return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
-        }
-        
-        /// <summary>
-        /// Creates a matrix which contains the values of the requested submatrix
-        /// </summary>
-        /// <param name="rowKey">The key which defines the first row to start copying from</param>
-        /// <param name="rowCount">The number of rows to copy</param>
-        /// <param name="columnKey">The key which defines the first column to start copying from</param>
-        /// <param name="columnCount">The number of columns to copy</param>
-        /// <returns>A matrix which is a submatrix of this KeyedMatrix</returns>
-        public new KeyedMatrix<TKey> SubMatrix(TKey rowKey, int rowCount, TKey columnKey, int columnCount)
-        {
-            return (KeyedMatrix<TKey>)base.SubMatrix(rowKey, rowCount, columnKey, columnCount);
         }
         
         /// <summary>

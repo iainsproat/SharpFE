@@ -8,10 +8,11 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
+    using SharpFE.Cache;
     
     /// <summary>
-    /// Builds various types of stiffness matrices from a Finite Element model
+    /// Builds the global stiffness matrix by summing all the
+    /// individual finite element stiffness matrices
     /// </summary>
     public class GlobalModelStiffnessMatrixBuilder
     {
@@ -22,7 +23,10 @@ namespace SharpFE.Stiffness
         
         private ElementStiffnessMatrixBuilderFactory stiffnessFactory = new ElementStiffnessMatrixBuilderFactory();
         
-        private IDictionary<int, IStiffnessProvider> elementStiffnessMatrixCache = new Dictionary<int, IStiffnessProvider>();
+        private IDictionary<int, IStiffnessProvider> elementStiffnessProviderCache = new Dictionary<int, IStiffnessProvider>();
+        private Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double> stiffnessCache = new Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double>();
+        
+        private int currentModelHash;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="StiffnessMatrixBuilder" /> class.
@@ -31,6 +35,14 @@ namespace SharpFE.Stiffness
         public GlobalModelStiffnessMatrixBuilder(FiniteElementModel parentModel)
         {
             this.parent = parentModel;
+            this.currentModelHash = this.parent.GetHashCode();
+        }
+        
+        public StiffnessMatrix BuildGlobalStiffnessMatrix()
+        {
+            IList<NodalDegreeOfFreedom> allDegreesOfFreedom = this.parent.AllDegreesOfFreedom;
+            
+            return this.BuildStiffnessSubMatrix(allDegreesOfFreedom, allDegreesOfFreedom);
         }
         
         /// <summary>
@@ -44,7 +56,7 @@ namespace SharpFE.Stiffness
             IList<NodalDegreeOfFreedom> knownDisplacements = this.parent.DegreesOfFreedomWithKnownDisplacement;
             if (knownDisplacements == null || knownDisplacements.Count == 0)
             {
-                throw new InvalidOperationException("The has no constraints and therefore cannot be solved");
+                throw new InvalidOperationException("The model has no constraints and therefore cannot be solved");
             }
             
             return this.BuildStiffnessSubMatrix(knownForces, knownDisplacements);
@@ -103,6 +115,8 @@ namespace SharpFE.Stiffness
             Guard.AgainstNullArgument(rowKeys, "rowKeys");
             Guard.AgainstNullArgument(columnKeys, "columnKeys");
             
+            // update to ensure validity of items stored in cache
+            this.currentModelHash = this.parent.GetHashCode();
             
             int numRows = rowKeys.Count;
             int numCols = columnKeys.Count;
@@ -115,6 +129,8 @@ namespace SharpFE.Stiffness
                 () => { return numCols == 0; },
                 "There must be at least one column",
                 "columnKeys");
+            
+            int modelHashCode = this.parent.GetHashCode();
             
             StiffnessMatrix result = new StiffnessMatrix(rowKeys, columnKeys);
             
@@ -145,29 +161,38 @@ namespace SharpFE.Stiffness
         private double SumStiffnessesForAllElementsAt(IList<FiniteElement> elementsDirectlyConnectingRowAndColumnNodes, NodalDegreeOfFreedom row, NodalDegreeOfFreedom column)
         {
             double totalStiffness = 0.0;
+            
+            Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom> cacheKey = new Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>(row, column);
+            if (stiffnessCache.ContainsKey(cacheKey, this.currentModelHash, out totalStiffness))
+            {
+                return totalStiffness;
+            }
+            
             foreach (FiniteElement e in elementsDirectlyConnectingRowAndColumnNodes)
             {
-                IStiffnessProvider elementStiffnessMatrixBuilder = this.GetElementStiffnessMatrixBuilder(e);
+                IStiffnessProvider elementStiffnessMatrixBuilder = this.GetElementStiffnessProvider(e);
                 totalStiffness += elementStiffnessMatrixBuilder.GetGlobalStiffnessAt(row.Node, row.DegreeOfFreedom, column.Node, column.DegreeOfFreedom);
             }
+            
+            this.stiffnessCache.Save(cacheKey, totalStiffness, this.currentModelHash);
             
             return totalStiffness;
         }
         
-        private IStiffnessProvider GetElementStiffnessMatrixBuilder(FiniteElement element)
+        private IStiffnessProvider GetElementStiffnessProvider(FiniteElement element)
         {
             int elementHash = element.GetHashCode();
             
             // check the cache, and retrieve if available
-            if (this.elementStiffnessMatrixCache.ContainsKey(elementHash))
+            if (this.elementStiffnessProviderCache.ContainsKey(elementHash))
             {
-                return (IStiffnessProvider)this.elementStiffnessMatrixCache[elementHash];
+                return (IStiffnessProvider)this.elementStiffnessProviderCache[elementHash];
             }
             
             IStiffnessProvider builder = this.stiffnessFactory.Create(element);
             
             // store in the cache
-            this.elementStiffnessMatrixCache.Add(elementHash, builder);
+            this.elementStiffnessProviderCache.Add(elementHash, builder);
             return builder;
         }
         

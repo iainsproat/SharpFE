@@ -35,7 +35,7 @@ namespace SharpFE.Core.Tests.Solvers
             force1 = model.ForceFactory.Create(20);
             model.ApplyForceToNode(force1, node2);
             
-            SUT = new LinearSolver(model);
+            SUT = new LinearSolverSVD(model);
         }
         
         [Test]
