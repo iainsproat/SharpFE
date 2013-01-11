@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace SharpFE.Examples.Beam
 {
     [TestFixture]
-    public class BeamIn1DModel
+    public class BeamIn2DModel
     {
         ////TODO most of the below are integration tests rather than examples, and should be split out.
         
@@ -236,13 +236,12 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(5000, node1Reaction.Z, 1);
             Assert.AreEqual(5000, node3Reaction.Z, 1);
             
-            // FIXME the tolerance values are very high!
-            Assert.AreEqual(0.0457, node1Displacement.YY, 0.005);
-            Assert.AreEqual(0.122, node2Displacement.X, 0.05);
-            Assert.AreEqual(-0.1525, node2Displacement.Z, 0.02);
             Assert.AreEqual(0, node2Displacement.YY, 0.001);
-            Assert.AreEqual(0.244, node3Displacement.X, 0.1);
-            Assert.AreEqual(-0.0457, node3Displacement.YY, 0.005);
+            Assert.AreEqual(0.0457, node1Displacement.YY, 0.0001);
+            Assert.AreEqual(0.122, node2Displacement.X, 0.001);
+            Assert.AreEqual(-0.1525, node2Displacement.Z, 0.001);
+            Assert.AreEqual(0.244, node3Displacement.X, 0.001);
+            Assert.AreEqual(-0.0457, node3Displacement.YY, 0.0001);
         }
         
         /// <summary>
