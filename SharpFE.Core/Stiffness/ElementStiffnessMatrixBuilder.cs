@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE;
     
     public abstract class ElementStiffnessMatrixBuilder<T> : IStiffnessProvider
@@ -128,7 +127,6 @@
             IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.XX, DegreeOfFreedom.YY, DegreeOfFreedom.ZZ };
             
             KeyedMatrix<DegreeOfFreedom> rotationMatrix = this.CalculateElementRotationMatrix();
-            KeyedMatrix<DegreeOfFreedom> identityMatrix = new KeyedMatrix<DegreeOfFreedom>(DenseMatrix.Identity(3), dof, dof);
             
             KeyedMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 

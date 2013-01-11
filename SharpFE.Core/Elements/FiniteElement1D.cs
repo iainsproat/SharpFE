@@ -3,7 +3,6 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE.Stiffness;
     
     /// <summary>
