@@ -22,7 +22,7 @@ namespace SharpFE.Stiffness
         
         public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
         {
-            //TODO should be able to get the below from the ModelType
+            ////TODO should be able to get the below from the ModelType
             IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2);
             supportedDegreesOfFreedom.Add(DegreeOfFreedom.X);
             supportedDegreesOfFreedom.Add(DegreeOfFreedom.Y);

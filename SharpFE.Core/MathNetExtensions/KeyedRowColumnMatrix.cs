@@ -158,7 +158,7 @@ namespace SharpFE
             {
                 rowIndex = this.RowIndex(rowKey);
             }
-            catch(KeyNotFoundException knfe)
+            catch (KeyNotFoundException knfe)
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -172,7 +172,7 @@ namespace SharpFE
             {
                 columnIndex = this.ColumnIndex(columnKey);
             }
-            catch(KeyNotFoundException knfe)
+            catch (KeyNotFoundException knfe)
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -268,7 +268,7 @@ namespace SharpFE
             {
                 return this.keysForRows[rowKey];
             }
-            catch(KeyNotFoundException knfe)
+            catch (KeyNotFoundException knfe)
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -289,7 +289,7 @@ namespace SharpFE
             {
                 return this.keysForColumns[columnKey];
             }
-            catch(KeyNotFoundException knfe)
+            catch (KeyNotFoundException knfe)
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,

@@ -27,27 +27,27 @@ namespace SharpFE.MathNetExtensions
         
         public void ThrowIfInvalid()
         {
-            Guard.AgainstNullArgument(lhs, "lhs");
-            Guard.AgainstNullArgument(rhs, "rhs");
+            Guard.AgainstNullArgument(this.lhs, "lhs");
+            Guard.AgainstNullArgument(this.rhs, "rhs");
             
-            if (lhs.Count != rhs.Count)
+            if (this.lhs.Count != this.rhs.Count)
             {
                 throw new ArgumentException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "There are a different number of keys in each list.  Argument 'lhs' has {0} items but 'rhs' has {1} items",
-                    lhs.Count,
-                    rhs.Count));
+                    this.lhs.Count,
+                    this.rhs.Count));
             }
             
-            errorMessages = new List<string>();
+            this.errorMessages = new List<string>();
             
-            int numItems = lhs.Count;
+            int numItems = this.lhs.Count;
             for (int i = 0; i < numItems; i++)
             {
                 this.CompareItemsAtIndex(i);
             }
             
-            if (errorMessages.Count > 0)
+            if (this.errorMessages.Count > 0)
             {
                 this.PrintAndThrowErrors();
             }
@@ -55,12 +55,12 @@ namespace SharpFE.MathNetExtensions
         
         private void CompareItemsAtIndex(int index)
         {
-            TLeftKey lhsItem = lhs[index];
-            TRightKey rhsItem = rhs[index];
+            TLeftKey lhsItem = this.lhs[index];
+            TRightKey rhsItem = this.rhs[index];
             
             if (lhsItem == null)
             {
-                errorMessages.Add(string.Format(
+                this.errorMessages.Add(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Item in lhs at index {0} is null.  The item at the corresponding index in rhs is {1}",
                     index,
@@ -70,7 +70,7 @@ namespace SharpFE.MathNetExtensions
             
             if (rhsItem == null)
             {
-                errorMessages.Add(string.Format(
+                this.errorMessages.Add(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Item in rhs at index {0} is null. The item at the corresponding index in lhs is {1}",
                     index,
@@ -80,7 +80,7 @@ namespace SharpFE.MathNetExtensions
             
             if (!lhsItem.Equals(rhsItem))
             {
-                errorMessages.Add(string.Format(
+                this.errorMessages.Add(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Item in lhs at index {0} does not equal the item in the rhs at the corresponding index.",
                     index));
@@ -92,11 +92,12 @@ namespace SharpFE.MathNetExtensions
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendLine("Error found in keys, refer to the following error messages:");
-            foreach(string message in this.errorMessages)
+            foreach (string message in this.errorMessages)
             {
                 sb.Append("    ");
                 sb.AppendLine(message);
             }
+            
             throw new ArgumentException(sb.ToString());
         }
     }

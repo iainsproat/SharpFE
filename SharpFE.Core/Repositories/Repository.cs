@@ -153,10 +153,10 @@ namespace SharpFE
         
         #region Equals and GetHashCode implementation
         public override bool Equals(object obj)
-		{
-			Repository<T> other = obj as Repository<T>;
-			return this.Equals(other);
-		}
+        {
+            Repository<T> other = obj as Repository<T>;
+            return this.Equals(other);
+        }
         
         /// <summary>
         /// 
@@ -166,31 +166,31 @@ namespace SharpFE
         public bool Equals(Repository<T> other)
         {
             if (other == null)
-				return false;
-			if (this.InternalStore == null && other.InternalStore == null)
-			{
-			    return true;
-			}
-			
-			if (this.InternalStore == null || other.InternalStore == null)
-			{
-			    return false;
-			}
-			
-			if (this.InternalStore.Count != other.InternalStore.Count)
-			{
-			    return false;
-			}
-			
-			foreach (T item in this.InternalStore)
-			{
-			    if (!other.InternalStore.Contains(item))
-			    {
-			        return false;
-			    }
-			}
-			
-			return true;
+                return false;
+            if (this.InternalStore == null && other.InternalStore == null)
+            {
+                return true;
+            }
+            
+            if (this.InternalStore == null || other.InternalStore == null)
+            {
+                return false;
+            }
+            
+            if (this.InternalStore.Count != other.InternalStore.Count)
+            {
+                return false;
+            }
+            
+            foreach (T item in this.InternalStore)
+            {
+                if (!other.InternalStore.Contains(item))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
         
         /// <summary>
@@ -198,42 +198,42 @@ namespace SharpFE
         /// </summary>
         /// <returns></returns>
         /// <remarks>The order in which items were added to the repository will not affect the hashcode</remarks>
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
-			unchecked
-			{
-				if (InternalStore != null)
-				{
-				    foreach(T item in this.InternalStore)
-				    {
-				        if (item != null)
-				        {
-				            hashCode += (1000000007) * item.GetHashCode();
-				        }
-				        else
-				        {
-				            hashCode += (int)10000000045;
-				        }
-				    }
-				}
-			}
-			return hashCode;
-		}
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked
+            {
+                if (this.InternalStore != null)
+                {
+                    foreach (T item in this.InternalStore)
+                    {
+                        if (item != null)
+                        {
+                            hashCode += (1000000007) * item.GetHashCode();
+                        }
+                        else
+                        {
+                            hashCode += (int)10000000045;
+                        }
+                    }
+                }
+            }
+            return hashCode;
+        }
         
-		public static bool operator ==(Repository<T> lhs, Repository<T> rhs)
-		{
-			if (ReferenceEquals(lhs, rhs))
-				return true;
-			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
-				return false;
-			return lhs.Equals(rhs);
-		}
+        public static bool operator ==(Repository<T> lhs, Repository<T> rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+                return true;
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+                return false;
+            return lhs.Equals(rhs);
+        }
         
-		public static bool operator !=(Repository<T> lhs, Repository<T> rhs)
-		{
-			return !(lhs == rhs);
-		}
+        public static bool operator !=(Repository<T> lhs, Repository<T> rhs)
+        {
+            return !(lhs == rhs);
+        }
         #endregion
 
     }

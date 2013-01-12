@@ -106,6 +106,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// Gets all the possible degrees of freedom in this entire model
+        /// </summary>
         public IList<NodalDegreeOfFreedom> AllDegreesOfFreedom
         {
             get
@@ -114,7 +117,7 @@ namespace SharpFE
                 IList<NodalDegreeOfFreedom> result = new List<NodalDegreeOfFreedom>(this.NodeCount * allowedBoundaryConditionDegreeOfFreedoms.Count);
                 foreach (FiniteElementNode node in this.nodes)
                 {
-                    foreach(DegreeOfFreedom dof in allowedBoundaryConditionDegreeOfFreedoms)
+                    foreach (DegreeOfFreedom dof in allowedBoundaryConditionDegreeOfFreedoms)
                     {
                         result.Add(new NodalDegreeOfFreedom(node, dof));
                     }
@@ -210,7 +213,7 @@ namespace SharpFE
         /// Determines whether a node is constrained in the given degree of freedom
         /// </summary>
         /// <param name="nodeToCheck">the node to check whether it is constrain in a particular degree of freedom</param>
-        /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constrainment</param>
+        /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constraint</param>
         /// <returns>True if this particular node and degree of freedom are constrained; otherwise, false.</returns>
         public bool IsConstrained(FiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
         {
@@ -238,6 +241,13 @@ namespace SharpFE
             return response;
         }
         
+        /// <summary>
+        /// Queries the model to find all the finite elements which directly connect to
+        /// the two provided nodes.
+        /// </summary>
+        /// <param name="node1">The first node connected to the elements to be sought</param>
+        /// <param name="node2">The second node connected to the elements to be sought</param>
+        /// <returns>A list of all the finite elements which directly connect the two nodes.  An empty list is returned if the nodes are equal.</returns>
         public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
         {
             Guard.AgainstNullArgument(node1, "node1");
@@ -309,18 +319,33 @@ namespace SharpFE
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// The HashCode of the model
+        /// </summary>
+        /// <returns>An integer representing the HashCode of the model</returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
-            unchecked {
-                if (nodes != null)
-                    hashCode += 1000000007 * nodes.GetHashCode();
-                if (elements != null)
-                    hashCode += 1000000009 * elements.GetHashCode();
-                if (forces != null)
-                    hashCode += 1000000021 * forces.GetHashCode();
-                hashCode += 1000000033 * ModelType.GetHashCode();
+            unchecked
+            {
+                if (this.nodes != null)
+                {
+                    hashCode += 1000000007 * this.nodes.GetHashCode();
+                }
+                
+                if (this.elements != null)
+                {
+                    hashCode += 1000000009 * this.elements.GetHashCode();
+                }
+                
+                if (this.forces != null)
+                {
+                    hashCode += 1000000021 * this.forces.GetHashCode();
+                }
+                
+                hashCode += 1000000033 * this.ModelType.GetHashCode();
             }
+            
             return hashCode;
         }
         
@@ -333,7 +358,10 @@ namespace SharpFE
         public bool Equals(FiniteElementModel other)
         {
             if (other == null)
+            {
                 return false;
+            }
+            
             return object.Equals(this.nodes, other.nodes)
                 && object.Equals(this.elements, other.elements)
                 && object.Equals(this.forces, other.forces)
@@ -343,9 +371,15 @@ namespace SharpFE
         public static bool operator ==(FiniteElementModel lhs, FiniteElementModel rhs)
         {
             if (ReferenceEquals(lhs, rhs))
+            {
                 return true;
+            }
+            
             if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+            {
                 return false;
+            }
+            
             return lhs.Equals(rhs);
         }
         
@@ -354,6 +388,5 @@ namespace SharpFE
             return !(lhs == rhs);
         }
         #endregion
-
     }
 }

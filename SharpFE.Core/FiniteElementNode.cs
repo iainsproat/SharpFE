@@ -13,7 +13,7 @@ namespace SharpFE
     /// Nodes have a position in space.
     /// Constraints and forces can be applied to nodes.
     /// </summary>
-    public class FiniteElementNode : IEquatable<FiniteElementNode>, IComparable<FiniteElementNode>
+    public class FiniteElementNode : IEquatable<FiniteElementNode>
     {
         #region Constructors
         /// <summary>
@@ -150,7 +150,7 @@ namespace SharpFE
         /// <summary>
         /// Returns the hashcode for this instance
         /// </summary>
-        /// <returns>A 32-bit signed integer hashcode</returns>
+        /// <returns>A 32-bit signed integer hash code</returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -177,44 +177,6 @@ namespace SharpFE
                 this.OriginalY,
                 this.OriginalZ);
         }
-        
-        public int CompareTo(FiniteElementNode other)
-        {
-            if (other == null)
-            {
-                return -1;
-            }
-            
-            if (other.OriginalX < this.OriginalX)
-            {
-                return -1;
-            }
-            else if (other.OriginalX > this.OriginalX)
-            {
-                return 1;
-            }
-            
-            if (other.OriginalY < this.OriginalY)
-            {
-                return -1;
-            }
-            else if (other.OriginalY > this.OriginalY)
-            {
-                return 1;
-            }
-            
-            if (other.OriginalZ < this.OriginalZ)
-            {
-                return -1;
-            }
-            else if (other.OriginalZ > this.OriginalZ)
-            {
-                return 1;
-            }
-            
-            return 0;
-        }
-
         #endregion
     }
 }

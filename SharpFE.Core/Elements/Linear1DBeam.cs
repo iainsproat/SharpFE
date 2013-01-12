@@ -47,7 +47,7 @@
         {
             get
             {
-                return this.Material.ShearModulusElasticity * this.CrossSection.Area ;
+                return this.Material.ShearModulusElasticity * this.CrossSection.Area;
             }
         }
         

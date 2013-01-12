@@ -163,7 +163,7 @@ namespace SharpFE.Stiffness
             double totalStiffness = 0.0;
             
             Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom> cacheKey = new Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>(row, column);
-            if (stiffnessCache.ContainsKey(cacheKey, this.currentModelHash, out totalStiffness))
+            if (this.stiffnessCache.ContainsKey(cacheKey, this.currentModelHash, out totalStiffness))
             {
                 return totalStiffness;
             }

@@ -42,46 +42,53 @@ namespace SharpFE
             
             #region Equals and GetHashCode implementation
             public override bool Equals(object obj)
-			{
-				return (obj is ElementRepository.NodeTuple) && Equals((ElementRepository.NodeTuple)obj);
-			}
+            {
+                return (obj is ElementRepository.NodeTuple) && Equals((ElementRepository.NodeTuple)obj);
+            }
             
             /// <summary>
             /// Order of nodes is ignored
             /// </summary>
             /// <param name="other"></param>
             /// <returns></returns>
-			public bool Equals(ElementRepository.NodeTuple other)
-			{
-				return object.Equals(this.n1, other.n1) && object.Equals(this.n2, other.n2)
-				    || object.Equals(this.n1, other.n2) && object.Equals(this.n2, other.n1);
-			}
+            public bool Equals(ElementRepository.NodeTuple other)
+            {
+                return object.Equals(this.n1, other.n1) && object.Equals(this.n2, other.n2)
+                    || object.Equals(this.n1, other.n2) && object.Equals(this.n2, other.n1);
+            }
             
-			/// <summary>
-			/// Order of nodes is ignored
-			/// </summary>
-			/// <returns></returns>
-			public override int GetHashCode()
-			{
-				int hashCode = 0;
-				unchecked {
-					if (n1 != null)
-						hashCode += 1000000007 * n1.GetHashCode();
-					if (n2 != null)
-						hashCode += 1000000007 * n2.GetHashCode();
-				}
-				return hashCode;
-			}
+            /// <summary>
+            /// Order of nodes is ignored
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode()
+            {
+                int hashCode = 0;
+                unchecked
+                {
+                    if (this.n1 != null)
+                    {
+                        hashCode += 1000000007 * this.n1.GetHashCode();
+                    }
+                    
+                    if (this.n2 != null)
+                    {
+                        hashCode += 1000000007 * this.n2.GetHashCode();
+                    }
+                }
+                
+                return hashCode;
+            }
             
-			public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
-			{
-				return lhs.Equals(rhs);
-			}
+            public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+            {
+                return lhs.Equals(rhs);
+            }
             
-			public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
-			{
-				return !(lhs == rhs);
-			}
+            public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+            {
+                return !(lhs == rhs);
+            }
             #endregion
 
         }
@@ -110,6 +117,11 @@ namespace SharpFE
             Guard.AgainstNullArgument(node2, "node2");
             
             IList<FiniteElement> connectingElements;
+            
+            if (node1.Equals(node2))
+            {
+                return new List<FiniteElement>(0);
+            }
             
             int currentValidHashForCache = this.GetHashCode();
             ElementRepository.NodeTuple keyForCache = new ElementRepository.NodeTuple(node1, node2);

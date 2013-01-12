@@ -58,7 +58,9 @@ namespace SharpFE
                                                             initialLengthOfSide1ProjectedInYAxis,
                                                             initialLengthOfSide1ProjectedInZAxis
                                                         },
-                                                        DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
+                                                        DegreeOfFreedom.X,
+                                                        DegreeOfFreedom.Y,
+                                                        DegreeOfFreedom.Z);
             }
         }
         

@@ -12,7 +12,7 @@ namespace SharpFE
     /// Solvers of finite element models should inherit from this interface.
     /// </summary>
     /// <remarks>
-    /// This interface is analagous the command interface of the Command pattern.
+    /// This interface is similar to the command interface of the Command pattern.
     /// </remarks>
     public interface IFiniteElementSolver
     {

@@ -127,7 +127,6 @@ namespace SharpFE
         /// <summary>
         /// Adds multiple displacements to the set of results
         /// </summary>
-        /// <param name="identifiers">The node and degree of freedom combinations.  The order of this list matches the order of the values in the corresponding parameter</param>
         /// <param name="displacements">The value of the displacements.  The order of this vector matches the order of the identifiers in the corresponding parameter</param>
         public void AddMultipleDisplacements(KeyedVector<NodalDegreeOfFreedom> displacements)
         {
@@ -144,7 +143,6 @@ namespace SharpFE
         /// <summary>
         /// Adds multiple reaction to this set of results
         /// </summary>
-        /// <param name="identifiers">The node and degree of freedom combinations.  The order of this list matches the order of the values in the corresponding parameter.</param>
         /// <param name="reactions">The value of the reactions.  The order of this vector matches the order of the identifiers in the corresponding parameter.</param>
         public void AddMultipleReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
         {

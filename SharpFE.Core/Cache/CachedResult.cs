@@ -44,39 +44,39 @@ namespace SharpFE.Cache
         
         #region Equals and GetHashCode implementation
         public override bool Equals(object obj)
-		{
-			return (obj is CachedValue<T>) && Equals((CachedValue<T>)obj);
-		}
+        {
+            return (obj is CachedValue<T>) && Equals((CachedValue<T>)obj);
+        }
         
-		public bool Equals(CachedValue<T> other)
-		{
-			return this.validityHash == other.validityHash && object.Equals(this.storedValue, other.storedValue);
-		}
+        public bool Equals(CachedValue<T> other)
+        {
+            return this.validityHash == other.validityHash && object.Equals(this.storedValue, other.storedValue);
+        }
         
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
-			unchecked
-			{
-				hashCode += 1000000007 * validityHash.GetHashCode();
-				if (storedValue != null)
-				{
-					hashCode += 1000000009 * storedValue.GetHashCode();
-				}
-			}
-			
-			return hashCode;
-		}
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked
+            {
+                hashCode += 1000000007 * this.validityHash.GetHashCode();
+                if (this.storedValue != null)
+                {
+                    hashCode += 1000000009 * this.storedValue.GetHashCode();
+                }
+            }
+            
+            return hashCode;
+        }
         
-		public static bool operator ==(CachedValue<T> lhs, CachedValue<T> rhs)
-		{
-			return lhs.Equals(rhs);
-		}
+        public static bool operator ==(CachedValue<T> lhs, CachedValue<T> rhs)
+        {
+            return lhs.Equals(rhs);
+        }
         
-		public static bool operator !=(CachedValue<T> lhs, CachedValue<T> rhs)
-		{
-			return !(lhs == rhs);
-		}
+        public static bool operator !=(CachedValue<T> lhs, CachedValue<T> rhs)
+        {
+            return !(lhs == rhs);
+        }
         #endregion
 
     }

@@ -1,13 +1,13 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="Cache.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-
 namespace SharpFE.Cache
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Very simple cache implementation
     /// </summary>
