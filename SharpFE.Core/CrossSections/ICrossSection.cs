@@ -54,6 +54,7 @@
         /// <summary>
         /// As measured from centre of bounding box
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid")]
         Coordinate2D GeometricCentroid { get; }
         
         

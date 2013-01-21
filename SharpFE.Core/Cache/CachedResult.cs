@@ -68,16 +68,15 @@ namespace SharpFE.Cache
             return hashCode;
         }
         
-        public static bool operator ==(CachedValue<T> lhs, CachedValue<T> rhs)
+        public static bool operator ==(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
         {
-            return lhs.Equals(rhs);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        public static bool operator !=(CachedValue<T> lhs, CachedValue<T> rhs)
+        public static bool operator !=(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
         {
-            return !(lhs == rhs);
+            return !(leftHandSide == rightHandSide);
         }
         #endregion
-
     }
 }

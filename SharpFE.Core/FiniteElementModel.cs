@@ -204,6 +204,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node to free</param>
         /// <param name="degreeOfFreedomToFree">the degree of freedom in which to free the node</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Unconstrain")]
         public void UnconstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
         {
             this.nodes.UnconstrainNode(node, degreeOfFreedomToFree);
@@ -291,8 +292,6 @@ namespace SharpFE
         public KeyedVector<NodalDegreeOfFreedom> KnownDisplacementVector()
         {
             IList<NodalDegreeOfFreedom> knownDisplacements = this.nodes.ConstrainedNodalDegreeOfFreedoms;
-            int numberOfKnownDisplacements = knownDisplacements.Count;
-            
             return new KeyedVector<NodalDegreeOfFreedom>(knownDisplacements, 0.0); // TODO allow for non-zero initial displacements
         }
         
@@ -368,24 +367,24 @@ namespace SharpFE
                 && this.ModelType == other.ModelType;
         }
         
-        public static bool operator ==(FiniteElementModel lhs, FiniteElementModel rhs)
+        public static bool operator ==(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
         {
-            if (ReferenceEquals(lhs, rhs))
+            if (ReferenceEquals(leftHandSide, rightHandSide))
             {
                 return true;
             }
             
-            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
             {
                 return false;
             }
             
-            return lhs.Equals(rhs);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        public static bool operator !=(FiniteElementModel lhs, FiniteElementModel rhs)
+        public static bool operator !=(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
         {
-            return !(lhs == rhs);
+            return !(leftHandSide == rightHandSide);
         }
         #endregion
     }

@@ -98,6 +98,7 @@ namespace SharpFE
         ///     - translation along the z-axis.
         ///     - rotation in plate elements in the xx-axis and yy-axis.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "The use of the word 'Multi' is relevant in this context")]
         MultiStorey2DSlab,
         
         /// <summary>

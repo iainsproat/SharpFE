@@ -146,24 +146,24 @@ namespace SharpFE
             return hashCode;
         }
         
-        public static bool operator ==(FiniteElement lhs, FiniteElement rhs)
+        public static bool operator ==(FiniteElement leftHandSide, FiniteElement rightHandSide)
         {
-            if (ReferenceEquals(lhs, rhs))
+            if (ReferenceEquals(leftHandSide, rightHandSide))
             {
                 return true;
             }
             
-            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
             {
                 return false;
             }
             
-            return lhs.Equals(rhs);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        public static bool operator !=(FiniteElement lhs, FiniteElement rhs)
+        public static bool operator !=(FiniteElement leftHandSide, FiniteElement rightHandSide)
         {
-            return !(lhs == rhs);
+            return !(leftHandSide == rightHandSide);
         }
         
         public override string ToString()
@@ -209,7 +209,9 @@ namespace SharpFE
         /// Adds a new node to the element.
         /// </summary>
         /// <param name="nodeToAdd">The node to add to the element</param>
-        internal void AddNode(FiniteElementNode nodeToAdd)
+        /// <exception cref="ArgumentNullException">Thrown if the node to add is null</exception>
+        /// <exception cref="ArgumentException">Thrown if the node is already part of the finite element</exception>
+        protected void AddNode(FiniteElementNode nodeToAdd)
         {
             Guard.AgainstNullArgument(nodeToAdd, "nodeToAdd");
             

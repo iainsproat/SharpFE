@@ -10,12 +10,15 @@
         private double _x;
         private double _y;
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "y")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "x")]
         public Coordinate2D(double x, double y)
         {
             this._x = x;
             this._y = y;
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X")]
         public double X
         {
             get
@@ -24,6 +27,7 @@
             }
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y")]
         public double Y
         {
             get
@@ -55,14 +59,14 @@
             return hashCode;
         }
         
-        public static bool operator ==(Coordinate2D lhs, Coordinate2D rhs)
+        public static bool operator ==(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
         {
-            return lhs.Equals(rhs);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        public static bool operator !=(Coordinate2D lhs, Coordinate2D rhs)
+        public static bool operator !=(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
         {
-            return !(lhs == rhs);
+            return !(leftHandSide == rightHandSide);
         }
         #endregion
 

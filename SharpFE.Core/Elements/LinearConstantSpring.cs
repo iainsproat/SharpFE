@@ -69,18 +69,18 @@ namespace SharpFE
             return hashCode;
         }
         
-        public static bool operator ==(LinearConstantSpring lhs, LinearConstantSpring rhs)
+        public static bool operator ==(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(leftHandSide, rightHandSide))
                 return true;
-            if (object.ReferenceEquals(lhs, null) || object.ReferenceEquals(rhs, null))
+            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
                 return false;
-            return lhs.Equals(rhs);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        public static bool operator !=(LinearConstantSpring lhs, LinearConstantSpring rhs)
+        public static bool operator !=(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
         {
-            return !(lhs == rhs);
+            return !(leftHandSide == rightHandSide);
         }
         #endregion
 

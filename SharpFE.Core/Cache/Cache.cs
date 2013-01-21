@@ -25,11 +25,13 @@ namespace SharpFE.Cache
             return this.internalStore.ContainsKey(key);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
         public bool ContainsKey(TKey key, out TValue cachedValue)
         {
             return this.ContainsKey(key, false, 0, out cachedValue);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#")]
         public bool ContainsKey(TKey key, int validHash, out TValue cachedValue)
         {
             return this.ContainsKey(key, true, validHash, out cachedValue);

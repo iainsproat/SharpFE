@@ -43,6 +43,8 @@
             }
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Az")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Az")]
         public double ShearStiffnessGAz
         {
             get
@@ -51,6 +53,7 @@
             }
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Iy")]
         public double BendingStiffnessEIy
         {
             get
