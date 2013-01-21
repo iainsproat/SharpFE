@@ -255,10 +255,6 @@ namespace SharpFE
             Guard.AgainstNullArgument(node2, "node2");
             
             IList<FiniteElement> response = this.elements.GetAllElementsDirectlyConnecting(node1, node2);
-            if (response == null)
-            {
-                return new List<FiniteElement>(0);
-            }
             
             return response;
         }

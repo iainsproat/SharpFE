@@ -111,17 +111,21 @@ namespace SharpFE
             return this.nodeToElementIndex.Get(node);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <returns>
+        /// A list of elements directly connecting both the nodes.
+        /// If node1 is equal to node2 (i.e. they are the same nodes), then all the elements connected to that node will be returned.
+        /// </returns>
         public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
         {
             Guard.AgainstNullArgument(node1, "node1");
             Guard.AgainstNullArgument(node2, "node2");
             
             IList<FiniteElement> connectingElements;
-            
-            if (node1.Equals(node2))
-            {
-                return new List<FiniteElement>(0);
-            }
             
             int currentValidHashForCache = this.GetHashCode();
             ElementRepository.NodeTuple keyForCache = new ElementRepository.NodeTuple(node1, node2);
