@@ -74,6 +74,7 @@ namespace SharpFE
             // empty
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods")]
         public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.ColumnKeys, other.RowKeys);
@@ -105,6 +106,7 @@ namespace SharpFE
             return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
         public new KeyedMatrix<TKey> NormalizeRows(int p)
         {
             Matrix<double> result = ((Matrix<double>)this).NormalizeRows(p);

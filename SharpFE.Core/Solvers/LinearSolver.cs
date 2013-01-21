@@ -123,10 +123,10 @@ namespace SharpFE
         /// <param name="A">The stiffness matrix</param>
         /// <param name="B">The forces</param>
         /// <returns></returns>
-        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix A, KeyedVector<NodalDegreeOfFreedom> B)
+        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
         {
-            KeyedMatrix<NodalDegreeOfFreedom> inverse = A.Inverse();
-            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(B);
+            KeyedMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
+            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(forceVector);
             return X;
         }
         

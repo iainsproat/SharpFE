@@ -52,7 +52,9 @@
         }
         
         public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract StiffnessMatrix GetLocalStiffnessMatrix();
         
         /// <summary>
@@ -124,13 +126,10 @@
         {
             this.ThrowIfNotInitialized();
             
-            IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.XX, DegreeOfFreedom.YY, DegreeOfFreedom.ZZ };
-            
             KeyedMatrix<DegreeOfFreedom> rotationMatrix = this.CalculateElementRotationMatrix();
             
             KeyedMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
-            int numberOfNodes = this.Element.Nodes.Count;
             foreach (FiniteElementNode node in this.Element.Nodes)
             {
                 elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));

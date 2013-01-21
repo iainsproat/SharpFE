@@ -13,6 +13,7 @@ namespace SharpFE
     /// <summary>
     /// Linear solver using Singular Value Decomposition
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SVD")]
     public class LinearSolverSVD : LinearSolver
     {
         public LinearSolverSVD(FiniteElementModel modelToSolve)
@@ -21,11 +22,11 @@ namespace SharpFE
             // empty
         }
         
-        protected override KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix A, KeyedVector<NodalDegreeOfFreedom> B)
+        protected override KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
         {
-            Svd svd = new DenseSvd(A, true);
-            Vector<double> X = svd.Solve(B);
-            return new KeyedVector<NodalDegreeOfFreedom>(X, B.Keys);
+            Svd svd = new DenseSvd(stiffnessMatrix, true);
+            Vector<double> X = svd.Solve(forceVector);
+            return new KeyedVector<NodalDegreeOfFreedom>(X, forceVector.Keys);
         }
     }
 }

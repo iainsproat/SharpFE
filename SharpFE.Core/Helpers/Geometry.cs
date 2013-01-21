@@ -14,11 +14,13 @@ namespace SharpFE
     /// </summary>
     public static class Geometry
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine")]
         public static Vector VectorBetweenPointAndLine(FiniteElementNode point, FiniteElementNode pointOnLine, Vector vectorDefiningLine)
         {
             return Geometry.VectorBetweenPointAndLine(Geometry.NodeToVector(point), Geometry.NodeToVector(pointOnLine), vectorDefiningLine);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine")]
         public static Vector VectorBetweenPointAndLine(Vector point, Vector pointOnLine, Vector vectorDefiningLine)
         {
             Vector<double> betweenPoints = point.Subtract(pointOnLine);
@@ -55,6 +57,7 @@ namespace SharpFE
         /// <param name="node2"></param>
         /// <param name="node3"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray")]
         public static double AreaQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3)
         {
             return Geometry.AreaQuadrilateral(Geometry.NodeToVector(node0), Geometry.NodeToVector(node1), Geometry.NodeToVector(node2), Geometry.NodeToVector(node3));
@@ -68,6 +71,7 @@ namespace SharpFE
         /// <param name="point2"></param>
         /// <param name="point3"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray")]
         public static double AreaQuadrilateral(Vector point0, Vector point1, Vector point2, Vector point3)
         {
             Vector diagonal1 = (Vector)point2.Subtract(point0);

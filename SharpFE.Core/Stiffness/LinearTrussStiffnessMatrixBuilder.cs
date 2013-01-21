@@ -65,7 +65,7 @@ namespace SharpFE.Stiffness
                     return spring.SpringConstant;
                 }
             }
-            catch
+            catch (InvalidCastException)
             {
                 // do nothing
             }

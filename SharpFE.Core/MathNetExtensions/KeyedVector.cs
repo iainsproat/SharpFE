@@ -13,6 +13,7 @@
     /// This is roughly analagous to what a Dictionary is to a List.
     /// </summary>
     /// <typeparam name="TKey">The type of the instances which form the keys to this KeyedMatrix</typeparam>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class KeyedVector<TKey> : DenseVector
     {
         /// <summary>
@@ -104,6 +105,7 @@
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
         public new KeyedVector<TKey> Normalize(double p)
         {
             Vector<double> result = base.Normalize(p);

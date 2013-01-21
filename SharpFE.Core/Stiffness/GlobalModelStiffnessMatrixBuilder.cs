@@ -130,8 +130,6 @@ namespace SharpFE.Stiffness
                 "There must be at least one column",
                 "columnKeys");
             
-            int modelHashCode = this.parent.GetHashCode();
-            
             StiffnessMatrix result = new StiffnessMatrix(rowKeys, columnKeys);
             
             IList<FiniteElement> connectedElements;
