@@ -32,7 +32,7 @@ namespace SharpFE.Examples.Beam
             IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
             ICrossSection section = new SolidRectangle(0.1, 0.1);
             
-            model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
             
             ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0); // Create a force of 10 Newtons in the z direction
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
@@ -45,6 +45,38 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-10000, reaction.YY, 0.001); // Check that we have calculated a reaction of -10 NewtonMetres around the YY axis.
             
             DisplacementVector displacement = results.GetDisplacement(node2);  // get the displacement at the second node
+            Assert.AreEqual(-0.00192, displacement.Z, 0.0005);
+            Assert.AreEqual(0.00286, displacement.YY, 0.0001);
+        }
+        
+        [Test]
+        public void ThreeNodeCantilever()
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Beam1D); // we will create and analyze a 1D beam system
+            FiniteElementNode node1 = model.NodeFactory.Create(0); // create a node at the origin
+            model.ConstrainNode(node1, DegreeOfFreedom.Z); // constrain the node from moving in the Z-axis
+            model.ConstrainNode(node1, DegreeOfFreedom.YY); // constrain this node from rotating around the Y-axis
+
+            FiniteElementNode node2 = model.NodeFactory.Create(0.5);
+            FiniteElementNode node3 = model.NodeFactory.Create(1.0);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
+            ICrossSection section = new SolidRectangle(0.1, 0.1);
+            
+            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
+            model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            
+            ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0); // Create a force of 10 Newtons in the z direction
+            model.ApplyForceToNode(force, node3); // Apply that force to the second node
+            
+            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+            FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
+            
+            ReactionVector reaction = results.GetReaction(node1); //get the reaction at the first node
+            Assert.AreEqual(10000, reaction.Z, 0.001);   // Check that we have calculated a reaction of 10 Newtons in the Z-axis
+            Assert.AreEqual(-10000, reaction.YY, 0.001); // Check that we have calculated a reaction of -10 NewtonMetres around the YY axis.
+            
+            DisplacementVector displacement = results.GetDisplacement(node3);  // get the displacement at the second node
             Assert.AreEqual(-0.00192, displacement.Z, 0.0005);
             Assert.AreEqual(0.00286, displacement.YY, 0.0001);
         }
