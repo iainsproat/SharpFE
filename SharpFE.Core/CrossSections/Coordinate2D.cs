@@ -37,6 +37,16 @@
         }
         
         #region Equals and GetHashCode implementation
+        public static bool operator ==(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
+        {
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        public static bool operator !=(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
         public override bool Equals(object obj)
         {
             return (obj is Coordinate2D) && this.Equals((Coordinate2D)obj);
@@ -58,17 +68,6 @@
             
             return hashCode;
         }
-        
-        public static bool operator ==(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
-        {
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(Coordinate2D leftHandSide, Coordinate2D rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
         #endregion
-
     }
 }

@@ -20,7 +20,7 @@
         /// The keys which identify the items of this keyed vector
         /// </summary>
         private IDictionary<TKey, int> _keys = new Dictionary<TKey, int>();
-            
+        
         public KeyedVector(IList<TKey> keysForVector)
             : base(keysForVector.Count)
         {
@@ -63,23 +63,24 @@
             this.CheckAndAddKeys(keysForVector);
         }
         
+        public IList<TKey> Keys
+        {
+            get
+            {
+                return new List<TKey>(this._keys.Keys);
+            }
+        }
+        
         public double this[TKey index]
         {
             get
             {
                 return this[this.KeyIndex(index)];
             }
+            
             set
             {
                 this[this.KeyIndex(index)] = value;
-            }
-        }
-        
-        public IList<TKey> Keys
-        {
-            get
-            {
-                return new List<TKey>(this._keys.Keys);
             }
         }
         
@@ -100,7 +101,7 @@
             kcv.ThrowIfInvalid();
             
             ////TODO If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
-             
+            
             Vector result = ((Vector)this).CrossProduct((Vector)other);
             return new KeyedVector<TKey>(result, this.Keys);
         }
@@ -133,7 +134,6 @@
             sb.Append("]");
             return sb.ToString();
         }
-
         
         /// <summary>
         /// Determines the row index in the matrix

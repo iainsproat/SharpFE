@@ -106,6 +106,26 @@ namespace SharpFE
         }
         
         #region Equals and GetHashCode implementation
+        public static bool operator ==(FiniteElement leftHandSide, FiniteElement rightHandSide)
+        {
+            if (ReferenceEquals(leftHandSide, rightHandSide))
+            {
+                return true;
+            }
+            
+            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
+            {
+                return false;
+            }
+            
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        public static bool operator !=(FiniteElement leftHandSide, FiniteElement rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
         public override bool Equals(object obj)
         {
             FiniteElement other = obj as FiniteElement;
@@ -146,26 +166,6 @@ namespace SharpFE
             return hashCode;
         }
         
-        public static bool operator ==(FiniteElement leftHandSide, FiniteElement rightHandSide)
-        {
-            if (ReferenceEquals(leftHandSide, rightHandSide))
-            {
-                return true;
-            }
-            
-            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
-            {
-                return false;
-            }
-            
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(FiniteElement leftHandSide, FiniteElement rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
-        
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -190,6 +190,7 @@ namespace SharpFE
                     sb.Append(", ");
                 }
             }
+            
             sb.Append("]");
             
             return sb.ToString();
@@ -197,13 +198,26 @@ namespace SharpFE
 
         #endregion
 
-        
         /// <summary>
         /// Determines whether a degree of freedom is supported by this element
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
         public abstract bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
+        
+        public bool IsDirty(int previousHash)
+        {
+            return this.GetHashCode() != previousHash;
+        }
+        
+        /// <summary>
+        /// Removes a node from the element.
+        /// </summary>
+        /// <param name="nodeToRemove">The node to remove from the element</param>
+        internal void RemoveNode(FiniteElementNode nodeToRemove)
+        {
+            this.nodeStore.Remove(nodeToRemove);
+        }
         
         /// <summary>
         /// Adds a new node to the element.
@@ -222,15 +236,6 @@ namespace SharpFE
             
             this.ThrowIfNodeCannotBeAdded(nodeToAdd);
             this.nodeStore.Add(nodeToAdd);
-        }
-        
-        /// <summary>
-        /// Removes a node from the element.
-        /// </summary>
-        /// <param name="nodeToRemove">The node to remove from the element</param>
-        internal void RemoveNode(FiniteElementNode nodeToRemove)
-        {
-            this.nodeStore.Remove(nodeToRemove);
         }
         
         /// <summary>
@@ -264,11 +269,6 @@ namespace SharpFE
             }
             
             return nodalDegreeOfFreedoms;
-        }
-        
-        public bool IsDirty(int previousHash)
-        {
-            return this.GetHashCode() != previousHash;
         }
     }
 }

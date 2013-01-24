@@ -29,70 +29,6 @@ namespace SharpFE
         
         private Cache<ElementRepository.NodeTuple, IList<FiniteElement>> cacheConnectingElements = new Cache<ElementRepository.NodeTuple, IList<FiniteElement>>();
         
-        private struct NodeTuple : IEquatable<NodeTuple>
-        {
-            private FiniteElementNode n1;
-            private FiniteElementNode n2;
-            
-            public NodeTuple(FiniteElementNode node1, FiniteElementNode node2)
-            {
-                this.n1 = node1;
-                this.n2 = node2;
-            }
-            
-            #region Equals and GetHashCode implementation
-            public override bool Equals(object obj)
-            {
-                return (obj is ElementRepository.NodeTuple) && Equals((ElementRepository.NodeTuple)obj);
-            }
-            
-            /// <summary>
-            /// Order of nodes is ignored
-            /// </summary>
-            /// <param name="other"></param>
-            /// <returns></returns>
-            public bool Equals(ElementRepository.NodeTuple other)
-            {
-                return object.Equals(this.n1, other.n1) && object.Equals(this.n2, other.n2)
-                    || object.Equals(this.n1, other.n2) && object.Equals(this.n2, other.n1);
-            }
-            
-            /// <summary>
-            /// Order of nodes is ignored
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                int hashCode = 0;
-                unchecked
-                {
-                    if (this.n1 != null)
-                    {
-                        hashCode += 1000000007 * this.n1.GetHashCode();
-                    }
-                    
-                    if (this.n2 != null)
-                    {
-                        hashCode += 1000000007 * this.n2.GetHashCode();
-                    }
-                }
-                
-                return hashCode;
-            }
-            
-            public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
-            {
-                return lhs.Equals(rhs);
-            }
-            
-            public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
-            {
-                return !(lhs == rhs);
-            }
-            #endregion
-
-        }
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementRepository" /> class.
         /// </summary>
@@ -234,6 +170,69 @@ namespace SharpFE
             }
             
             return success;
+        }
+        
+        private struct NodeTuple : IEquatable<NodeTuple>
+        {
+            private FiniteElementNode n1;
+            private FiniteElementNode n2;
+            
+            public NodeTuple(FiniteElementNode node1, FiniteElementNode node2)
+            {
+                this.n1 = node1;
+                this.n2 = node2;
+            }
+            
+            #region Equals and GetHashCode implementation
+            public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+            {
+                return lhs.Equals(rhs);
+            }
+            
+            public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
+            {
+                return !(lhs == rhs);
+            }
+            
+            public override bool Equals(object obj)
+            {
+                return (obj is ElementRepository.NodeTuple) && this.Equals((ElementRepository.NodeTuple)obj);
+            }
+            
+            /// <summary>
+            /// Order of nodes is ignored
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            public bool Equals(ElementRepository.NodeTuple other)
+            {
+                return (object.Equals(this.n1, other.n1) && object.Equals(this.n2, other.n2))
+                    || (object.Equals(this.n1, other.n2) && object.Equals(this.n2, other.n1));
+            }
+            
+            /// <summary>
+            /// Order of nodes is ignored
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode()
+            {
+                int hashCode = 0;
+                unchecked
+                {
+                    if (this.n1 != null)
+                    {
+                        hashCode += 1000000007 * this.n1.GetHashCode();
+                    }
+                    
+                    if (this.n2 != null)
+                    {
+                        hashCode += 1000000007 * this.n2.GetHashCode();
+                    }
+                }
+                
+                return hashCode;
+            }
+            #endregion
         }
     }
 }

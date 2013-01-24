@@ -1,9 +1,18 @@
-﻿namespace SharpFE.Stiffness
+﻿//-----------------------------------------------------------------------
+// <copyright file="ElementStiffnessMatrixBuilder.cs" company="SharpFE">
+//     Copyright Iain Sproat, 2012 - 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
     using SharpFE;
     
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class ElementStiffnessMatrixBuilder<T> : IStiffnessProvider
         where T : FiniteElement
     {
@@ -12,8 +21,15 @@
         /// </summary>
         private StiffnessMatrix _globalStiffnessMatrix;
         
+        /// <summary>
+        /// 
+        /// </summary>
         private int elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt;
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="finiteElement"></param>
         protected ElementStiffnessMatrixBuilder(T finiteElement)
         {
             Guard.AgainstNullArgument(finiteElement, "finiteElement");
@@ -22,6 +38,9 @@
             this.HasBeenInitialized = true;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public T Element
         {
             get;
@@ -45,15 +64,33 @@
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         protected bool HasBeenInitialized
         {
             get;
             private set;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract StiffnessMatrix GetLocalStiffnessMatrix();
         
@@ -79,6 +116,93 @@
             }
             
             return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal KeyedMatrix<DegreeOfFreedom> CalculateElementRotationMatrix()
+        {
+            this.ThrowIfNotInitialized();
+            
+            KeyedMatrix<DegreeOfFreedom> rotationMatrix = CreateFromRows(this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis);
+            rotationMatrix = rotationMatrix.NormalizeRows(2);
+            return rotationMatrix;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void ThrowIfNotInitialized()
+        {
+            if (!this.HasBeenInitialized)
+            {
+                throw new InvalidOperationException("This StiffnessMatrixBuilder has not been initialized correctly.  The Initialize(FiniteElement) method should be called first.");
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="axis1"></param>
+        /// <param name="axis2"></param>
+        /// <param name="axis3"></param>
+        /// <returns></returns>
+        private static KeyedMatrix<DegreeOfFreedom> CreateFromRows(KeyedVector<DegreeOfFreedom> axis1, KeyedVector<DegreeOfFreedom> axis2, KeyedVector<DegreeOfFreedom> axis3)
+        {
+            Guard.AgainstBadArgument(
+                () => { return axis1.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis1");
+            Guard.AgainstBadArgument(
+                () => { return axis2.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis2");
+            Guard.AgainstBadArgument(
+                () => { return axis3.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis3");
+            Guard.AgainstBadArgument(
+                () => { return axis1.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis1),
+                "axis1");
+            Guard.AgainstBadArgument(
+                () => { return axis2.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis2),
+                "axis2");
+            Guard.AgainstBadArgument(
+                () => { return axis3.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis3),
+                "axis3");
+            
+            KeyedVector<DegreeOfFreedom> axis1Norm = axis1.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis2Norm = axis2.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis3Norm = axis3.Normalize(2);
+            
+            IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z };
+            
+            KeyedMatrix<DegreeOfFreedom> result = new KeyedMatrix<DegreeOfFreedom>(dof);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[DegreeOfFreedom.Z]);
+            
+            return result;
         }
         
         /// <summary>
@@ -148,79 +272,6 @@
             }
             
             return elementRotationMatrixFromLocalToGlobalCoordinates;
-        }
-        
-        internal KeyedMatrix<DegreeOfFreedom> CalculateElementRotationMatrix()
-        {
-            this.ThrowIfNotInitialized();
-            
-            KeyedMatrix<DegreeOfFreedom> rotationMatrix = CreateFromRows(this.Element.LocalXAxis, this.Element.LocalYAxis, this.Element.LocalZAxis);
-            rotationMatrix = rotationMatrix.NormalizeRows(2);
-            return rotationMatrix;
-        }
-        
-        private static KeyedMatrix<DegreeOfFreedom> CreateFromRows(KeyedVector<DegreeOfFreedom> axis1, KeyedVector<DegreeOfFreedom> axis2, KeyedVector<DegreeOfFreedom> axis3)
-        {
-            Guard.AgainstBadArgument(
-                () => { return axis1.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis1");
-            Guard.AgainstBadArgument(
-                () => { return axis2.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis2");
-            Guard.AgainstBadArgument(
-                () => { return axis3.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis3");
-            Guard.AgainstBadArgument(
-                () => { return axis1.SumMagnitudes() == 0; },
-                string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Axis should not be zero: {0}",
-                    axis1),
-                "axis1");
-            Guard.AgainstBadArgument(
-                () => { return axis2.SumMagnitudes() == 0; },
-                string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Axis should not be zero: {0}",
-                    axis2),
-                "axis2");
-            Guard.AgainstBadArgument(
-                () => { return axis3.SumMagnitudes() == 0; },
-                string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Axis should not be zero: {0}",
-                    axis3),
-                "axis3");
-            
-            KeyedVector<DegreeOfFreedom> axis1Norm = axis1.Normalize(2);
-            KeyedVector<DegreeOfFreedom> axis2Norm = axis2.Normalize(2);
-            KeyedVector<DegreeOfFreedom> axis3Norm = axis3.Normalize(2);
-            
-            IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z };
-            
-            KeyedMatrix<DegreeOfFreedom> result = new KeyedMatrix<DegreeOfFreedom>(dof);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[DegreeOfFreedom.X]);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[DegreeOfFreedom.Y]);
-            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[DegreeOfFreedom.Z]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[DegreeOfFreedom.X]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[DegreeOfFreedom.Y]);
-            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[DegreeOfFreedom.Z]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[DegreeOfFreedom.X]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[DegreeOfFreedom.Y]);
-            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[DegreeOfFreedom.Z]);
-            
-            return result;
-        }
-        
-        protected void ThrowIfNotInitialized()
-        {
-            if (!this.HasBeenInitialized)
-            {
-                throw new InvalidOperationException("This StiffnessMatrixBuilder has not been initialized correctly.  The Initialize(FiniteElement) method should be called first.");
-            }
         }
     }
 }

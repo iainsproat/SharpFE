@@ -15,9 +15,9 @@ namespace SharpFE.MathNetExtensions
     /// </summary>
     public class KeyCompatibilityValidator<TLeftKey, TRightKey>
     {
-        IList<string> errorMessages;
-        IList<TLeftKey> lhs;
-        IList<TRightKey> rhs;
+        private IList<string> errorMessages;
+        private IList<TLeftKey> lhs;
+        private IList<TRightKey> rhs;
         
         public KeyCompatibilityValidator(IList<TLeftKey> leftHandSide, IList<TRightKey> rightHandSide)
         {

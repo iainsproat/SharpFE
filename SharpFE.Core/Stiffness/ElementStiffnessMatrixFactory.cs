@@ -3,33 +3,36 @@
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace SharpFE.Stiffness
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     /// <summary>
     /// Description of ElementStiffnessMatrixFactory.
     /// </summary>
     public class ElementStiffnessMatrixBuilderFactory
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private IDictionary<Type, Type> lookup = new Dictionary<Type, Type>();
         
+        /// <summary>
+        /// 
+        /// </summary>
         public ElementStiffnessMatrixBuilderFactory()
         {
             this.RegisterTypes();
         }
         
-        private void RegisterTypes()
-        {
-            this.lookup.Add(typeof(LinearConstantSpring), typeof(LinearTrussStiffnessMatrixBuilder));
-            this.lookup.Add(typeof(LinearTruss), typeof(LinearTrussStiffnessMatrixBuilder));
-            this.lookup.Add(typeof(Linear1DBeam), typeof(Linear1DBeamStiffnessMatrixBuilder));
-            this.lookup.Add(typeof(Linear3DBeam), typeof(Linear3DBeamStiffnessMatrixBuilder));
-            this.lookup.Add(typeof(LinearConstantStrainTriangle), typeof(LinearConstantStrainTriangleStiffnessMatrixBuilder));
-        }
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public IStiffnessProvider Create<T>(T element)
             where T : FiniteElement
         {
@@ -44,7 +47,8 @@ namespace SharpFE.Stiffness
             }
             
             Type builderType = this.lookup[element.GetType()];
-            object[] parameters = new object[] {
+            object[] parameters = new object[]
+            {
                 element
             };
             object builder = Activator.CreateInstance(builderType, parameters);
@@ -67,6 +71,18 @@ namespace SharpFE.Stiffness
             }
             
             return castBuilder;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private void RegisterTypes()
+        {
+            this.lookup.Add(typeof(LinearConstantSpring), typeof(LinearTrussStiffnessMatrixBuilder));
+            this.lookup.Add(typeof(LinearTruss), typeof(LinearTrussStiffnessMatrixBuilder));
+            this.lookup.Add(typeof(Linear1DBeam), typeof(Linear1DBeamStiffnessMatrixBuilder));
+            this.lookup.Add(typeof(Linear3DBeam), typeof(Linear3DBeamStiffnessMatrixBuilder));
+            this.lookup.Add(typeof(LinearConstantStrainTriangle), typeof(LinearConstantStrainTriangleStiffnessMatrixBuilder));
         }
     }
 }

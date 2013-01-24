@@ -14,10 +14,26 @@ namespace SharpFE.Stiffness
     /// </summary>
     public class LinearConstantStrainTriangleStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<LinearConstantStrainTriangle>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
         public LinearConstantStrainTriangleStiffnessMatrixBuilder(LinearConstantStrainTriangle element)
             : base(element)
         {
             // empty
+        }
+        
+        private static IList<Strain> SupportedStrains
+        {
+            get
+            {
+                IList<Strain> strains = new List<Strain>(3);
+                strains.Add(Strain.LinearStrainX);
+                strains.Add(Strain.LinearStrainY);
+                strains.Add(Strain.ShearStrainXY);
+                return strains;
+            }
         }
         
         public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
@@ -35,17 +51,17 @@ namespace SharpFE.Stiffness
             FiniteElementNode node2 = this.Element.Nodes[2];
             
             double constant = 1.0 / (2.0 * this.Element.Area);
-            double N1 = (node1.OriginalX * node2.OriginalY - node2.OriginalX * node1.OriginalY)
-                + (node1.OriginalY - node2.OriginalY) * location.OriginalX
-                + (node2.OriginalX - node1.OriginalX) * location.OriginalY;
+            double N1 = ((node1.OriginalX * node2.OriginalY) - (node2.OriginalX * node1.OriginalY))
+                + ((node1.OriginalY - node2.OriginalY) * location.OriginalX)
+                + ((node2.OriginalX - node1.OriginalX) * location.OriginalY);
             
-            double N2 = (node2.OriginalX * node0.OriginalY - node0.OriginalX * node2.OriginalY)
-                + (node2.OriginalY - node1.OriginalY) * location.OriginalX
-                + (node0.OriginalX - node2.OriginalX) * location.OriginalY;
+            double N2 = ((node2.OriginalX * node0.OriginalY) - (node0.OriginalX * node2.OriginalY))
+                + ((node2.OriginalY - node1.OriginalY) * location.OriginalX)
+                + ((node0.OriginalX - node2.OriginalX) * location.OriginalY);
             
-            double N3 = (node0.OriginalX * node1.OriginalY - node1.OriginalX * node0.OriginalY)
-                + (node0.OriginalY - node1.OriginalY) * location.OriginalX
-                + (node1.OriginalX - node0.OriginalX) * location.OriginalY;
+            double N3 = ((node0.OriginalX * node1.OriginalY) - (node1.OriginalX * node0.OriginalY))
+                + ((node0.OriginalY - node1.OriginalY) * location.OriginalX)
+                + ((node1.OriginalX - node0.OriginalX) * location.OriginalY);
             
             shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * N1);
             shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * N1);
@@ -104,22 +120,10 @@ namespace SharpFE.Stiffness
             return k;
         }
         
-        private static IList<Strain> SupportedStrains
-        {
-            get
-            {
-                IList<Strain> strains = new List<Strain>(3);
-                strains.Add(Strain.LinearStrainX);
-                strains.Add(Strain.LinearStrainY);
-                strains.Add(Strain.ShearStrainXY);
-                return strains;
-            }
-        }
-        
         private KeyedMatrix<Strain> MaterialMatrix()
         {
             IMaterial material = this.Element.Material;
-            double constant = material.YoungsModulus / ((1.0 + material.PoissonsRatio) * (1.0 - 2.0 * material.PoissonsRatio));
+            double constant = material.YoungsModulus / ((1.0 + material.PoissonsRatio) * (1.0 - (2.0 * material.PoissonsRatio)));
             
             KeyedMatrix<Strain> E = new KeyedMatrix<Strain>(LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains);
             E.At(Strain.LinearStrainX, Strain.LinearStrainX, constant * (1.0 - material.PoissonsRatio));
@@ -128,7 +132,7 @@ namespace SharpFE.Stiffness
             E.At(Strain.LinearStrainY, Strain.LinearStrainX, constant * material.PoissonsRatio);
             E.At(Strain.LinearStrainY, Strain.LinearStrainY, constant * (1.0 - material.PoissonsRatio));
             
-            E.At(Strain.ShearStrainXY, Strain.ShearStrainXY, constant * ((1.0 - 2.0 * material.PoissonsRatio) / 2.0));
+            E.At(Strain.ShearStrainXY, Strain.ShearStrainXY, constant * ((1.0 - (2.0 * material.PoissonsRatio)) / 2.0));
             
             return E;
         }

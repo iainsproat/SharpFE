@@ -1,9 +1,22 @@
-﻿namespace SharpFE.Stiffness
+﻿//-----------------------------------------------------------------------
+// <copyright file="Linear1DBeamStiffnessMatrixBuilder.cs" company="SharpFE">
+//     Copyright Iain Sproat, 2012 - 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE.Stiffness
 {
     using System;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Linear1DBeamStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<Linear1DBeam>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="finiteElement"></param>
         public Linear1DBeamStiffnessMatrixBuilder(Linear1DBeam finiteElement)
             : base(finiteElement)
         {

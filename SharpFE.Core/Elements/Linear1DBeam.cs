@@ -16,23 +16,7 @@
             // empty
         }
         
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
-        {
-            switch (degreeOfFreedom)
-            {
-                case DegreeOfFreedom.Z: // major-axis shear
-                case DegreeOfFreedom.YY: // major-axis moment
-                    return true;
-                case DegreeOfFreedom.X:  // axial force
-                case DegreeOfFreedom.Y:  // minor-axis shear
-                case DegreeOfFreedom.XX: // torsion
-                case DegreeOfFreedom.ZZ: // minor-axis
-                default:
-                    return false;
-            }
-        }
-        
-        /// <summary>
+                /// <summary>
         /// Elastic stiffness per metre length.
         /// </summary>
         public double StiffnessEA
@@ -60,6 +44,22 @@
             get
             {
                 return this.Material.YoungsModulus * this.CrossSection.SecondMomentOfAreaAroundYY;
+            }
+        }
+        
+        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        {
+            switch (degreeOfFreedom)
+            {
+                case DegreeOfFreedom.Z: // major-axis shear
+                case DegreeOfFreedom.YY: // major-axis moment
+                    return true;
+                case DegreeOfFreedom.X:  // axial force
+                case DegreeOfFreedom.Y:  // minor-axis shear
+                case DegreeOfFreedom.XX: // torsion
+                case DegreeOfFreedom.ZZ: // minor-axis
+                default:
+                    return false;
             }
         }
     }

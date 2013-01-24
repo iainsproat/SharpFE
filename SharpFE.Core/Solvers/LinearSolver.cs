@@ -8,8 +8,8 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE.Stiffness;
     using MathNet.Numerics.LinearAlgebra.Double.Factorization;
+    using SharpFE.Stiffness;
 
     /// <summary>
     /// Carries out a simple, linear analysis to solve a static, implicit finite element problem.
@@ -69,6 +69,19 @@ namespace SharpFE
         }
         
         /// <summary>
+        /// Solves AX=B for X.
+        /// </summary>
+        /// <param name="A">The stiffness matrix</param>
+        /// <param name="B">The forces</param>
+        /// <returns></returns>
+        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
+        {
+            KeyedMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
+            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(forceVector);
+            return X;
+        }
+        
+        /// <summary>
         /// Checks as to whether the model is valid for solving.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if the model is invalid for solving.</exception>
@@ -111,23 +124,10 @@ namespace SharpFE
                         knownForcesUnknownDisplacementStiffnesses));
             }
             
-             // K11^-1 * (Fk + (K12 * Uk))
+            // K11^-1 * (Fk + (K12 * Uk))
             KeyedVector<NodalDegreeOfFreedom> unknownDisplacements = this.Solve(knownForcesUnknownDisplacementStiffnesses, externallyAppliedForces);
             
             return unknownDisplacements;
-        }
-        
-        /// <summary>
-        /// Solves AX=B for X.
-        /// </summary>
-        /// <param name="A">The stiffness matrix</param>
-        /// <param name="B">The forces</param>
-        /// <returns></returns>
-        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
-        {
-            KeyedMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
-            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(forceVector);
-            return X;
         }
         
         /// <summary>

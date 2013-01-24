@@ -183,6 +183,100 @@ namespace SharpFE
                 return this.nodes.UnconstrainedNodalDegreeOfFreedoms;
             }
         }
+                        
+        #region Equals and GetHashCode implementation
+                /// <summary>
+        /// Equality operator
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
+        public static bool operator ==(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
+        {
+            if (ReferenceEquals(leftHandSide, rightHandSide))
+            {
+                return true;
+            }
+            
+            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
+            {
+                return false;
+            }
+            
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        /// <summary>
+        /// Inequality operator
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
+        public static bool operator !=(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
+        /// <summary>
+        /// The HashCode of the model
+        /// </summary>
+        /// <returns>An integer representing the HashCode of the model</returns>
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked
+            {
+                if (this.nodes != null)
+                {
+                    hashCode += 1000000007 * this.nodes.GetHashCode();
+                }
+                
+                if (this.elements != null)
+                {
+                    hashCode += 1000000009 * this.elements.GetHashCode();
+                }
+                
+                if (this.forces != null)
+                {
+                    hashCode += 1000000021 * this.forces.GetHashCode();
+                }
+                
+                hashCode += 1000000033 * this.ModelType.GetHashCode();
+            }
+            
+            return hashCode;
+        }
+        
+        /// <summary>
+        /// Determines whether another object equals this.
+        /// </summary>
+        /// <param name="obj">The other object to compare to this.</param>
+        /// <returns>True if the other object equals this model.</returns>
+        public override bool Equals(object obj)
+        {
+            FiniteElementModel other = obj as FiniteElementModel;
+            return this.Equals(other);
+        }
+        
+        /// <summary>
+        /// Determines whether another FiniteElementModel equals this.
+        /// </summary>
+        /// <param name="other">The other model to compare to this</param>
+        /// <returns>True if the node repository, element repository, force repository and model type 
+        /// of this model and the other model are equal.</returns>
+        public bool Equals(FiniteElementModel other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            
+            return object.Equals(this.nodes, other.nodes)
+                && object.Equals(this.elements, other.elements)
+                && object.Equals(this.forces, other.forces)
+                && this.ModelType == other.ModelType;
+        }
+        #endregion
         
         /// <summary>
         /// Constrains a node in a given degree of freedom.
@@ -204,7 +298,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node to free</param>
         /// <param name="degreeOfFreedomToFree">the degree of freedom in which to free the node</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Unconstrain")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Unconstrain", Justification = "Spelling is OK")]
         public void UnconstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
         {
             this.nodes.UnconstrainNode(node, degreeOfFreedomToFree);
@@ -312,76 +406,5 @@ namespace SharpFE
         {
             return this.forces.GetCombinedForcesFor(nodalDegreeOfFreedoms);
         }
-        
-        #region Equals and GetHashCode implementation
-        /// <summary>
-        /// The HashCode of the model
-        /// </summary>
-        /// <returns>An integer representing the HashCode of the model</returns>
-        public override int GetHashCode()
-        {
-            int hashCode = 0;
-            unchecked
-            {
-                if (this.nodes != null)
-                {
-                    hashCode += 1000000007 * this.nodes.GetHashCode();
-                }
-                
-                if (this.elements != null)
-                {
-                    hashCode += 1000000009 * this.elements.GetHashCode();
-                }
-                
-                if (this.forces != null)
-                {
-                    hashCode += 1000000021 * this.forces.GetHashCode();
-                }
-                
-                hashCode += 1000000033 * this.ModelType.GetHashCode();
-            }
-            
-            return hashCode;
-        }
-        
-        public override bool Equals(object obj)
-        {
-            FiniteElementModel other = obj as FiniteElementModel;
-            return this.Equals(other);
-        }
-        
-        public bool Equals(FiniteElementModel other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-            
-            return object.Equals(this.nodes, other.nodes)
-                && object.Equals(this.elements, other.elements)
-                && object.Equals(this.forces, other.forces)
-                && this.ModelType == other.ModelType;
-        }
-        
-        public static bool operator ==(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
-        {
-            if (ReferenceEquals(leftHandSide, rightHandSide))
-            {
-                return true;
-            }
-            
-            if (ReferenceEquals(leftHandSide, null) || ReferenceEquals(rightHandSide, null))
-            {
-                return false;
-            }
-            
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
-        #endregion
     }
 }

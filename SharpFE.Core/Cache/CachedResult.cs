@@ -3,17 +3,18 @@
 //     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
 
 namespace SharpFE.Cache
 {
+    using System;
+    
     /// <summary>
     /// Description of CachedResult.
     /// </summary>
     public struct CachedValue<T> : IEquatable<CachedValue<T>>
     {
-        int validityHash;
-        T storedValue;
+        private int validityHash;
+        private T storedValue;
         
         public CachedValue(int hashRelatingToValidityOfResult, T resultToStore)
         {
@@ -37,15 +38,20 @@ namespace SharpFE.Cache
             }
         }
         
-        public bool IsValid(int hashToCompareTo)
+        #region Equals and GetHashCode implementation
+        public static bool operator ==(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
         {
-            return this.Hash.Equals(hashToCompareTo);
+            return leftHandSide.Equals(rightHandSide);
         }
         
-        #region Equals and GetHashCode implementation
+        public static bool operator !=(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
         public override bool Equals(object obj)
         {
-            return (obj is CachedValue<T>) && Equals((CachedValue<T>)obj);
+            return (obj is CachedValue<T>) && this.Equals((CachedValue<T>)obj);
         }
         
         public bool Equals(CachedValue<T> other)
@@ -67,16 +73,11 @@ namespace SharpFE.Cache
             
             return hashCode;
         }
-        
-        public static bool operator ==(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
-        {
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(CachedValue<T> leftHandSide, CachedValue<T> rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
         #endregion
+        
+        public bool IsValid(int hashToCompareTo)
+        {
+            return this.Hash.Equals(hashToCompareTo);
+        }
     }
 }

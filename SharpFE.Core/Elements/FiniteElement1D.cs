@@ -1,6 +1,4 @@
-﻿
-
-namespace SharpFE
+﻿namespace SharpFE
 {
     using System;
     using SharpFE.Stiffness;
@@ -45,7 +43,7 @@ namespace SharpFE
                 double lengthX = this.EndNode.OriginalX - this.StartNode.OriginalX;
                 double lengthY = this.EndNode.OriginalY - this.StartNode.OriginalY;
                 double lengthZ = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
-                return Math.Sqrt(lengthX * lengthX + lengthY * lengthY + lengthZ * lengthZ);
+                return Math.Sqrt((lengthX * lengthX) + (lengthY * lengthY) + (lengthZ * lengthZ));
             }
         }
         
@@ -60,12 +58,16 @@ namespace SharpFE
                 double initialLengthProjectedInYAxis = this.EndNode.OriginalY - this.StartNode.OriginalY;
                 double initialLengthProjectedInZAxis = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
 
-                return new KeyedVector<DegreeOfFreedom>(new double[]
-                                                     {
-                                                         initialLengthProjectedInXAxis,
-                                                         initialLengthProjectedInYAxis,
-                                                         initialLengthProjectedInZAxis
-                                                     }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
+                return new KeyedVector<DegreeOfFreedom>(
+                    new double[]
+                    {
+                        initialLengthProjectedInXAxis,
+                        initialLengthProjectedInYAxis,
+                        initialLengthProjectedInZAxis
+                    },
+                    DegreeOfFreedom.X,
+                    DegreeOfFreedom.Y,
+                    DegreeOfFreedom.Z);
             }
         }
         
@@ -81,11 +83,34 @@ namespace SharpFE
         }
         
         #region Equals and GetHashCode implementation
+        public static bool operator ==(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
+        {
+            if (object.ReferenceEquals(leftHandSide, rightHandSide))
+            {
+                return true;
+            }
+            
+            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
+            {
+                return false;
+            }
+            
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        public static bool operator !=(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
         public override bool Equals(object obj)
         {
             FiniteElement1D other = obj as FiniteElement1D;
             if (other == null)
+            {
                 return false;
+            }
+            
             return base.Equals(other);
         }
         
@@ -96,24 +121,10 @@ namespace SharpFE
             {
                 hashCode += base.GetHashCode();
             }
+            
             return hashCode;
         }
-        
-        public static bool operator ==(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
-        {
-            if (object.ReferenceEquals(leftHandSide, rightHandSide))
-                return true;
-            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
-                return false;
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
         #endregion
-
         
         /// <summary>
         /// Checks as to whether a new node can actually be added

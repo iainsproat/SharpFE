@@ -193,7 +193,5 @@ namespace SharpFE.Stiffness
             this.elementStiffnessProviderCache.Add(elementHash, builder);
             return builder;
         }
-        
-
     }
 }

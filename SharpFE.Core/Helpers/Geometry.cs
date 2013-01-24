@@ -3,12 +3,13 @@
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using MathNet.Numerics.LinearAlgebra.Double;
-using MathNet.Numerics.LinearAlgebra.Generic;
 
 namespace SharpFE
 {
+    using System;
+    using MathNet.Numerics.LinearAlgebra.Double;
+    using MathNet.Numerics.LinearAlgebra.Generic;
+
     /// <summary>
     /// Description of Geometry.
     /// </summary>
@@ -77,7 +78,7 @@ namespace SharpFE
             Vector diagonal1 = (Vector)point2.Subtract(point0);
             Vector diagonal2 = (Vector)point3.Subtract(point1);
             
-            double crossProduct = diagonal1[0] * diagonal2[1] - diagonal1[1] * diagonal2[0];
+            double crossProduct = (diagonal1[0] * diagonal2[1]) - (diagonal1[1] * diagonal2[0]);
             return 0.5 * crossProduct;
         }
         

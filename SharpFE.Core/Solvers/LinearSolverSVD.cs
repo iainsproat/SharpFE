@@ -3,13 +3,14 @@
 //     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using MathNet.Numerics.LinearAlgebra.Generic;
-using MathNet.Numerics.LinearAlgebra.Double.Factorization;
-using SharpFE.Stiffness;
 
 namespace SharpFE
 {
+    using System;
+    using MathNet.Numerics.LinearAlgebra.Double.Factorization;
+    using MathNet.Numerics.LinearAlgebra.Generic;
+    using SharpFE.Stiffness;
+
     /// <summary>
     /// Linear solver using Singular Value Decomposition
     /// </summary>

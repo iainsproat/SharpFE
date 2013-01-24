@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="LinearTrussStiffnessMatrixBuilder.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace SharpFE.Stiffness
 {
@@ -11,6 +15,10 @@ namespace SharpFE.Stiffness
     /// </summary>
     public class LinearTrussStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<FiniteElement1D>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="finiteElement"></param>
         public LinearTrussStiffnessMatrixBuilder(FiniteElement1D finiteElement)
             : base(finiteElement)
         {

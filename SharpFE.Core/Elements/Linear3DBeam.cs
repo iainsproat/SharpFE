@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="Linear3DBeam.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace SharpFE
 {
@@ -11,7 +15,6 @@ namespace SharpFE
     /// </summary>
     public class Linear3DBeam : LinearBeam
     {
-        
         public Linear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
             : base(start, end, mat, section)
         {

@@ -3,10 +3,11 @@
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
 
 namespace SharpFE.Elements
 {
+    using System;
+    
     /// <summary>
     /// Description of Beam.
     /// </summary>

@@ -37,6 +37,23 @@ namespace SharpFE.Cache
             return this.ContainsKey(key, true, validHash, out cachedValue);
         }
         
+        public bool Save(TKey key, TValue value, int hashForValidityOfValue)
+        {
+            CachedValue<TValue> valueToCache = new CachedValue<TValue>(hashForValidityOfValue, value);
+            if (this.ContainsKey(key))
+            {
+                // update cache with new value
+                this.internalStore[key] = valueToCache;
+            }
+            else
+            {
+                // store new value in cache
+                this.internalStore.Add(key, valueToCache);
+            }
+            
+            return true;
+        }
+        
         private bool ContainsKey(TKey key, bool hashWasProvided, int validHash, out TValue cachedValue)
         {
             cachedValue = default(TValue);
@@ -54,23 +71,6 @@ namespace SharpFE.Cache
             }
             
             return false;
-        }
-        
-        public bool Save(TKey key, TValue value, int hashForValidityOfValue)
-        {
-            CachedValue<TValue> valueToCache = new CachedValue<TValue>(hashForValidityOfValue, value);
-            if (this.ContainsKey(key))
-            {
-                // update cache with new value
-                this.internalStore[key] = valueToCache;
-            }
-            else
-            {
-                // store new value in cache
-                this.internalStore.Add(key, valueToCache);
-            }
-            
-            return true;
         }
     }
 }

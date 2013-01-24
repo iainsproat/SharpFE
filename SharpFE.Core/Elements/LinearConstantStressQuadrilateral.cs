@@ -52,15 +52,16 @@ namespace SharpFE
                 double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].OriginalX - this.Nodes[0].OriginalX;
                 double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].OriginalY - this.Nodes[0].OriginalY;
                 double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].OriginalZ - this.Nodes[0].OriginalZ;
-                return new KeyedVector<DegreeOfFreedom>(new double[]
-                                                        {
-                                                            initialLengthOfSide1ProjectedInXAxis,
-                                                            initialLengthOfSide1ProjectedInYAxis,
-                                                            initialLengthOfSide1ProjectedInZAxis
-                                                        },
-                                                        DegreeOfFreedom.X,
-                                                        DegreeOfFreedom.Y,
-                                                        DegreeOfFreedom.Z);
+                return new KeyedVector<DegreeOfFreedom>(
+                    new double[]
+                    {
+                        initialLengthOfSide1ProjectedInXAxis,
+                        initialLengthOfSide1ProjectedInYAxis,
+                        initialLengthOfSide1ProjectedInZAxis
+                    },
+                    DegreeOfFreedom.X,
+                    DegreeOfFreedom.Y,
+                    DegreeOfFreedom.Z);
             }
         }
         

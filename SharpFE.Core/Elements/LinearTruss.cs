@@ -31,6 +31,52 @@
             private set;
         }
         
+        #region Equals and GetHashCode implementation
+        public static bool operator ==(LinearTruss leftHandSide, LinearTruss rightHandSide)
+        {
+            if (object.ReferenceEquals(leftHandSide, rightHandSide))
+            {
+                return true;
+            }
+            
+            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
+            {
+                return false;
+            }
+            
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        public static bool operator !=(LinearTruss leftHandSide, LinearTruss rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
+        public override bool Equals(object obj)
+        {
+            LinearTruss other = obj as LinearTruss;
+            if (other == null)
+            {
+                return false;
+            }
+            
+            return base.Equals(other) && object.Equals(this.Material, other.Material) && object.Equals(this.CrossSection, other.CrossSection);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked
+            {
+                hashCode += base.GetHashCode();
+                hashCode += 1000000007 * this.Material.GetHashCode();
+                hashCode += 1000000022 * this.CrossSection.GetHashCode();
+            }
+            
+            return hashCode;
+        }
+        #endregion
+        
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)
@@ -46,40 +92,5 @@
                     return false;
             }
         }
-        
-        #region Equals and GetHashCode implementation
-        public override bool Equals(object obj)
-        {
-            LinearTruss other = obj as LinearTruss;
-            if (other == null)
-                return false;
-            return base.Equals(other) && object.Equals(this.Material, other.Material) && object.Equals(this.CrossSection, other.CrossSection);
-        }
-        
-        public override int GetHashCode()
-        {
-            int hashCode = 0;
-            unchecked {
-                hashCode += base.GetHashCode();
-                hashCode += 1000000007 * this.Material.GetHashCode();
-                hashCode += 1000000022 * this.CrossSection.GetHashCode();
-            }
-            return hashCode;
-        }
-        
-        public static bool operator ==(LinearTruss leftHandSide, LinearTruss rightHandSide)
-        {
-            if (object.ReferenceEquals(leftHandSide, rightHandSide))
-                return true;
-            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
-                return false;
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(LinearTruss leftHandSide, LinearTruss rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
-        #endregion
     }
 }

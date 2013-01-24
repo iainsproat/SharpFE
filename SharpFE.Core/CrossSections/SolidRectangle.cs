@@ -1,10 +1,18 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="SolidRectangle.cs" company="SharpFE">
+//     Copyright Iain Sproat, 2012 - 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
 
+    /// <summary>
+    /// A cross section formed of a solid (that is, it has no internal voids) rectangle, or square.
+    /// </summary>
     public class SolidRectangle : ICrossSection
     {
-        
         public SolidRectangle(double height, double width)
         {
             if (height <= 0)
@@ -61,7 +69,7 @@
         {
             get
             {
-                return this.MaximumDepth * 2 + this.MaximumWidth * 2;
+                return (this.MaximumDepth * 2) + (this.MaximumWidth * 2);
             }
         }
         
@@ -69,7 +77,7 @@
         {
             get
             {
-                return Math.Pow(this.MaximumDepth, 3) / 3.0 * (this.MaximumWidth - 0.63 * this.MaximumDepth * (1 - Math.Pow(this.MaximumDepth, 4) / (12.0 * Math.Pow(this.MaximumWidth, 4))));
+                return (Math.Pow(this.MaximumDepth, 3) / 3.0) * (this.MaximumWidth - (0.63 * this.MaximumDepth * (1 - (Math.Pow(this.MaximumDepth, 4) / (12.0 * Math.Pow(this.MaximumWidth, 4))))));
             }
         }
         

@@ -34,6 +34,51 @@ namespace SharpFE
             private set;
         }
         
+        #region Equals and GetHashCode implementation
+        public static bool operator ==(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
+        {
+            if (object.ReferenceEquals(leftHandSide, rightHandSide))
+            {
+                return true;
+            }
+            
+            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
+            {
+                return false;
+            }
+            
+            return leftHandSide.Equals(rightHandSide);
+        }
+        
+        public static bool operator !=(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
+        {
+            return !(leftHandSide == rightHandSide);
+        }
+        
+        public override bool Equals(object obj)
+        {
+            LinearConstantSpring other = obj as LinearConstantSpring;
+            if (other == null)
+            {
+                return false;
+            }
+            
+            return base.Equals(other) && object.Equals(this.SpringConstant, other.SpringConstant);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked
+            {
+                hashCode += base.GetHashCode();
+                hashCode += 1000000007 * this.SpringConstant.GetHashCode();
+            }
+            
+            return hashCode;
+        }
+        #endregion
+        
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)
@@ -49,40 +94,5 @@ namespace SharpFE
                     return false;
             }
         }
-        
-        #region Equals and GetHashCode implementation
-        public override bool Equals(object obj)
-        {
-            LinearConstantSpring other = obj as LinearConstantSpring;
-            if (other == null)
-                return false;
-            return base.Equals(other) && object.Equals(this.SpringConstant, other.SpringConstant);
-        }
-        
-        public override int GetHashCode()
-        {
-            int hashCode = 0;
-            unchecked {
-                hashCode += base.GetHashCode();
-                hashCode += 1000000007 * this.SpringConstant.GetHashCode();
-            }
-            return hashCode;
-        }
-        
-        public static bool operator ==(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
-        {
-            if (object.ReferenceEquals(leftHandSide, rightHandSide))
-                return true;
-            if (object.ReferenceEquals(leftHandSide, null) || object.ReferenceEquals(rightHandSide, null))
-                return false;
-            return leftHandSide.Equals(rightHandSide);
-        }
-        
-        public static bool operator !=(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
-        {
-            return !(leftHandSide == rightHandSide);
-        }
-        #endregion
-
     }
 }

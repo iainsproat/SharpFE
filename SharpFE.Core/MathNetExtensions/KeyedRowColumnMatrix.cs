@@ -3,14 +3,15 @@
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra.Double;
-using MathNet.Numerics.LinearAlgebra.Generic;
-using SharpFE.MathNetExtensions;
 
 namespace SharpFE
 {
+    using System;
+    using System.Collections.Generic;
+    using MathNet.Numerics.LinearAlgebra.Double;
+    using MathNet.Numerics.LinearAlgebra.Generic;
+    using SharpFE.MathNetExtensions;
+
     /// <summary>
     /// Description of KeyedRowColumnMatrix.
     /// </summary>
@@ -101,7 +102,6 @@ namespace SharpFE
         {
             return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(this);
         }
-
         
         /// <summary>
         /// Creates a matrix which contains values from the requested sub-matrix
@@ -160,12 +160,13 @@ namespace SharpFE
             }
             catch (KeyNotFoundException knfe)
             {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "A value could not be added to a matrix.  The key provided for the row does not exist in the matrix.  The key provided for the row is : {0}. We have not checked the key for the column, but it was : {1}",
-                    rowKey,
-                    columnKey),
-                                                    knfe);
+                throw new InvalidOperationException(
+                    string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "A value could not be added to a matrix.  The key provided for the row does not exist in the matrix.  The key provided for the row is : {0}. We have not checked the key for the column, but it was : {1}",
+                        rowKey,
+                        columnKey),
+                    knfe);
             }
             
             try
@@ -174,12 +175,13 @@ namespace SharpFE
             }
             catch (KeyNotFoundException knfe)
             {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "A value could not be added to a matrix.  The key provided for the column does not exist in the matrix.  The key provided for the column is : {0}. However, the key for the row could be found, for reference it was : {1}",
-                    columnKey,
-                    rowKey),
-                                                    knfe);
+                throw new InvalidOperationException(
+                    string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "A value could not be added to a matrix.  The key provided for the column does not exist in the matrix.  The key provided for the column is : {0}. However, the key for the row could be found, for reference it was : {1}",
+                        columnKey,
+                        rowKey),
+                    knfe);
             }
             
             this.At(rowIndex, columnIndex, value);
@@ -270,11 +272,12 @@ namespace SharpFE
             }
             catch (KeyNotFoundException knfe)
             {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "We could not find the requested row in this matrix.  The key provided for the row was : {0}.",
-                    rowKey),
-                                                    knfe);
+                throw new InvalidOperationException(
+                    string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "We could not find the requested row in this matrix.  The key provided for the row was : {0}.",
+                        rowKey),
+                    knfe);
             }
         }
         
@@ -291,11 +294,12 @@ namespace SharpFE
             }
             catch (KeyNotFoundException knfe)
             {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "We could not find the requested column within this matrix.  The key provided for the column was : {0}.",
-                    columnKey),
-                                                    knfe);
+                throw new InvalidOperationException(
+                    string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "We could not find the requested column within this matrix.  The key provided for the column was : {0}.",
+                        columnKey),
+                    knfe);
             }
         }
     }
