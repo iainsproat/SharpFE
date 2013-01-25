@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="Geometry.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,17 +11,31 @@ namespace SharpFE
     using MathNet.Numerics.LinearAlgebra.Generic;
 
     /// <summary>
-    /// Description of Geometry.
+    /// Contains various methods for calculating geometric properties
     /// </summary>
     public static class Geometry
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="pointOnLine"></param>
+        /// <param name="vectorDefiningLine"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine", Justification = "Not referring to Online, i.e. internet, but a geometric description")]
         public static Vector VectorBetweenPointAndLine(FiniteElementNode point, FiniteElementNode pointOnLine, Vector vectorDefiningLine)
         {
             return Geometry.VectorBetweenPointAndLine(Geometry.NodeToVector(point), Geometry.NodeToVector(pointOnLine), vectorDefiningLine);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="pointOnLine"></param>
+        /// <param name="vectorDefiningLine"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine", Justification = "Not referring to Online, i.e. internet, but a geometric description")]
         public static Vector VectorBetweenPointAndLine(Vector point, Vector pointOnLine, Vector vectorDefiningLine)
         {
             Vector<double> betweenPoints = point.Subtract(pointOnLine);
@@ -35,11 +49,25 @@ namespace SharpFE
             return (Vector)result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node0"></param>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <returns></returns>
         public static double AreaTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2)
         {
             return Geometry.AreaTriangle(Geometry.NodeToVector(node0), Geometry.NodeToVector(node1), Geometry.NodeToVector(node2));
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point0"></param>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
+        /// <returns></returns>
         public static double AreaTriangle(Vector point0, Vector point1, Vector point2)
         {
             Vector side01 = (Vector)point1.Subtract(point0);
@@ -58,7 +86,7 @@ namespace SharpFE
         /// <param name="node2"></param>
         /// <param name="node3"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray", Justification = "Requires exactly four points, so an adjustable params array is not necessary")]
         public static double AreaQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3)
         {
             return Geometry.AreaQuadrilateral(Geometry.NodeToVector(node0), Geometry.NodeToVector(node1), Geometry.NodeToVector(node2), Geometry.NodeToVector(node3));
@@ -72,7 +100,7 @@ namespace SharpFE
         /// <param name="point2"></param>
         /// <param name="point3"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray", Justification = "Can only have four points, so params array is useless")]
         public static double AreaQuadrilateral(Vector point0, Vector point1, Vector point2, Vector point3)
         {
             Vector diagonal1 = (Vector)point2.Subtract(point0);
@@ -82,6 +110,11 @@ namespace SharpFE
             return 0.5 * crossProduct;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private static Vector NodeToVector(FiniteElementNode node)
         {
             Vector result = new DenseVector(3);

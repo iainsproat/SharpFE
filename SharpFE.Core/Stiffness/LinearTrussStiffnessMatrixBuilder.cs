@@ -11,7 +11,6 @@ namespace SharpFE.Stiffness
     using SharpFE.Elements;
     
     /// <summary>
-    /// Description of LinearElasticMaterialCrossSectionStiffnessBuilder.
     /// </summary>
     public class LinearTrussStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<FiniteElement1D>
     {
@@ -25,7 +24,12 @@ namespace SharpFE.Stiffness
             // empty
         }
 
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
         {
             throw new NotImplementedException();
         }
@@ -33,24 +37,27 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// Generates the transposed strain-displacement matrix for the given element
         /// </summary>
-        /// <param name="element"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             IList<Strain> supportedDegreesOfFreedom = new List<Strain>(1);
             supportedDegreesOfFreedom.Add(Strain.LinearStrainX);
             IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> B = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreeOfFreedoms);
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreeOfFreedoms);
             
             double originalLength = this.Element.OriginalLength;
             
-            B.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.StartNode, DegreeOfFreedom.X), -1.0 / originalLength);
-            B.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.EndNode, DegreeOfFreedom.X), 1.0 / originalLength);
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.StartNode, DegreeOfFreedom.X), -1.0 / originalLength);
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.EndNode, DegreeOfFreedom.X), 1.0 / originalLength);
             
-            return B;
+            return strainDisplacementMatrix;
         }
         
-        public override StiffnessMatrix GetLocalStiffnessMatrix()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double stiffness = this.CalculateStiffnessConstant();
             
@@ -63,6 +70,10 @@ namespace SharpFE.Stiffness
             return matrix;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private double CalculateStiffnessConstant()
         {
             try

@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\Cache.cs" />
-    <Compile Include="Cache\CachedResult.cs" />
+    <Compile Include="Cache\CachedValue.cs" />
     <Compile Include="CrossSections\Coordinate2D.cs" />
     <Compile Include="CrossSections\ICrossSection.cs" />
     <Compile Include="CrossSections\IHasConstantCrossSection.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\LinearSolverSVD.cs" />
     <Compile Include="Stiffness\StiffnessMatrix.cs" />
-    <Compile Include="Stiffness\ElementStiffnessMatrixFactory.cs" />
+    <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IStiffnessProvider.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />

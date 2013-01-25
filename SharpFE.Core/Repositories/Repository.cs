@@ -56,6 +56,12 @@ namespace SharpFE
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// Equality operator
+        /// </summary>
+        /// <param name="lhs">The object to the left side of the equality operator</param>
+        /// <param name="rhs">The object to the right hand side of the equality operator</param>
+        /// <returns>True if the two objects are equal, false otherwise</returns>
         public static bool operator ==(Repository<T> lhs, Repository<T> rhs)
         {
             if (ReferenceEquals(lhs, rhs))
@@ -71,11 +77,22 @@ namespace SharpFE
             return lhs.Equals(rhs);
         }
         
+        /// <summary>
+        /// Inequality operator
+        /// </summary>
+        /// <param name="lhs">The object on the left of the inequality operator</param>
+        /// <param name="rhs">The object on the right of the inequality operator</param>
+        /// <returns>True if the two objects are not equal, false if they are equal</returns>
         public static bool operator !=(Repository<T> lhs, Repository<T> rhs)
         {
             return !(lhs == rhs);
         }
         
+        /// <summary>
+        /// Determines whether another object is equal to this object
+        /// </summary>
+        /// <param name="obj">the other object to compare equality to this</param>
+        /// <returns>true if the other object is equal to this, false otherwise</returns>
         public override bool Equals(object obj)
         {
             Repository<T> other = obj as Repository<T>;
@@ -83,9 +100,9 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// 
+        /// Determines whether another repository is equal to this repository
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the other repository is equal to this, false otherwise</returns>
         /// <remarks>The order in which items were added to the repository will not affect the equality comparison</remarks>
         public bool Equals(Repository<T> other)
         {
@@ -121,9 +138,9 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// 
+        /// Calculates the HashCode of this object
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An unsigned 32 bit integer representing the HashCode of this object</returns>
         /// <remarks>The order in which items were added to the repository will not affect the hashcode</remarks>
         public override int GetHashCode()
         {

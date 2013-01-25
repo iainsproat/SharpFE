@@ -54,6 +54,14 @@ namespace SharpFE
             return newSpring;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <param name="material"></param>
+        /// <param name="crossSection"></param>
+        /// <returns></returns>
         public LinearTruss CreateLinearTruss(FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
         {
             LinearTruss newTruss = new LinearTruss(node1, node2, material, crossSection);
@@ -65,6 +73,14 @@ namespace SharpFE
             return newTruss;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="material"></param>
+        /// <param name="crossSection"></param>
+        /// <returns></returns>
         public Linear1DBeam CreateLinear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
             Linear1DBeam newBeam = new Linear1DBeam(start, end, material, crossSection);
@@ -76,6 +92,14 @@ namespace SharpFE
             return newBeam;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="material"></param>
+        /// <param name="crossSection"></param>
+        /// <returns></returns>
         public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
             Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
@@ -87,6 +111,15 @@ namespace SharpFE
             return newBeam;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node0"></param>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <param name="material"></param>
+        /// <param name="thickness"></param>
+        /// <returns></returns>
         public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
         {
             LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
@@ -98,6 +131,16 @@ namespace SharpFE
             return newTriangle;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node0"></param>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <param name="node3"></param>
+        /// <param name="material"></param>
+        /// <param name="thickness"></param>
+        /// <returns></returns>
         public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
         {
             LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);

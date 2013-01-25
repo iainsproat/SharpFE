@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Spring.cs" company="SharpFE">
+// <copyright file="LinearConstantSpring.cs" company="SharpFE">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -28,6 +28,9 @@ namespace SharpFE
             this.SpringConstant = springConstant;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double SpringConstant
         {
             get;
@@ -35,6 +38,12 @@ namespace SharpFE
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator ==(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
         {
             if (object.ReferenceEquals(leftHandSide, rightHandSide))
@@ -50,11 +59,22 @@ namespace SharpFE
             return leftHandSide.Equals(rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator !=(LinearConstantSpring leftHandSide, LinearConstantSpring rightHandSide)
         {
             return !(leftHandSide == rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             LinearConstantSpring other = obj as LinearConstantSpring;
@@ -66,6 +86,10 @@ namespace SharpFE
             return base.Equals(other) && object.Equals(this.SpringConstant, other.SpringConstant);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -79,6 +103,11 @@ namespace SharpFE
         }
         #endregion
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="degreeOfFreedom"></param>
+        /// <returns></returns>
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)

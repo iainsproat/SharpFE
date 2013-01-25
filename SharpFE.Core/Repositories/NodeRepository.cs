@@ -105,7 +105,7 @@ namespace SharpFE
         /// Determines whether a node is constrained in the given degree of freedom
         /// </summary>
         /// <param name="nodeToCheck">the node to check whether it is constrain in a particular degree of freedom</param>
-        /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constrainment</param>
+        /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constraint</param>
         /// <returns>True if this particular node and degree of freedom are constrained; otherwise, false.</returns>
         public bool IsConstrained(FiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
         {

@@ -1,4 +1,10 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="LinearTruss.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
 
@@ -12,6 +18,13 @@
     /// </summary>
     public class LinearTruss : FiniteElement1D, IHasMaterial, IHasConstantCrossSection
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="material"></param>
+        /// <param name="crossSection"></param>
         public LinearTruss(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
             : base(start, end)
         {
@@ -19,12 +32,18 @@
             this.Material = material;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public ICrossSection CrossSection
         {
             get;
             private set;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public IMaterial Material
         {
             get;
@@ -32,6 +51,12 @@
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator ==(LinearTruss leftHandSide, LinearTruss rightHandSide)
         {
             if (object.ReferenceEquals(leftHandSide, rightHandSide))
@@ -47,11 +72,22 @@
             return leftHandSide.Equals(rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator !=(LinearTruss leftHandSide, LinearTruss rightHandSide)
         {
             return !(leftHandSide == rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             LinearTruss other = obj as LinearTruss;
@@ -63,6 +99,10 @@
             return base.Equals(other) && object.Equals(this.Material, other.Material) && object.Equals(this.CrossSection, other.CrossSection);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -77,6 +117,11 @@
         }
         #endregion
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="degreeOfFreedom"></param>
+        /// <returns></returns>
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)

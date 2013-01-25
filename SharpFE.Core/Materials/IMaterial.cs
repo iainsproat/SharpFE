@@ -13,14 +13,26 @@ namespace SharpFE
     /// </summary>
     public interface IMaterial
     {
+        /// <summary>
+        /// 
+        /// </summary>
         double Density { get; }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Youngs")]
+        /// <summary>
+        /// 
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Youngs", Justification = "spelling is correct")]
         double YoungsModulus { get; }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poissons")]
+        /// <summary>
+        /// 
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poissons", Justification = "spelling is correct")]
         double PoissonsRatio { get; }
         
+        /// <summary>
+        /// 
+        /// </summary>
         double ShearModulusElasticity { get; }
     }
 }

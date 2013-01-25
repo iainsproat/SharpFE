@@ -66,6 +66,12 @@ namespace SharpFE
             return newForce;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueOfZComponent"></param>
+        /// <param name="valueOfMomentAboutYY"></param>
+        /// <returns></returns>
         public ForceVector CreateFor1DBeam(double valueOfZComponent, double valueOfMomentAboutYY)
         {
             if (!(this.modelType == ModelType.Beam1D || this.modelType == ModelType.Frame2D))
@@ -140,6 +146,7 @@ namespace SharpFE
         /// Creates a new force for a 2D ModelType
         /// </summary>
         /// <param name="valueOfXComponent">The component of the force along the global x-axis</param>
+        /// <param name="valueOfYComponent">The component of the force along the global y-axis</param>
         /// <param name="valueOfZComponent">The component of the force along the global z-axis</param>
         /// <returns>The force vector which has been created</returns>
         public ForceVector Create(double valueOfXComponent, double valueOfYComponent, double valueOfZComponent, double valueOfXXComponent, double valueOfYYComponent, double valueOfZZComponent)

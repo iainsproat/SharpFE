@@ -29,8 +29,11 @@ namespace SharpFE
         /// The nodal degrees of freedom supported by this element.
         /// </summary>
         /// <param name="stiffness"></param>
-        private IList<NodalDegreeOfFreedom> _supportedNodalDegreeOfFreedoms;
+        private IList<NodalDegreeOfFreedom> supportedNodalDof;
         
+        /// <summary>
+        /// 
+        /// </summary>
         private int hashAtWhichNodalDegreesOfFreedomWereLastBuilt;
         
         /// <summary>
@@ -84,7 +87,7 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// Gets or sets the nodal degrees of freedom supported by this finite element
+        /// Gets the nodal degrees of freedom supported by this finite element
         /// </summary>
         internal IList<NodalDegreeOfFreedom> SupportedNodalDegreeOfFreedoms
         {
@@ -96,16 +99,22 @@ namespace SharpFE
                     this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
                 }
                 
-                return this._supportedNodalDegreeOfFreedoms;
+                return this.supportedNodalDof;
             }
             
             private set
             {
-                this._supportedNodalDegreeOfFreedoms = value;
+                this.supportedNodalDof = value;
             }
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator ==(FiniteElement leftHandSide, FiniteElement rightHandSide)
         {
             if (ReferenceEquals(leftHandSide, rightHandSide))
@@ -121,11 +130,22 @@ namespace SharpFE
             return leftHandSide.Equals(rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator !=(FiniteElement leftHandSide, FiniteElement rightHandSide)
         {
             return !(leftHandSide == rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             FiniteElement other = obj as FiniteElement;
@@ -151,6 +171,10 @@ namespace SharpFE
             return true;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -166,6 +190,10 @@ namespace SharpFE
             return hashCode;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -205,6 +233,11 @@ namespace SharpFE
         /// <returns></returns>
         public abstract bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="previousHash"></param>
+        /// <returns></returns>
         public bool IsDirty(int previousHash)
         {
             return this.GetHashCode() != previousHash;

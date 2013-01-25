@@ -9,7 +9,6 @@ namespace SharpFE
     using System;
     
     /// <summary>
-    /// Description of ModelType.
     /// </summary>
     public enum ModelType
     {
@@ -40,11 +39,11 @@ namespace SharpFE
         /// <summary>
         /// A two dimensional truss.
         /// : Positioning of nodes and elements:
-        ///     - 2D along the x-axis and y-axis.
+        ///     - 2D along the x-axis and z-axis.
         /// : Forces can be applied:
-        ///     - translational in the x-axis and y-axis.
+        ///     - translational in the x-axis and z-axis.
         /// : Results will occur:
-        ///     - translation along the x-axis and y-axis.
+        ///     - translation along the x-axis and z-axis.
         ///     - rotations within members are not allowed.
         /// </summary>
         Truss2D,
@@ -52,13 +51,13 @@ namespace SharpFE
         /// <summary>
         /// A two dimensional frame.
         /// : Positioning of nodes and elements:
-        ///     - 2D along the x-axis and y-axis.
+        ///     - 2D along the x-axis and z-axis.
         /// : Forces can be applied:
-        ///     - translational in the x-axis and y-axis.
+        ///     - translational in the x-axis and z-axis.
         ///     - rotation around the z-axis.
         /// : Results will occur:
-        ///     - translation along the x-axis and y-axis.
-        ///     - rotational reactions around the z-axis.
+        ///     - translation along the x-axis and z-axis.
+        ///     - rotational reactions around the y-y-axis.
         /// </summary>
         Frame2D,
         
@@ -71,7 +70,7 @@ namespace SharpFE
         ///     - rotation around the x-axis and the y-axis.
         /// : Results will occur:
         ///     - translation along the z-axis.
-        ///     - rotational reactions around the x-axis and y-axis.
+        ///     - rotational reactions around the x-x axis and y-y axis.
         /// </summary>
         Slab2D,
         
@@ -90,13 +89,13 @@ namespace SharpFE
         /// <summary>
         /// Multiple 2D slabs linked by 1D spring elements in the z-axis.
         /// : Positioning of nodes and elements:
-        ///     - 3D along the x-axis, y-axis and z-axis.  Plate elements are restricted to being in a plane with normals parallel to the z-axis.
+        ///     - 3D along the x-axis, y-axis and z-axis.  Plate elements are restricted to being in a plane with normal parallel to the z-axis.
         /// : Forces can be applied:
         ///     - translational in the z-axis.
-        ///     - rotational in the xx-axis and yy-axis.
+        ///     - rotational in the x-x axis and y-y axis.
         /// : Results will occur:
         ///     - translation along the z-axis.
-        ///     - rotation in plate elements in the xx-axis and yy-axis.
+        ///     - rotation in plate elements in the x-x axis and y-y axis.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "The use of the word 'Multi' is relevant in this context")]
         MultiStorey2DSlab,

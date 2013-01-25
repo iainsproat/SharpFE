@@ -71,14 +71,14 @@ namespace SharpFE
         /// <summary>
         /// Solves AX=B for X.
         /// </summary>
-        /// <param name="A">The stiffness matrix</param>
-        /// <param name="B">The forces</param>
+        /// <param name="stiffnessMatrix">The stiffness matrix</param>
+        /// <param name="forceVector">The forces</param>
         /// <returns></returns>
         protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
         {
             KeyedMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
-            KeyedVector<NodalDegreeOfFreedom> X = inverse.Multiply(forceVector);
-            return X;
+            KeyedVector<NodalDegreeOfFreedom> solution = inverse.Multiply(forceVector);
+            return solution;
         }
         
         /// <summary>
@@ -155,7 +155,6 @@ namespace SharpFE
         /// The user may have placed reactions directly on to fixed supports.
         /// These are ignored during the calculation, but the correct answer for the total reaction must include them
         /// </summary>
-        /// <param name="reactionIdentifiers">Identifers for the nodes and degrees of freedom which are fixed and therefore have reactions</param>
         /// <param name="reactions">The calculated values of the reactions</param>
         /// <returns>The calculated values of the reactions with additional external forces added where applicable.</returns>
         private KeyedVector<NodalDegreeOfFreedom> CombineExternalForcesOnReactionNodesWithReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
@@ -167,8 +166,6 @@ namespace SharpFE
         /// <summary>
         /// Puts the data into the results data structure.
         /// </summary>
-        /// <param name="displacementIdentifiers">Identifers for the nodes and degrees of freedom which are free and therefore have displacements</param>
-        /// <param name="reactionIdentifiers">Identifers for the nodes and degrees of freedom which are fixed and therefore have reactions</param>
         /// <param name="displacements">The calculated displacements.  The index of the values in the vector matches the index of the displacement identifiers.</param>
         /// <param name="reactions">The calculated reactions.  The index of the values in the vector matches the index of the reaction identifiers.</param>
         /// <returns>The results in a presentable data structure</returns>

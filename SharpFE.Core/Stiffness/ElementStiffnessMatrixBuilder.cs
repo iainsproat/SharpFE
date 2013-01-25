@@ -13,13 +13,14 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class ElementStiffnessMatrixBuilder<T> : IStiffnessProvider
         where T : FiniteElement
     {
         /// <summary>
         /// The global stiffness matrix of this element
         /// </summary>
-        private StiffnessMatrix _globalStiffnessMatrix;
+        private StiffnessMatrix globStiffMat;
         
         /// <summary>
         /// 
@@ -27,7 +28,7 @@ namespace SharpFE.Stiffness
         private int elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt;
         
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="ElementStiffnessMatrixBuilder">ElementStiffnessMatrixBuilder</see> class.
         /// </summary>
         /// <param name="finiteElement"></param>
         protected ElementStiffnessMatrixBuilder(T finiteElement)
@@ -60,7 +61,7 @@ namespace SharpFE.Stiffness
                     this.elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
                 }
                 
-                return this._globalStiffnessMatrix;
+                return this.globStiffMat;
             }
         }
         
@@ -78,21 +79,19 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location);
+        public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location);
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix();
+        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix();
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public abstract StiffnessMatrix GetLocalStiffnessMatrix();
+        public abstract StiffnessMatrix LocalStiffnessMatrix();
         
         /// <summary>
         /// Gets the exact stiffness value for a given node and degree of freedom combinations.
@@ -215,7 +214,7 @@ namespace SharpFE.Stiffness
         {
             this.ThrowIfNotInitialized();
             
-            StiffnessMatrix k = this.GetLocalStiffnessMatrix();
+            StiffnessMatrix k = this.LocalStiffnessMatrix();
             if (k.Determinant() != 0)
             {
                 throw new InvalidOperationException(string.Format(
@@ -231,9 +230,9 @@ namespace SharpFE.Stiffness
             KeyedMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
             KeyedMatrix<NodalDegreeOfFreedom> ttransposed = t.Transpose(); // T^
             KeyedMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
-            this._globalStiffnessMatrix = new StiffnessMatrix(ttransposedkt);
+            this.globStiffMat = new StiffnessMatrix(ttransposedkt);
             
-            if (this._globalStiffnessMatrix.Determinant() != 0)
+            if (this.globStiffMat.Determinant() != 0)
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -246,6 +245,7 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// Builds the rotational matrix from local coordinates to global coordinates.
         /// </summary>
+        /// <returns></returns>
         private KeyedMatrix<NodalDegreeOfFreedom> BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
         {
             this.ThrowIfNotInitialized();

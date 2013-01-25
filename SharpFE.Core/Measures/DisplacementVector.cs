@@ -10,7 +10,6 @@ namespace SharpFE
     using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
-    /// Description of Displacement.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Vector is more specific and is used instead of Collection")]
     public class DisplacementVector : DenseVector

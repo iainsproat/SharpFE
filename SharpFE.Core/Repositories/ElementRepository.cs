@@ -27,6 +27,9 @@ namespace SharpFE
         /// </summary>
         private Index<FiniteElementNode, FiniteElementNode> nodeToNodeIndex = new Index<FiniteElementNode, FiniteElementNode>();
         
+        /// <summary>
+        /// 
+        /// </summary>
         private Cache<ElementRepository.NodeTuple, IList<FiniteElement>> cacheConnectingElements = new Cache<ElementRepository.NodeTuple, IList<FiniteElement>>();
         
         /// <summary>
@@ -172,11 +175,26 @@ namespace SharpFE
             return success;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         private struct NodeTuple : IEquatable<NodeTuple>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             private FiniteElementNode n1;
+            
+            /// <summary>
+            /// 
+            /// </summary>
             private FiniteElementNode n2;
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="node1"></param>
+            /// <param name="node2"></param>
             public NodeTuple(FiniteElementNode node1, FiniteElementNode node2)
             {
                 this.n1 = node1;
@@ -184,16 +202,33 @@ namespace SharpFE
             }
             
             #region Equals and GetHashCode implementation
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="lhs"></param>
+            /// <param name="rhs"></param>
+            /// <returns></returns>
             public static bool operator ==(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
             {
                 return lhs.Equals(rhs);
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="lhs"></param>
+            /// <param name="rhs"></param>
+            /// <returns></returns>
             public static bool operator !=(ElementRepository.NodeTuple lhs, ElementRepository.NodeTuple rhs)
             {
                 return !(lhs == rhs);
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public override bool Equals(object obj)
             {
                 return (obj is ElementRepository.NodeTuple) && this.Equals((ElementRepository.NodeTuple)obj);

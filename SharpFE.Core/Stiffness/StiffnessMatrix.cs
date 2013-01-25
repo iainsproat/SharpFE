@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ElementStiffnessMatrix.cs" company="SharpFE">
-//     Copyright Iain Sproat, 2012.
+// <copyright file="StiffnessMatrix.cs" company="SharpFE">
+//     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ namespace SharpFE.Stiffness
         }
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class
+        /// Initializes a new instance of the <see cref="StiffnessMatrix" /> class
         /// </summary>
         /// <param name="matrix">The matrix which holds the data to copy into this new matrix</param>
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
@@ -61,6 +61,10 @@ namespace SharpFE.Stiffness
             // empty
         }
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StiffnessMatrix" /> class.
+        /// </summary>
+        /// <param name="matrix"></param>
         public StiffnessMatrix(KeyedMatrix<NodalDegreeOfFreedom> matrix)
             : base(matrix)
         {

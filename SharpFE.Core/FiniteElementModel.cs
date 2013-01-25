@@ -188,9 +188,9 @@ namespace SharpFE
                 /// <summary>
         /// Equality operator
         /// </summary>
-        /// <param name="leftHandSide"></param>
-        /// <param name="rightHandSide"></param>
-        /// <returns></returns>
+        /// <param name="leftHandSide">The object on the left of the equality operator</param>
+        /// <param name="rightHandSide">The object to the right of the equality operator</param>
+        /// <returns>True if the model at the left hand side and the right hand side are equal.</returns>
         public static bool operator ==(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
         {
             if (ReferenceEquals(leftHandSide, rightHandSide))
@@ -207,11 +207,11 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// Inequality operator
+        /// Inequality operator.
         /// </summary>
-        /// <param name="leftHandSide"></param>
-        /// <param name="rightHandSide"></param>
-        /// <returns></returns>
+        /// <param name="leftHandSide">The object to the left of the inequality operator</param>
+        /// <param name="rightHandSide">The object to the right of the inequality operator</param>
+        /// <returns>True if the models are not equal, false otherwise.</returns>
         public static bool operator !=(FiniteElementModel leftHandSide, FiniteElementModel rightHandSide)
         {
             return !(leftHandSide == rightHandSide);

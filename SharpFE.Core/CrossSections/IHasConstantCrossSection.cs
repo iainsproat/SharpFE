@@ -1,12 +1,21 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="IHasConstantCrossSection.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
     
     /// <summary>
-    /// Description of IHasConstantCrossSection.
+    /// 
     /// </summary>
     public interface IHasConstantCrossSection : IHasCrossSection
     {
+        /// <summary>
+        /// 
+        /// </summary>
         ICrossSection CrossSection { get; }
     }
 }

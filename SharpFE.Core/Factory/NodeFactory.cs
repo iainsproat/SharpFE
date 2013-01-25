@@ -9,7 +9,6 @@ namespace SharpFE
     using System;
     
     /// <summary>
-    /// Description of NodeFactory.
     /// </summary>
     public class NodeFactory
     {
@@ -96,6 +95,12 @@ namespace SharpFE
             return newNode;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="coordinateAlongGlobalXAxis"></param>
+        /// <param name="coordinateAlongGlobalZAxis"></param>
+        /// <returns></returns>
         public FiniteElementNode CreateForTruss(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
         {
             if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)

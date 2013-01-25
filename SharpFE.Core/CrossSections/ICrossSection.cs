@@ -1,4 +1,10 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="ICrossSection.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
     
@@ -54,7 +60,7 @@
         /// <summary>
         /// As measured from centre of bounding box
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid", Justification = "valid spelling")]
         Coordinate2D GeometricCentroid { get; }
                 
         ////TODO storing of coordinate data for profile (may need to work with b-splines etc...)

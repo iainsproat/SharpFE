@@ -13,6 +13,11 @@ namespace SharpFE
     /// </summary>
     public class SolidRectangle : ICrossSection
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
         public SolidRectangle(double height, double width)
         {
             if (height <= 0)
@@ -29,18 +34,27 @@ namespace SharpFE
             this.MaximumWidth = width;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double MaximumDepth
         {
             get;
             private set;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double MaximumWidth
         {
             get;
             private set;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double Area
         {
             get
@@ -49,6 +63,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double SecondMomentOfAreaAroundYY
         {
             get
@@ -57,6 +74,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double SecondMomentOfAreaAroundZZ
         {
             get
@@ -65,6 +85,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double ExternalPerimeterLength
         {
             get
@@ -73,6 +96,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double MomentOfInertiaInTorsion
         {
             get
@@ -81,6 +107,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public Coordinate2D GeometricCentroid
         {
             get

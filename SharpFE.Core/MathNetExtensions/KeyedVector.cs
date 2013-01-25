@@ -1,4 +1,10 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="KeyedVector.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
@@ -13,64 +19,105 @@
     /// This is roughly analagous to what a Dictionary is to a List.
     /// </summary>
     /// <typeparam name="TKey">The type of the instances which form the keys to this KeyedMatrix</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Vector is more descriptive than Collection")]
     public class KeyedVector<TKey> : DenseVector
     {
         /// <summary>
         /// The keys which identify the items of this keyed vector
         /// </summary>
-        private IDictionary<TKey, int> _keys = new Dictionary<TKey, int>();
+        private IDictionary<TKey, int> keyz = new Dictionary<TKey, int>();
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keysForVector"></param>
         public KeyedVector(IList<TKey> keysForVector)
             : base(keysForVector.Count)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keysForVector"></param>
+        /// <param name="initialValue"></param>
         public KeyedVector(IList<TKey> keysForVector, double initialValue)
             : base(keysForVector.Count, initialValue)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="keysForVector"></param>
         public KeyedVector(Vector vector, IList<TKey> keysForVector)
             : base(vector)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="keysForVector"></param>
         public KeyedVector(double[] array, IList<TKey> keysForVector)
             : base(array)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="keysForVector"></param>
         public KeyedVector(Vector<double> vector, IList<TKey> keysForVector)
             : base(vector)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="keysForVector"></param>
         public KeyedVector(double[] array, params TKey[] keysForVector)
             : base(array)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyedVector">KeyedVector</see> class
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="keysForVector"></param>
         public KeyedVector(Vector<double> vector, params TKey[] keysForVector)
             : base(vector)
         {
             this.CheckAndAddKeys(keysForVector);
         }
         
+        /// <summary>
+        /// Gets the keys of this vector
+        /// </summary>
         public IList<TKey> Keys
         {
             get
             {
-                return new List<TKey>(this._keys.Keys);
+                return new List<TKey>(this.keyz.Keys);
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public double this[TKey index]
         {
             get
@@ -84,6 +131,11 @@
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public KeyedVector<TKey> Add(KeyedVector<TKey> other)
         {
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
@@ -95,6 +147,11 @@
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public KeyedVector<TKey> CrossProduct(KeyedVector<TKey> other)
         {
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
@@ -106,13 +163,22 @@
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p", Justification = "Following Math.net library convention")]
         public new KeyedVector<TKey> Normalize(double p)
         {
             Vector<double> result = base.Normalize(p);
             return new KeyedVector<TKey>(result, this.Keys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -138,13 +204,17 @@
         /// <summary>
         /// Determines the row index in the matrix
         /// </summary>
-        /// <param name="rowKey">The key for which to find the index</param>
+        /// <param name="key">The key for which to find the index</param>
         /// <returns>An integer representing the row index in the matrix</returns>
         private int KeyIndex(TKey key)
         {
-            return this._keys[key];
+            return this.keyz[key];
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keysForVector"></param>
         private void CheckAndAddKeys(TKey[] keysForVector)
         {
             this.CheckAndAddKeys(new List<TKey>(keysForVector));
@@ -154,8 +224,7 @@
         /// Replaces the keys with the provided lists.
         /// First checks that the lists are reasonably valid (does not check for duplicate keys, however)
         /// </summary>
-        /// <param name="keysForRows">The keys to replace the RowKeys property with</param>
-        /// <param name="keysForColumns">The keys to replace the ColumnKeys property with</param>
+        /// <param name="keysForVector">The keys to replace the Keys property with</param>
         private void CheckAndAddKeys(IList<TKey> keysForVector)
         {
             Guard.AgainstNullArgument(keysForVector, "keysForVector");
@@ -164,12 +233,12 @@
                 "The number of items in the keys list should match the number of items of the underlying vector",
                 "keysForVector");
             
-            this._keys.Clear();
+            this.keyz.Clear();
             
             int numKeys = keysForVector.Count;
             for (int i = 0; i < numKeys; i++)
             {
-                this._keys.Add(keysForVector[i], i);
+                this.keyz.Add(keysForVector[i], i);
             }
         }
     }

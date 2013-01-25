@@ -10,7 +10,6 @@ namespace SharpFE.Stiffness
     using System.Collections.Generic;
     
     /// <summary>
-    /// Description of LinearConstantStrainTriangleStiffnessMatrixBuilder.
     /// </summary>
     public class LinearConstantStrainTriangleStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<LinearConstantStrainTriangle>
     {
@@ -24,6 +23,9 @@ namespace SharpFE.Stiffness
             // empty
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         private static IList<Strain> SupportedStrains
         {
             get
@@ -36,7 +38,12 @@ namespace SharpFE.Stiffness
             }
         }
         
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
         {
             ////TODO should be able to get the below from the ModelType
             IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2);
@@ -51,35 +58,39 @@ namespace SharpFE.Stiffness
             FiniteElementNode node2 = this.Element.Nodes[2];
             
             double constant = 1.0 / (2.0 * this.Element.Area);
-            double N1 = ((node1.OriginalX * node2.OriginalY) - (node2.OriginalX * node1.OriginalY))
+            double n1 = ((node1.OriginalX * node2.OriginalY) - (node2.OriginalX * node1.OriginalY))
                 + ((node1.OriginalY - node2.OriginalY) * location.OriginalX)
                 + ((node2.OriginalX - node1.OriginalX) * location.OriginalY);
             
-            double N2 = ((node2.OriginalX * node0.OriginalY) - (node0.OriginalX * node2.OriginalY))
+            double n2 = ((node2.OriginalX * node0.OriginalY) - (node0.OriginalX * node2.OriginalY))
                 + ((node2.OriginalY - node1.OriginalY) * location.OriginalX)
                 + ((node0.OriginalX - node2.OriginalX) * location.OriginalY);
             
-            double N3 = ((node0.OriginalX * node1.OriginalY) - (node1.OriginalX * node0.OriginalY))
+            double n3 = ((node0.OriginalX * node1.OriginalY) - (node1.OriginalX * node0.OriginalY))
                 + ((node0.OriginalY - node1.OriginalY) * location.OriginalX)
                 + ((node1.OriginalX - node0.OriginalX) * location.OriginalY);
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * N1);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * N1);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * n1);
+            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * n1);
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * N2);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * N2);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * n2);
+            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * n2);
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * N3);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * N3);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * n3);
+            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * n3);
 
             return shapeFunctions;
         }
         
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             IList<Strain> supportedStrains = LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains;
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> B = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom);
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom);
             
             FiniteElementNode node0 = this.Element.Nodes[0];
             FiniteElementNode node1 = this.Element.Nodes[1];
@@ -87,54 +98,62 @@ namespace SharpFE.Stiffness
             
             double constant = 1.0 / (2.0 * this.Element.Area);
             
-            B.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node1.OriginalY - node2.OriginalY));
-            B.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node2.OriginalY - node0.OriginalY));
-            B.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node0.OriginalY - node1.OriginalY));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node1.OriginalY - node2.OriginalY));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node2.OriginalY - node0.OriginalY));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node0.OriginalY - node1.OriginalY));
             
-            B.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node2.OriginalX - node1.OriginalX));
-            B.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node0.OriginalX - node2.OriginalX));
-            B.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node1.OriginalX - node0.OriginalX));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node2.OriginalX - node1.OriginalX));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node0.OriginalX - node2.OriginalX));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node1.OriginalX - node0.OriginalX));
             
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node2.OriginalX - node1.OriginalX));
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node1.OriginalY - node2.OriginalY));
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node0.OriginalX - node2.OriginalX));
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node2.OriginalY - node0.OriginalY));
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node1.OriginalX - node0.OriginalX));
-            B.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node0.OriginalY - node1.OriginalY));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node2.OriginalX - node1.OriginalX));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node1.OriginalY - node2.OriginalY));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node0.OriginalX - node2.OriginalX));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node2.OriginalY - node0.OriginalY));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node1.OriginalX - node0.OriginalX));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node0.OriginalY - node1.OriginalY));
             
-            return B;
+            return strainDisplacementMatrix;
         }
         
-        public override StiffnessMatrix GetLocalStiffnessMatrix()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double elementVolume = this.Element.Thickness * this.Element.Area;
-            KeyedMatrix<Strain> E = this.MaterialMatrix();
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> B = this.GetStrainDisplacementMatrix();
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> BT = B.Transpose();
+            KeyedMatrix<Strain> materialMatrix = this.MaterialMatrix();
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = this.StrainDisplacementMatrix();
+            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> transposedStrainDisplacementMatrix = strainDisplacementMatrix.Transpose();
             
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> BTE = BT.Multiply<Strain, Strain>(E);
+            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> bte = transposedStrainDisplacementMatrix.Multiply<Strain, Strain>(materialMatrix);
             
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> BTEB = BTE.Multiply<Strain, NodalDegreeOfFreedom>(B);
+            KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> bteb = bte.Multiply<Strain, NodalDegreeOfFreedom>(strainDisplacementMatrix);
             
-            StiffnessMatrix k = new StiffnessMatrix(BTEB.Multiply(elementVolume), BTEB.RowKeys, BTEB.ColumnKeys);
+            StiffnessMatrix k = new StiffnessMatrix(bteb.Multiply(elementVolume), bteb.RowKeys, bteb.ColumnKeys);
             return k;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private KeyedMatrix<Strain> MaterialMatrix()
         {
             IMaterial material = this.Element.Material;
             double constant = material.YoungsModulus / ((1.0 + material.PoissonsRatio) * (1.0 - (2.0 * material.PoissonsRatio)));
             
-            KeyedMatrix<Strain> E = new KeyedMatrix<Strain>(LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains);
-            E.At(Strain.LinearStrainX, Strain.LinearStrainX, constant * (1.0 - material.PoissonsRatio));
-            E.At(Strain.LinearStrainX, Strain.LinearStrainY, constant * material.PoissonsRatio);
+            KeyedMatrix<Strain> materialMatrix = new KeyedMatrix<Strain>(LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains);
+            materialMatrix.At(Strain.LinearStrainX, Strain.LinearStrainX, constant * (1.0 - material.PoissonsRatio));
+            materialMatrix.At(Strain.LinearStrainX, Strain.LinearStrainY, constant * material.PoissonsRatio);
             
-            E.At(Strain.LinearStrainY, Strain.LinearStrainX, constant * material.PoissonsRatio);
-            E.At(Strain.LinearStrainY, Strain.LinearStrainY, constant * (1.0 - material.PoissonsRatio));
+            materialMatrix.At(Strain.LinearStrainY, Strain.LinearStrainX, constant * material.PoissonsRatio);
+            materialMatrix.At(Strain.LinearStrainY, Strain.LinearStrainY, constant * (1.0 - material.PoissonsRatio));
             
-            E.At(Strain.ShearStrainXY, Strain.ShearStrainXY, constant * ((1.0 - (2.0 * material.PoissonsRatio)) / 2.0));
+            materialMatrix.At(Strain.ShearStrainXY, Strain.ShearStrainXY, constant * ((1.0 - (2.0 * material.PoissonsRatio)) / 2.0));
             
-            return E;
+            return materialMatrix;
         }
     }
 }

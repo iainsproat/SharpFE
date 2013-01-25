@@ -148,7 +148,7 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// Returns the hashcode for this instance
+        /// Returns the HashCode for this instance
         /// </summary>
         /// <returns>A 32-bit signed integer hash code</returns>
         public override int GetHashCode()

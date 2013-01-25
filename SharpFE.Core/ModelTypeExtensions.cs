@@ -10,7 +10,7 @@ namespace SharpFE
     using System.Collections.Generic;
 
     /// <summary>
-    /// This is an extension to the ModelType enum which provides useful information
+    /// This is an extension to the ModelType enumeration which provides useful information
     /// about the degrees of freedom each model type allows.
     /// </summary>
     public static class ModelTypeExtensions
@@ -18,7 +18,7 @@ namespace SharpFE
         /// <summary>
         /// The allowed degrees of freedom in which the model geometry can be created.
         /// </summary>
-        /// <param name="modelType">The modeltype which dictates the allowed degrees of freedom</param>
+        /// <param name="modelType">The type of model which ultimately dictates the allowed degrees of freedom</param>
         /// <returns>A list of allowed degrees of freedom for the geometry</returns>
         public static IList<DegreeOfFreedom> GetAllowedDegreesOfFreedomForGeometry(this ModelType modelType)
         {
@@ -124,7 +124,7 @@ namespace SharpFE
         /// <summary>
         /// The allowed degrees of freedom in which the applied forces and constraints can be created.
         /// </summary>
-        /// <param name="modelType">The modeltype which dictates the allowed degrees of freedom</param>
+        /// <param name="modelType">The type of model which will then dictate the allowed degrees of freedom</param>
         /// <returns>A list of allowed degrees of freedom for the forces and constraints</returns>
         public static IList<DegreeOfFreedom> GetAllowedDegreesOfFreedomForBoundaryConditions(this ModelType modelType)
         {

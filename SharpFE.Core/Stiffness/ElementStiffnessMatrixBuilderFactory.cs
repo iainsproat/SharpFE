@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="ElementStiffnessMatrixBuilderFactory.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace SharpFE.Stiffness
     using System.Reflection;
 
     /// <summary>
-    /// Description of ElementStiffnessMatrixFactory.
+    /// Factory to create ElementStiffnessMatrixBuilders for the correct finite element type
     /// </summary>
     public class ElementStiffnessMatrixBuilderFactory
     {

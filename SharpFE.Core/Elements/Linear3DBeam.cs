@@ -15,12 +15,24 @@ namespace SharpFE
     /// </summary>
     public class Linear3DBeam : LinearBeam
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="mat"></param>
+        /// <param name="section"></param>
         public Linear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
             : base(start, end, mat, section)
         {
             // empty
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="degreeOfFreedom"></param>
+        /// <returns></returns>
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)

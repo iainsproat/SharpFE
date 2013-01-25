@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="LinearConstantStrainTriangle.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,6 +14,14 @@ namespace SharpFE
     /// </summary>
     public class LinearConstantStrainTriangle : FiniteElement, IHasMaterial
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node0"></param>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <param name="elementMaterial"></param>
+        /// <param name="elementThickness"></param>
         public LinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial elementMaterial, double elementThickness)
         {
             this.AddNode(node0);
@@ -29,12 +37,18 @@ namespace SharpFE
             this.Thickness = elementThickness;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public IMaterial Material
         {
             get;
             private set;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double Thickness
         {
             get;
@@ -79,6 +93,9 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double Area
         {
             get
@@ -87,6 +104,11 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="degreeOfFreedom"></param>
+        /// <returns></returns>
         public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
             switch (degreeOfFreedom)
@@ -103,6 +125,10 @@ namespace SharpFE
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeToAdd"></param>
         protected override void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd)
         {
             if (this.Nodes.Count > 2)

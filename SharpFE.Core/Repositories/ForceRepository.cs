@@ -11,7 +11,6 @@ namespace SharpFE
     using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
-    /// Description of ForceRepository.
     /// </summary>
     internal class ForceRepository : Repository<ForceVector>
     {

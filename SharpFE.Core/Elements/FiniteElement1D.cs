@@ -1,4 +1,10 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="FiniteElement1D.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
     using SharpFE.Stiffness;
@@ -8,6 +14,11 @@
     /// </summary>
     public abstract class FiniteElement1D : FiniteElement
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
         protected FiniteElement1D(FiniteElementNode node1, FiniteElementNode node2)
         {
             this.AddNode(node1);
@@ -36,6 +47,9 @@
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public double OriginalLength
         {
             get
@@ -83,6 +97,12 @@
         }
         
         #region Equals and GetHashCode implementation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator ==(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
         {
             if (object.ReferenceEquals(leftHandSide, rightHandSide))
@@ -98,11 +118,22 @@
             return leftHandSide.Equals(rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
+        /// <returns></returns>
         public static bool operator !=(FiniteElement1D leftHandSide, FiniteElement1D rightHandSide)
         {
             return !(leftHandSide == rightHandSide);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             FiniteElement1D other = obj as FiniteElement1D;
@@ -114,6 +145,10 @@
             return base.Equals(other);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -148,7 +183,7 @@
         }
         
         /// <summary>
-        /// Lines are unique in that you cannot work out which way is 'up' from the nodes (could be any of an infinte number as the line spins on its own axis).
+        /// Lines are unique in that you cannot work out which way is 'up' from the nodes (could be any of an infinite number as the line spins on its own axis).
         /// This method defines an 'up' direction.  It is in the direction of the Global Z, unless the line local X axis is also aligned with global z.
         /// In that case the up direction is aligned with global y axis.
         /// </summary>

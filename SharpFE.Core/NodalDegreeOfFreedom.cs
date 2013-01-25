@@ -99,9 +99,9 @@ namespace SharpFE
         }
         
         /// <summary>
-        /// Calculates the hashcode for this instance.
+        /// Calculates the HashCode for this instance.
         /// </summary>
-        /// <returns>An integer representing the hashcode of this object</returns>
+        /// <returns>An integer representing the HashCode of this object</returns>
         public override int GetHashCode()
         {
             int hashCode = 0;

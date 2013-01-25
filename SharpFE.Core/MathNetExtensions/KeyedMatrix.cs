@@ -74,7 +74,12 @@ namespace SharpFE
             // empty
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "hiding base method avoids the need for calling members to cast")]
         public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.ColumnKeys, other.RowKeys);
@@ -94,19 +99,32 @@ namespace SharpFE
             return new KeyedMatrix<TKey>(this);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public new KeyedMatrix<TKey> Inverse()
         {
             Matrix<double> result = ((Matrix<double>)this).Inverse();
             return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public new KeyedMatrix<TKey> Transpose()
         {
             Matrix<double> result = ((Matrix<double>)this).Transpose();
             return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p", Justification = "Following Math.net library convention")]
         public new KeyedMatrix<TKey> NormalizeRows(int p)
         {
             Matrix<double> result = ((Matrix<double>)this).NormalizeRows(p);

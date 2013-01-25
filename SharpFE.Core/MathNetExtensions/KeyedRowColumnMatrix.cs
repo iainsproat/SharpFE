@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="KeyedRowColumnMatrix.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,8 +13,9 @@ namespace SharpFE
     using SharpFE.MathNetExtensions;
 
     /// <summary>
-    /// Description of KeyedRowColumnMatrix.
     /// </summary>
+    /// <typeparam name="TRowKey"></typeparam>
+    /// <typeparam name="TColumnKey"></typeparam>
     public class KeyedRowColumnMatrix<TRowKey, TColumnKey> : DenseMatrix
     {
         /// <summary>
@@ -187,17 +188,30 @@ namespace SharpFE
             this.At(rowIndex, columnIndex, value);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Transpose()
         {
             return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(base.Transpose(), this.ColumnKeys, this.RowKeys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public new KeyedRowColumnMatrix<TColumnKey, TRowKey> Inverse()
         {
             Matrix<double> result = ((Matrix<double>)this).Inverse();
             return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(result, this.ColumnKeys, this.RowKeys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> Multiply<TOtherRowKey, TOtherColumnKey>(KeyedRowColumnMatrix<TOtherRowKey, TOtherColumnKey> other)
         {
             KeyCompatibilityValidator<TColumnKey, TOtherRowKey> kcv = new KeyCompatibilityValidator<TColumnKey, TOtherRowKey>(this.ColumnKeys, other.RowKeys);
@@ -208,12 +222,22 @@ namespace SharpFE
             return new KeyedRowColumnMatrix<TRowKey, TOtherColumnKey>(result, this.RowKeys, other.ColumnKeys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <returns></returns>
         public new KeyedRowColumnMatrix<TRowKey, TColumnKey> Multiply(double scalar)
         {
             Matrix<double> result = base.Multiply(scalar);
             return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(result, this.RowKeys, this.ColumnKeys);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rightSide"></param>
+        /// <returns></returns>
         public KeyedVector<TRowKey> Multiply(KeyedVector<TColumnKey> rightSide)
         {
             KeyCompatibilityValidator<TColumnKey, TColumnKey> kcv = new KeyCompatibilityValidator<TColumnKey, TColumnKey>(this.ColumnKeys, rightSide.Keys);
@@ -228,8 +252,8 @@ namespace SharpFE
         /// Replaces the keys with the provided lists.
         /// First checks that the lists are reasonably valid (does not check for duplicate keys, however)
         /// </summary>
-        /// <param name="keysForRows">The keys to replace the RowKeys property with</param>
-        /// <param name="keysForColumns">The keys to replace the ColumnKeys property with</param>
+        /// <param name="keysRows">The keys to replace the RowKeys property with</param>
+        /// <param name="keysColumns">The keys to replace the ColumnKeys property with</param>
         private void CheckAndAddKeys(IList<TRowKey> keysRows, IList<TColumnKey> keysColumns)
         {
             Guard.AgainstNullArgument(keysRows, "keysRows");

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="StiffnessMatrixBuilder.cs" company="SharpFE">
+// <copyright file="GlobalModelStiffnessMatrixBuilder.cs" company="SharpFE">
 //     Copyright Iain Sproat, 2012.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -21,11 +21,24 @@ namespace SharpFE.Stiffness
         /// </summary>
         private FiniteElementModel parent;
         
+        /// <summary>
+        /// 
+        /// </summary>
         private ElementStiffnessMatrixBuilderFactory stiffnessFactory = new ElementStiffnessMatrixBuilderFactory();
         
+        /// <summary>
+        /// 
+        /// </summary>
         private IDictionary<int, IStiffnessProvider> elementStiffnessProviderCache = new Dictionary<int, IStiffnessProvider>();
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double> stiffnessCache = new Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double>();
         
+        /// <summary>
+        /// 
+        /// </summary>
         private int currentModelHash;
         
         /// <summary>
@@ -38,6 +51,10 @@ namespace SharpFE.Stiffness
             this.currentModelHash = this.parent.GetHashCode();
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
             IList<NodalDegreeOfFreedom> allDegreesOfFreedom = this.parent.AllDegreesOfFreedom;
@@ -177,6 +194,11 @@ namespace SharpFE.Stiffness
             return totalStiffness;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private IStiffnessProvider GetElementStiffnessProvider(FiniteElement element)
         {
             int elementHash = element.GetHashCode();

@@ -10,7 +10,6 @@ namespace SharpFE
     using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
-    /// Description of Force.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Vector is a more specific name and will be used instead of Collection")]
     public class ForceVector : DenseVector

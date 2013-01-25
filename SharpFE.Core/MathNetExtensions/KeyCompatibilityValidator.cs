@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="?.cs" company="Iain Sproat">
+// <copyright file="KeyCompatibilityValidator.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,18 +13,39 @@ namespace SharpFE.MathNetExtensions
     /// Compares two lists for equality in both contained items
     /// and order of items
     /// </summary>
+    /// <typeparam name="TLeftKey"></typeparam>
+    /// <typeparam name="TRightKey"></typeparam>
     public class KeyCompatibilityValidator<TLeftKey, TRightKey>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private IList<string> errorMessages;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private IList<TLeftKey> lhs;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private IList<TRightKey> rhs;
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftHandSide"></param>
+        /// <param name="rightHandSide"></param>
         public KeyCompatibilityValidator(IList<TLeftKey> leftHandSide, IList<TRightKey> rightHandSide)
         {
             this.lhs = leftHandSide;
             this.rhs = rightHandSide;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void ThrowIfInvalid()
         {
             Guard.AgainstNullArgument(this.lhs, "lhs");
@@ -53,6 +74,10 @@ namespace SharpFE.MathNetExtensions
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
         private void CompareItemsAtIndex(int index)
         {
             TLeftKey lhsItem = this.lhs[index];
@@ -88,6 +113,9 @@ namespace SharpFE.MathNetExtensions
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         private void PrintAndThrowErrors()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();

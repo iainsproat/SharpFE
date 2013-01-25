@@ -1,4 +1,10 @@
-﻿namespace SharpFE
+﻿//-----------------------------------------------------------------------
+// <copyright file="IHasMaterial.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace SharpFE
 {
     using System;
     
@@ -7,6 +13,9 @@
     /// </summary>
     public interface IHasMaterial
     {
+        /// <summary>
+        /// 
+        /// </summary>
         IMaterial Material { get; }
     }
 }

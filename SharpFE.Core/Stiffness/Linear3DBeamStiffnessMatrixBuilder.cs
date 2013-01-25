@@ -9,7 +9,6 @@ namespace SharpFE.Stiffness
     using System;
     
     /// <summary>
-    /// Description of Linear3DBeamStiffnessMatrixBuilder.
     /// </summary>
     public class Linear3DBeamStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<Linear3DBeam>
     {
@@ -23,17 +22,30 @@ namespace SharpFE.Stiffness
             // empty
         }
         
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> GetShapeFunctionVector(FiniteElementNode location)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
         {
             throw new NotImplementedException();
         }
         
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> GetStrainDisplacementMatrix()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
         }
         
-        public override StiffnessMatrix GetLocalStiffnessMatrix()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double length = this.Element.OriginalLength;                    
             StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
