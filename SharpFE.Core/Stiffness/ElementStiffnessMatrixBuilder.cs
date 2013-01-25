@@ -142,12 +142,12 @@ namespace SharpFE.Stiffness
         }
         
         /// <summary>
-        /// 
+        /// Creates a new keyed matrix from keyed vectors representing the rows of the new matrix
         /// </summary>
-        /// <param name="axis1"></param>
-        /// <param name="axis2"></param>
-        /// <param name="axis3"></param>
-        /// <returns></returns>
+        /// <param name="axis1">The vector representing the first row</param>
+        /// <param name="axis2">The vector representing the second row</param>
+        /// <param name="axis3">The vector representing the third row</param>
+        /// <returns>A matrix built from the vectors</returns>
         private static KeyedMatrix<DegreeOfFreedom> CreateFromRows(KeyedVector<DegreeOfFreedom> axis1, KeyedVector<DegreeOfFreedom> axis2, KeyedVector<DegreeOfFreedom> axis3)
         {
             Guard.AgainstBadArgument(

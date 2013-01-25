@@ -9,6 +9,7 @@ namespace SharpFE
     using System;
     
     /// <summary>
+    /// Allows different directions of strain to be differentiated between.
     /// </summary>
     public enum Strain
     {
