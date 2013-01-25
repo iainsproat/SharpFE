@@ -19,12 +19,14 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// The finite element model from which to build the matrices
         /// </summary>
-        private FiniteElementModel parent;
+        private ITopologyQueryable parent;
+        
+        private IModelConstraintProvider constraintProvider;
         
         /// <summary>
         /// 
         /// </summary>
-        private ElementStiffnessMatrixBuilderFactory stiffnessFactory = new ElementStiffnessMatrixBuilderFactory();
+        private ElementStiffnessMatrixBuilderFactory stiffnessMatrixBuilderFactory;
         
         /// <summary>
         /// 
@@ -34,21 +36,91 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// 
         /// </summary>
-        private Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double> stiffnessCache = new Cache<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double>();
+        private IDictionary<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double> stiffnessCache = new Dictionary<Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>, double>();
+        
+        public GlobalModelStiffnessMatrixBuilder(FiniteElementModel model)
+            : this( model, model)
+        {
+            // empty
+        }
         
         /// <summary>
-        /// 
-        /// </summary>
-        private int currentModelHash;
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StiffnessMatrixBuilder" /> class.
+        /// Initializes a new instance of the <see cref="GlobalModelStiffnessMatrixBuilder" /> class.
         /// </summary>
         /// <param name="parentModel">The model from which the stiffness matrices will be built.</param>
-        public GlobalModelStiffnessMatrixBuilder(FiniteElementModel parentModel)
+        public GlobalModelStiffnessMatrixBuilder(ITopologyQueryable parentModel, IModelConstraintProvider modelConstraintProvider)
+            : this(parentModel, modelConstraintProvider, new ElementStiffnessMatrixBuilderFactory())
+        {
+            // empty
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GlobalModelStiffnessMatrixBuilder" /> class.
+        /// </summary>
+        /// <param name="parentModel"></param>
+        /// <param name="elementStiffnessMatrixBuilderFactory"></param>
+        public GlobalModelStiffnessMatrixBuilder(ITopologyQueryable parentModel, IModelConstraintProvider constraintProv, ElementStiffnessMatrixBuilderFactory elementStiffnessMatrixBuilderFactory)
         {
             this.parent = parentModel;
-            this.currentModelHash = this.parent.GetHashCode();
+            this.constraintProvider = constraintProv;
+            this.stiffnessMatrixBuilderFactory = elementStiffnessMatrixBuilderFactory; 
+        }
+        
+        /// <summary>
+        /// Gets a list of all the nodes and degrees of freedom which have a known force.
+        /// </summary>
+        /// <remarks>
+        /// This is exactly the same as the list of unknown displacements.
+        /// The presence of a force on a node does not necessarily mean that it is known.
+        /// For example, an external force applied to a fixed node does not mean that you will know the reaction of that node (without calculating it).
+        /// Counter intuitively, a node without an external force applied to does actually have a known force - the force is zero.
+        /// </remarks>
+        public IList<NodalDegreeOfFreedom> DegreesOfFreedomWithKnownForce
+        {
+            get
+            {
+                return this.constraintProvider.UnconstrainedNodalDegreeOfFreedoms;
+            }
+        }
+        
+        /// <summary>
+        /// Gets a list of all the nodes and degrees of freedom which have a known displacement.
+        /// </summary>
+        /// <remarks>
+        /// This will be all the nodes which are constrained in a particular degree of freedom.
+        /// </remarks>
+        public IList<NodalDegreeOfFreedom> DegreesOfFreedomWithKnownDisplacement
+        {
+            get
+            {
+                return this.constraintProvider.ConstrainedNodalDegreeOfFreedoms;
+            }
+        }
+        
+        /// <summary>
+        /// Gets a list of all the nodes and degrees of freedom which have an unknown force.
+        /// This is exactly the same list as those which have a known displacement.
+        /// </summary>
+        public IList<NodalDegreeOfFreedom> DegreesOfFreedomWithUnknownForce
+        {
+            get
+            {
+                return this.constraintProvider.ConstrainedNodalDegreeOfFreedoms;
+            }
+        }
+        
+        /// <summary>
+        /// Gets a list of all the nodes and degrees of freedom which have an unknown displacement.
+        /// </summary>
+        /// <remarks>
+        /// This will be all the degrees of freedom of each node which are not constrained.
+        /// </remarks>
+        public IList<NodalDegreeOfFreedom> DegreesOfFreedomWithUnknownDisplacement
+        {
+            get
+            {
+                return this.constraintProvider.UnconstrainedNodalDegreeOfFreedoms;
+            }
         }
         
         /// <summary>
@@ -57,7 +129,7 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> allDegreesOfFreedom = this.parent.AllDegreesOfFreedom;
+            IList<NodalDegreeOfFreedom> allDegreesOfFreedom = this.constraintProvider.AllDegreesOfFreedom;
             
             return this.BuildStiffnessSubMatrix(allDegreesOfFreedom, allDegreesOfFreedom);
         }
@@ -68,9 +140,9 @@ namespace SharpFE.Stiffness
         /// <returns>A stiffness matrix for known forces and known displacements</returns>
         public StiffnessMatrix BuildKnownForcesKnownDisplacementStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> knownForces = this.parent.DegreesOfFreedomWithKnownForce;
+            IList<NodalDegreeOfFreedom> knownForces = this.DegreesOfFreedomWithKnownForce;
             
-            IList<NodalDegreeOfFreedom> knownDisplacements = this.parent.DegreesOfFreedomWithKnownDisplacement;
+            IList<NodalDegreeOfFreedom> knownDisplacements = this.DegreesOfFreedomWithKnownDisplacement;
             if (knownDisplacements == null || knownDisplacements.Count == 0)
             {
                 throw new InvalidOperationException("The model has no constraints and therefore cannot be solved");
@@ -85,13 +157,13 @@ namespace SharpFE.Stiffness
         /// <returns>A stiffness matrix for known forces and unknown displacements</returns>
         public StiffnessMatrix BuildKnownForcesUnknownDisplacementStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> knownForceIdentifiers = this.parent.DegreesOfFreedomWithKnownForce;
+            IList<NodalDegreeOfFreedom> knownForceIdentifiers = this.DegreesOfFreedomWithKnownForce;
             if (knownForceIdentifiers == null || knownForceIdentifiers.Count == 0)
             {
                 throw new InvalidOperationException("The model has too many constraints and no displacements will occur.  The reactions of each node equals the forces applied to each node.");
             }
             
-            IList<NodalDegreeOfFreedom> unknownDisplacementIdentifiers = this.parent.DegreesOfFreedomWithUnknownDisplacement;
+            IList<NodalDegreeOfFreedom> unknownDisplacementIdentifiers = this.DegreesOfFreedomWithUnknownDisplacement;
             
             return this.BuildStiffnessSubMatrix(knownForceIdentifiers, unknownDisplacementIdentifiers);
         }
@@ -102,9 +174,9 @@ namespace SharpFE.Stiffness
         /// <returns>A stiffness matrix for unknown forces and known displacements</returns>
         public StiffnessMatrix BuildUnknownForcesKnownDisplacementStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> unknownForces = this.parent.DegreesOfFreedomWithUnknownForce;
+            IList<NodalDegreeOfFreedom> unknownForces = this.DegreesOfFreedomWithUnknownForce;
             
-            IList<NodalDegreeOfFreedom> knownDisplacements = this.parent.DegreesOfFreedomWithKnownDisplacement;
+            IList<NodalDegreeOfFreedom> knownDisplacements = this.DegreesOfFreedomWithKnownDisplacement;
             return this.BuildStiffnessSubMatrix(unknownForces, knownDisplacements);
         }
         
@@ -114,9 +186,9 @@ namespace SharpFE.Stiffness
         /// <returns>A stiffness matrix for unknown forces and unknown displacements</returns>
         public StiffnessMatrix BuildUnknownForcesUnknownDisplacementStiffnessMatrix()
         {
-            IList<NodalDegreeOfFreedom> unknownForces = this.parent.DegreesOfFreedomWithUnknownForce;
+            IList<NodalDegreeOfFreedom> unknownForces = this.DegreesOfFreedomWithUnknownForce;
             
-            IList<NodalDegreeOfFreedom> unknownDisplacements = this.parent.DegreesOfFreedomWithUnknownDisplacement;
+            IList<NodalDegreeOfFreedom> unknownDisplacements = this.DegreesOfFreedomWithUnknownDisplacement;
             return this.BuildStiffnessSubMatrix(unknownForces, unknownDisplacements);
         }
         
@@ -131,9 +203,6 @@ namespace SharpFE.Stiffness
         {
             Guard.AgainstNullArgument(rowKeys, "rowKeys");
             Guard.AgainstNullArgument(columnKeys, "columnKeys");
-            
-            // update to ensure validity of items stored in cache
-            this.currentModelHash = this.parent.GetHashCode();
             
             int numRows = rowKeys.Count;
             int numCols = columnKeys.Count;
@@ -154,7 +223,7 @@ namespace SharpFE.Stiffness
             {
                 foreach (NodalDegreeOfFreedom column in columnKeys)
                 {
-                    connectedElements = this.parent.GetAllElementsDirectlyConnecting(row.Node, column.Node);
+                    connectedElements = this.parent.AllElementsDirectlyConnecting(row.Node, column.Node);
                     double currentResult = this.SumStiffnessesForAllElementsAt(connectedElements, row, column);
                     if (currentResult != 0)
                     {
@@ -178,7 +247,7 @@ namespace SharpFE.Stiffness
             double totalStiffness = 0.0;
             
             Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom> cacheKey = new Tuple<NodalDegreeOfFreedom, NodalDegreeOfFreedom>(row, column);
-            if (this.stiffnessCache.ContainsKey(cacheKey, this.currentModelHash, out totalStiffness))
+            if (this.stiffnessCache.TryGetValue(cacheKey, out totalStiffness))
             {
                 return totalStiffness;
             }
@@ -189,7 +258,7 @@ namespace SharpFE.Stiffness
                 totalStiffness += elementStiffnessMatrixBuilder.GetGlobalStiffnessAt(row.Node, row.DegreeOfFreedom, column.Node, column.DegreeOfFreedom);
             }
             
-            this.stiffnessCache.Save(cacheKey, totalStiffness, this.currentModelHash);
+            this.stiffnessCache[cacheKey] = totalStiffness;
             
             return totalStiffness;
         }
@@ -209,7 +278,7 @@ namespace SharpFE.Stiffness
                 return (IStiffnessProvider)this.elementStiffnessProviderCache[elementHash];
             }
             
-            IStiffnessProvider builder = this.stiffnessFactory.Create(element);
+            IStiffnessProvider builder = this.stiffnessMatrixBuilderFactory.Create(element);
             
             // store in the cache
             this.elementStiffnessProviderCache.Add(elementHash, builder);

@@ -62,7 +62,27 @@ namespace SharpFE.Core.Tests
             SUT.ForceFactory.Create(0, 0);
         }
         
+        [Test]
+        public void GetConstrainedNodalDegreesOfFreedom()
+        {
+            IList<NodalDegreeOfFreedom> result = SUT.ConstrainedNodalDegreeOfFreedoms;
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(node1, result[0].Node);
+            Assert.AreEqual(DegreeOfFreedom.X, result[0].DegreeOfFreedom);
+            Assert.AreEqual(node3, result[1].Node);
+            Assert.AreEqual(DegreeOfFreedom.X, result[1].DegreeOfFreedom);
+        }
         
+        [Test]
+        public void GetUnconstrainedNodalDegreesOfFreedom()
+        {
+            IList<NodalDegreeOfFreedom> result = SUT.UnconstrainedNodalDegreeOfFreedoms;
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(node2, result[0].Node);
+            Assert.AreEqual(DegreeOfFreedom.X, result[0].DegreeOfFreedom);
+        }
         
         [Test]
         public void GetKnownForceVector()
@@ -91,28 +111,6 @@ namespace SharpFE.Core.Tests
             NodalDegreeOfFreedom ndof2 = new NodalDegreeOfFreedom(node3, DegreeOfFreedom.X);
             Assert.AreEqual(0, result[ndof1]);
             Assert.AreEqual(0, result[ndof2]);
-        }
-        
-        [Test]
-        public void GetUnknownForceVector()
-        {
-            IList<NodalDegreeOfFreedom> result = SUT.DegreesOfFreedomWithUnknownForce;
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(node1, result[0].Node);
-            Assert.AreEqual(DegreeOfFreedom.X, result[0].DegreeOfFreedom);
-            Assert.AreEqual(node3, result[1].Node);
-            Assert.AreEqual(DegreeOfFreedom.X, result[1].DegreeOfFreedom);
-        }
-        
-        [Test]
-        public void GetUnknownDisplacementVector()
-        {
-            IList<NodalDegreeOfFreedom> result = SUT.DegreesOfFreedomWithUnknownDisplacement;
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(node2, result[0].Node);
-            Assert.AreEqual(DegreeOfFreedom.X, result[0].DegreeOfFreedom);
         }
     }
 }

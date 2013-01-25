@@ -70,6 +70,8 @@
     <Compile Include="Helpers\Geometry.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
+    <Compile Include="IModelConstraintProvider.cs" />
+    <Compile Include="ITopologyQueryable.cs" />
     <Compile Include="Materials\GenericElasticMaterial.cs" />
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />

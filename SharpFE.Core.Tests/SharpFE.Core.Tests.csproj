@@ -80,7 +80,7 @@
     <Compile Include="ResultTest.cs" />
     <Compile Include="Solvers\LinearSolverTest.cs" />
     <Compile Include="Solvers\LinearSolverTestsIn2D.cs" />
-    <Compile Include="Solvers\StiffnessMatrixBuilderTest.cs" />
+    <Compile Include="Solvers\GlobalModelStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
@@ -102,6 +102,7 @@
     <Folder Include="Stiffness" />
     <Folder Include="Solvers" />
     <Folder Include="Repositories" />
+    <Folder Include="Solvers\Mocks" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpFE.Core\SharpFE.Core.csproj">

@@ -55,7 +55,11 @@ namespace SharpFE.Core.Tests.Repositories
             Assert.IsNotNull(results);
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results.Contains(spring2));
-           
+            
+            FiniteElementNode unconnectedNode = nodeFactory.CreateForTruss(0,3);
+            results = SUT.GetAllElementsConnectedTo(unconnectedNode);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(0, results.Count);
         }
         
         [Test]
