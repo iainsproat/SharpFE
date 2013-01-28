@@ -18,28 +18,26 @@ namespace SharpFE.Core.Tests.Solvers
     public class GlobalStiffnessMatrixBuilderTest
     {
         MockRepository mocks;
-        IModelConstraintProvider constraintProvider;
-        ITopologyQueryable topologyQueryable;
-        IElementStiffnessMatrixBuilderFactory elementStiffnessMatrixBuilderFactory;
-        NodeFactory nodeFactory;
-        FiniteElementNode node1;
-        FiniteElementNode node2;
-        FiniteElementNode node3;
+        IFiniteElementNode node1;
+        IFiniteElementNode node2;
+        IFiniteElementNode node3;
         IFiniteElement spring1;
         IFiniteElement spring2;
         IElementStiffnessCalculator spring1Calculator;
         IElementStiffnessCalculator spring2Calculator;
+        IModelConstraintProvider constraintProvider;
+        ITopologyQueryable topologyQueryable;
+        IElementStiffnessMatrixBuilderFactory elementStiffnessMatrixBuilderFactory;
         GlobalModelStiffnessMatrixBuilder SUT;
         
         [SetUp]
         public void Setup()
         {
             mocks = new MockRepository();
-            nodeFactory = new NodeFactory(ModelType.Truss1D);
             
-            node1 = nodeFactory.Create(0);
-            node2 = nodeFactory.Create(1);
-            node3 = nodeFactory.Create(2);
+            node1 = mocks.StrictMock<IFiniteElementNode>();
+            node2 = mocks.StrictMock<IFiniteElementNode>();
+            node3 = mocks.StrictMock<IFiniteElementNode>();
             
             spring1 = mocks.StrictMock<IFiniteElement>();
             spring2 = mocks.StrictMock<IFiniteElement>();
