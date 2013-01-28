@@ -40,7 +40,7 @@ namespace SharpFE.Core.Tests.Repositories
         [Test]
         public void AllElementsConnectedToANodeCanBeFound()
         {
-            IList<FiniteElement> results = SUT.GetAllElementsConnectedTo(node1);
+            IList<IFiniteElement> results = SUT.GetAllElementsConnectedTo(node1);
             Assert.IsNotNull(results);
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results.Contains(spring1));
@@ -58,6 +58,43 @@ namespace SharpFE.Core.Tests.Repositories
             
             FiniteElementNode unconnectedNode = nodeFactory.CreateForTruss(0,3);
             results = SUT.GetAllElementsConnectedTo(unconnectedNode);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(0, results.Count);
+        }
+        
+        [Test]
+        public void Can_get_all_elements_directly_connecting_two_nodes()
+        {
+            IList<IFiniteElement> results = SUT.GetAllElementsDirectlyConnecting(node1, node2);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results.Contains(spring1));
+            
+            results = SUT.GetAllElementsDirectlyConnecting(node2, node3);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results.Contains(spring2));
+        }
+        
+        [Test]
+        public void Can_get_all_elements_directly_connecting_the_same_node()
+        {
+            IList<IFiniteElement> results = SUT.GetAllElementsDirectlyConnecting(node1, node1);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results.Contains(spring1));
+            
+            results = SUT.GetAllElementsDirectlyConnecting(node2, node2);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(2, results.Count);
+            Assert.IsTrue(results.Contains(spring1));
+            Assert.IsTrue(results.Contains(spring2));
+        }
+        
+        [Test]
+        public void Will_return_empty_list_if_no_elements_directly_connect_nodes()
+        {
+            IList<IFiniteElement> results = SUT.GetAllElementsDirectlyConnecting(node1, node3);
             Assert.IsNotNull(results);
             Assert.AreEqual(0, results.Count);
         }

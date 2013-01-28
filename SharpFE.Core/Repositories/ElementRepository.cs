@@ -15,12 +15,12 @@ namespace SharpFE
     /// <summary>
     /// Stores elements and manages reverse indexes of values in element properties
     /// </summary>
-    internal class ElementRepository : Repository<FiniteElement>
+    internal class ElementRepository : Repository<IFiniteElement>
     {
         /// <summary>
         /// A reverse index for quickly looking up the elements to which finite elment nodes are linked.
         /// </summary>
-        private Index<FiniteElementNode, FiniteElement> nodeToElementIndex = new Index<FiniteElementNode, FiniteElement>();
+        private Index<FiniteElementNode, IFiniteElement> nodeToElementIndex = new Index<FiniteElementNode, IFiniteElement>();
         
         /// <summary>
         /// A reverse index for quickly looking up other nodes to which finite element nodes are linked via finite elements.
@@ -30,7 +30,7 @@ namespace SharpFE
         /// <summary>
         /// 
         /// </summary>
-        private Cache<ElementRepository.NodeTuple, IList<FiniteElement>> cacheConnectingElements = new Cache<ElementRepository.NodeTuple, IList<FiniteElement>>();
+        private Cache<ElementRepository.NodeTuple, IList<IFiniteElement>> cacheConnectingElements = new Cache<ElementRepository.NodeTuple, IList<IFiniteElement>>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementRepository" /> class.
@@ -45,7 +45,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node for which to search for connected finite elements.</param>
         /// <returns>A list of all finite elements connecting the node.</returns>
-        public IList<FiniteElement> GetAllElementsConnectedTo(FiniteElementNode node)
+        public IList<IFiniteElement> GetAllElementsConnectedTo(FiniteElementNode node)
         {
             return this.nodeToElementIndex.Get(node);
         }
@@ -59,12 +59,12 @@ namespace SharpFE
         /// A list of elements directly connecting both the nodes.
         /// If node1 is equal to node2 (i.e. they are the same nodes), then all the elements connected to that node will be returned.
         /// </returns>
-        public IList<FiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
+        public IList<IFiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
         {
             Guard.AgainstNullArgument(node1, "node1");
             Guard.AgainstNullArgument(node2, "node2");
             
-            IList<FiniteElement> connectingElements;
+            IList<IFiniteElement> connectingElements;
             
             int currentValidHashForCache = this.GetHashCode();
             ElementRepository.NodeTuple keyForCache = new ElementRepository.NodeTuple(node1, node2);
@@ -73,9 +73,17 @@ namespace SharpFE
                 return connectingElements;
             }
             
-            IList<FiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
-            IList<FiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
-            connectingElements = elementsConnectedToNode1.Intersect(elementsConnectedToNode2).ToList();
+            IList<IFiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
+            
+            if (node1.Equals(node2))
+            {
+                connectingElements = elementsConnectedToNode1;
+            }
+            else
+            {
+                IList<IFiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
+                connectingElements = elementsConnectedToNode1.Intersect(elementsConnectedToNode2).ToList();
+            }
             
             this.cacheConnectingElements.Save(keyForCache, connectingElements, currentValidHashForCache);
             
@@ -97,7 +105,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="newItemToRegister">The new finite element to register.</param>
         /// <exception cref="ArgumentException">Thrown if the finite element already exists in the register.</exception>
-        protected override void AddToRepository(FiniteElement newItemToRegister)
+        protected override void AddToRepository(IFiniteElement newItemToRegister)
         {
             this.RegisterNewElement(newItemToRegister, newItemToRegister.Nodes);
         }
@@ -107,7 +115,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="item">the item to remove from the indices of the repository</param>
         /// <returns>true if the item was successfully removed; otherwise, false.  Returns false if the item does not exist in any indice.</returns>
-        protected override bool RemoveItem(FiniteElement item)
+        protected override bool RemoveItem(IFiniteElement item)
         {
             return this.RemoveItemFromRepositoryIndices(item, item.Nodes);
         }
@@ -126,7 +134,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="element">The new finite element to register.</param>
         /// <param name="nodes">The nodes which form part of the element and should be used to update the various indexes.</param>
-        private void RegisterNewElement(FiniteElement element, IList<FiniteElementNode> nodes)
+        private void RegisterNewElement(IFiniteElement element, IList<FiniteElementNode> nodes)
         {
             int numNodes = nodes.Count;
             for (int i = 0; i < numNodes; i++)
@@ -147,7 +155,7 @@ namespace SharpFE
         /// <param name="element">the item to remove</param>
         /// <param name="nodes">the nodes of the item to remove</param>
         /// <returns>true if the item was successfully removed; otherwise, false. Returns false if the item was not found in any index</returns>
-        private bool RemoveItemFromRepositoryIndices(FiniteElement element, IList<FiniteElementNode> nodes)
+        private bool RemoveItemFromRepositoryIndices(IFiniteElement element, IList<FiniteElementNode> nodes)
         {
             bool success = false;
             int numNodes = nodes.Count;

@@ -52,6 +52,7 @@
     <Compile Include="CrossSections\IHasCrossSection.cs" />
     <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="Elements\IFiniteElement.cs" />
     <Compile Include="Elements\LinearBeam.cs" />
     <Compile Include="Elements\LinearConstantSpring.cs" />
     <Compile Include="Elements\FiniteElement.cs" />
@@ -98,10 +99,11 @@
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\LinearSolverSVD.cs" />
+    <Compile Include="Stiffness\IElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\StiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\IStiffnessProvider.cs" />
+    <Compile Include="Stiffness\IGlobalStiffnessCalculator.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />

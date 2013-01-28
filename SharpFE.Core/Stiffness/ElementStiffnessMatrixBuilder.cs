@@ -14,7 +14,7 @@ namespace SharpFE.Stiffness
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class ElementStiffnessMatrixBuilder<T> : IStiffnessProvider
+    public abstract class ElementStiffnessMatrixBuilder<T> : IElementStiffnessCalculator
         where T : FiniteElement
     {
         /// <summary>
@@ -49,9 +49,9 @@ namespace SharpFE.Stiffness
         }
         
         /// <summary>
-        /// Gets the stiffness matrix of this element.
+        /// Gets the stiffness matrix of this element as rotated to global coordinates.
         /// </summary>
-        public StiffnessMatrix GlobalStiffnessMatrix
+        public StiffnessMatrix StiffnessMatrixInGlobalCoordinates
         {
             get
             {
@@ -102,7 +102,7 @@ namespace SharpFE.Stiffness
         /// <param name="columnDegreeOfFreedom">the degree of freedom defining the column (displacement equations)</param>
         /// <returns>A value representing the stiffness at the given locations</returns>
         /// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
-        public double GetGlobalStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
+        public double GetStiffnessInGlobalCoordinatesAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
         {
             if (rowNode == null)
             {
@@ -114,7 +114,7 @@ namespace SharpFE.Stiffness
                 throw new ArgumentNullException("columnNode");
             }
             
-            return this.GlobalStiffnessMatrix.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+            return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
         }
         
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IStiffnessProvider.cs" company="Iain Sproat">
+// <copyright file="IGlobalStiffnessCalculator.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2013.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,21 +11,21 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// 
     /// </summary>
-    public interface IStiffnessProvider
+    public interface IElementStiffnessCalculator
     {
         /// <summary>
-        /// 
+        /// Element stiffness matrix as rotated to global coordinates
         /// </summary>
-        StiffnessMatrix GlobalStiffnessMatrix { get; } ////FIXME only here for testing, to be removed
+        StiffnessMatrix StiffnessMatrixInGlobalCoordinates { get; } ////FIXME only here for testing, to be removed
  
         /// <summary>
-        /// 
+        /// Retrieves particular values of the element stiffness matrix as rotated to global coordinates.
         /// </summary>
         /// <param name="rowNode"></param>
         /// <param name="rowDegreeOfFreedom"></param>
         /// <param name="columnNode"></param>
         /// <param name="columnDegreeOfFreedom"></param>
         /// <returns></returns>
-        double GetGlobalStiffnessAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
+        double GetStiffnessInGlobalCoordinatesAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
     }
 }

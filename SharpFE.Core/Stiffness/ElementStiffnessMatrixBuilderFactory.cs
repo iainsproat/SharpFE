@@ -13,7 +13,7 @@ namespace SharpFE.Stiffness
     /// <summary>
     /// Factory to create ElementStiffnessMatrixBuilders for the correct finite element type
     /// </summary>
-    public class ElementStiffnessMatrixBuilderFactory
+    public class ElementStiffnessMatrixBuilderFactory : IElementStiffnessMatrixBuilderFactory
     {
         /// <summary>
         /// 
@@ -33,8 +33,8 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public IStiffnessProvider Create<T>(T element)
-            where T : FiniteElement
+        public IElementStiffnessCalculator Create<T>(T element)
+            where T : IFiniteElement
         {
             Guard.AgainstNullArgument(element, "element");
             
@@ -42,7 +42,7 @@ namespace SharpFE.Stiffness
             {
                 throw new ArgumentException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
-                    "Factory has not registered a builder for the element type {0}",
+                    "ElementStiffnessMatrixBuilderFactory has not registered a builder for the element type {0}",
                     element.GetType().FullName));
             }
             
@@ -60,7 +60,7 @@ namespace SharpFE.Stiffness
                     builderType.FullName));
             }
             
-            IStiffnessProvider castBuilder = builder as IStiffnessProvider;
+            IElementStiffnessCalculator castBuilder = builder as IElementStiffnessCalculator;
             if (castBuilder == null)
             {
                 throw new InvalidOperationException(string.Format(

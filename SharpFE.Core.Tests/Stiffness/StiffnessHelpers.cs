@@ -5,19 +5,19 @@
 	
 	public class StiffnessHelpers
 	{
-		public static void Assert12x12StiffnessMatrix(IStiffnessProvider SUT, params double[] expectedValues)
+		public static void Assert12x12StiffnessMatrix(IElementStiffnessCalculator SUT, params double[] expectedValues)
         {
-            Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 12, 12, expectedValues);
+            Helpers.AssertMatrix(SUT.StiffnessMatrixInGlobalCoordinates, 12, 12, expectedValues);
         }
 		
-		public static void Assert18x18StiffnessMatrix(IStiffnessProvider SUT, params double[] expectedValues)
+		public static void Assert18x18StiffnessMatrix(IElementStiffnessCalculator SUT, params double[] expectedValues)
         {
-			Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 18, 18, expectedValues);
+			Helpers.AssertMatrix(SUT.StiffnessMatrixInGlobalCoordinates, 18, 18, expectedValues);
         }
 		
-		public static void Assert24x24StiffnessMatrix(IStiffnessProvider SUT, params double[] expectedValues)
+		public static void Assert24x24StiffnessMatrix(IElementStiffnessCalculator SUT, params double[] expectedValues)
         {
-			Helpers.AssertMatrix(SUT.GlobalStiffnessMatrix, 24, 24, expectedValues);
+			Helpers.AssertMatrix(SUT.StiffnessMatrixInGlobalCoordinates, 24, 24, expectedValues);
         }
 	}
 }

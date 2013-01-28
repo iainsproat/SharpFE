@@ -26,12 +26,12 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// 
         /// </summary>
-        private ElementStiffnessMatrixBuilderFactory stiffnessMatrixBuilderFactory;
+        private IElementStiffnessMatrixBuilderFactory stiffnessMatrixBuilderFactory;
         
         /// <summary>
         /// 
         /// </summary>
-        private IDictionary<int, IStiffnessProvider> elementStiffnessProviderCache = new Dictionary<int, IStiffnessProvider>();
+        private IDictionary<int, IElementStiffnessCalculator> elementStiffnessProviderCache = new Dictionary<int, IElementStiffnessCalculator>();
         
         /// <summary>
         /// 
@@ -59,7 +59,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="parentModel"></param>
         /// <param name="elementStiffnessMatrixBuilderFactory"></param>
-        public GlobalModelStiffnessMatrixBuilder(ITopologyQueryable parentModel, IModelConstraintProvider constraintProv, ElementStiffnessMatrixBuilderFactory elementStiffnessMatrixBuilderFactory)
+        public GlobalModelStiffnessMatrixBuilder(ITopologyQueryable parentModel, IModelConstraintProvider constraintProv, IElementStiffnessMatrixBuilderFactory elementStiffnessMatrixBuilderFactory)
         {
             this.parent = parentModel;
             this.constraintProvider = constraintProv;
@@ -218,7 +218,7 @@ namespace SharpFE.Stiffness
             
             StiffnessMatrix result = new StiffnessMatrix(rowKeys, columnKeys);
             
-            IList<FiniteElement> connectedElements;
+            IList<IFiniteElement> connectedElements;
             foreach (NodalDegreeOfFreedom row in rowKeys)
             {
                 foreach (NodalDegreeOfFreedom column in columnKeys)
@@ -242,7 +242,7 @@ namespace SharpFE.Stiffness
         /// <param name="row">The node and degree of freedom which define the row</param>
         /// <param name="column">The node and degree of freedom which define the column</param>
         /// <returns>A double representing the stiffness for this element</returns>
-        private double SumStiffnessesForAllElementsAt(IList<FiniteElement> elementsDirectlyConnectingRowAndColumnNodes, NodalDegreeOfFreedom row, NodalDegreeOfFreedom column)
+        private double SumStiffnessesForAllElementsAt(IList<IFiniteElement> elementsDirectlyConnectingRowAndColumnNodes, NodalDegreeOfFreedom row, NodalDegreeOfFreedom column)
         {
             double totalStiffness = 0.0;
             
@@ -252,10 +252,10 @@ namespace SharpFE.Stiffness
                 return totalStiffness;
             }
             
-            foreach (FiniteElement e in elementsDirectlyConnectingRowAndColumnNodes)
+            foreach (IFiniteElement e in elementsDirectlyConnectingRowAndColumnNodes)
             {
-                IStiffnessProvider elementStiffnessMatrixBuilder = this.GetElementStiffnessProvider(e);
-                totalStiffness += elementStiffnessMatrixBuilder.GetGlobalStiffnessAt(row.Node, row.DegreeOfFreedom, column.Node, column.DegreeOfFreedom);
+                IElementStiffnessCalculator elementStiffnessMatrixBuilder = this.GetElementStiffnessProvider(e);
+                totalStiffness += elementStiffnessMatrixBuilder.GetStiffnessInGlobalCoordinatesAt(row.Node, row.DegreeOfFreedom, column.Node, column.DegreeOfFreedom);
             }
             
             this.stiffnessCache[cacheKey] = totalStiffness;
@@ -268,17 +268,17 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private IStiffnessProvider GetElementStiffnessProvider(FiniteElement element)
+        private IElementStiffnessCalculator GetElementStiffnessProvider(IFiniteElement element)
         {
             int elementHash = element.GetHashCode();
             
             // check the cache, and retrieve if available
             if (this.elementStiffnessProviderCache.ContainsKey(elementHash))
             {
-                return (IStiffnessProvider)this.elementStiffnessProviderCache[elementHash];
+                return (IElementStiffnessCalculator)this.elementStiffnessProviderCache[elementHash];
             }
             
-            IStiffnessProvider builder = this.stiffnessMatrixBuilderFactory.Create(element);
+            IElementStiffnessCalculator builder = this.stiffnessMatrixBuilderFactory.Create(element);
             
             // store in the cache
             this.elementStiffnessProviderCache.Add(elementHash, builder);

@@ -20,7 +20,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        IList<FiniteElement> AllElementsConnectedTo(FiniteElementNode node);
+        IList<IFiniteElement> AllElementsConnectedTo(FiniteElementNode node);
         
         /// <summary>
         /// 
@@ -28,6 +28,6 @@ namespace SharpFE
         /// <param name="node1"></param>
         /// <param name="node2"></param>
         /// <returns></returns>
-        IList<FiniteElement> AllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2);        
+        IList<IFiniteElement> AllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2);        
     }
 }

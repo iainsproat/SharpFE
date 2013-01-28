@@ -38,6 +38,9 @@
     <Reference Include="nunit.framework">
       <HintPath>lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>lib\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -102,7 +105,6 @@
     <Folder Include="Stiffness" />
     <Folder Include="Solvers" />
     <Folder Include="Repositories" />
-    <Folder Include="Solvers\Mocks" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpFE.Core\SharpFE.Core.csproj">

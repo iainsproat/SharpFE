@@ -18,7 +18,7 @@ namespace SharpFE
     /// The finite element class defines the local coordinate frame for the finite element in relation to the global frame.
     /// The StiffnessBuilder property connects to a separate object implementing IStiffnessBuilder - that class calculates the stiffness matrices, strain-displacement matrices, rotation matrices and shape functions for this element.
     /// </summary>
-    public abstract class FiniteElement
+    public abstract class FiniteElement : IFiniteElement
     {
         /// <summary>
         /// The nodes of this element.

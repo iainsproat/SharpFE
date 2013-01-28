@@ -11,9 +11,9 @@ namespace SharpFE.Core.Tests.Stiffness
 		[Test]
 		public void CanGetStiffnessAt()
 		{
-			double result = SUT.GetGlobalStiffnessAt(start, DegreeOfFreedom.X, start, DegreeOfFreedom.X);
+			double result = SUT.GetStiffnessInGlobalCoordinatesAt(start, DegreeOfFreedom.X, start, DegreeOfFreedom.X);
 			Assert.AreEqual(2, result);
-			result = SUT.GetGlobalStiffnessAt(start, DegreeOfFreedom.X, end, DegreeOfFreedom.X);
+			result = SUT.GetStiffnessInGlobalCoordinatesAt(start, DegreeOfFreedom.X, end, DegreeOfFreedom.X);
 			Assert.AreEqual(-2, result);
 		}
 		
