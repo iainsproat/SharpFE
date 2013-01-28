@@ -28,7 +28,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the node at the start of this Spring
         /// </summary>
-        public FiniteElementNode StartNode
+        public IFiniteElementNode StartNode
         {
             get
             {
@@ -39,7 +39,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the node at the end of this Spring
         /// </summary>
-        public FiniteElementNode EndNode
+        public IFiniteElementNode EndNode
         {
             get
             {

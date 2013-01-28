@@ -102,7 +102,7 @@ namespace SharpFE.Stiffness
         /// <param name="columnDegreeOfFreedom">the degree of freedom defining the column (displacement equations)</param>
         /// <returns>A value representing the stiffness at the given locations</returns>
         /// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
-        public double GetStiffnessInGlobalCoordinatesAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
+        public double GetStiffnessInGlobalCoordinatesAt(IFiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, IFiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
         {
             if (rowNode == null)
             {

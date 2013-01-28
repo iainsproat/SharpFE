@@ -70,6 +70,7 @@
     <Compile Include="GeometryDimensionality.cs" />
     <Compile Include="Helpers\Geometry.cs" />
     <Compile Include="Helpers\Guard.cs" />
+    <Compile Include="IFiniteElementNode.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
     <Compile Include="IModelConstraintProvider.cs" />
     <Compile Include="ITopologyQueryable.cs" />

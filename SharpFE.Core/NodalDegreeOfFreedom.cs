@@ -16,7 +16,7 @@ namespace SharpFE
         /// <summary>
         /// The node to which the degree of freedom relates.
         /// </summary>
-        private FiniteElementNode targetNode;
+        private IFiniteElementNode targetNode;
         
         /// <summary>
         /// The degree of freedom of the node
@@ -29,7 +29,7 @@ namespace SharpFE
         /// <param name="node">The node to which the degree of freedom relates</param>
         /// <param name="degreeOfFreedom">The degree of freedom of the node</param>
         /// <exception cref="ArgumentNullException">node parameter cannot be null</exception>
-        public NodalDegreeOfFreedom(FiniteElementNode node, DegreeOfFreedom degreeOfFreedom)
+        public NodalDegreeOfFreedom(IFiniteElementNode node, DegreeOfFreedom degreeOfFreedom)
         {
             Guard.AgainstNullArgument(node, "node");
             
@@ -41,7 +41,7 @@ namespace SharpFE
         /// Gets the node which this relates to.
         /// </summary>
         /// <remarks>Node will never be null.</remarks>
-        public FiniteElementNode Node
+        public IFiniteElementNode Node
         {
             get { return this.targetNode; }
         }

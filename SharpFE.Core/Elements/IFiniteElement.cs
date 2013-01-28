@@ -11,7 +11,7 @@ namespace SharpFE
     
     public interface IFiniteElement
     {
-        IList<FiniteElementNode> Nodes { get; }
+        IList<IFiniteElementNode> Nodes { get; }
         KeyedVector<DegreeOfFreedom> LocalXAxis { get; }
         KeyedVector<DegreeOfFreedom> LocalYAxis { get; }
         KeyedVector<DegreeOfFreedom> LocalZAxis { get; }

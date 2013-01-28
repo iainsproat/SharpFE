@@ -53,9 +53,9 @@ namespace SharpFE.Stiffness
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
             
-            FiniteElementNode node0 = this.Element.Nodes[0];
-            FiniteElementNode node1 = this.Element.Nodes[1];
-            FiniteElementNode node2 = this.Element.Nodes[2];
+            IFiniteElementNode node0 = this.Element.Nodes[0];
+            IFiniteElementNode node1 = this.Element.Nodes[1];
+            IFiniteElementNode node2 = this.Element.Nodes[2];
                         
             //            double constant = 1.0 / (2.0 * quad.Area);
             //            double N1 = (node1.OriginalX * node2.OriginalY - node2.OriginalX * node1.OriginalY)
@@ -91,10 +91,10 @@ namespace SharpFE.Stiffness
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> B = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom);
             
-            FiniteElementNode node0 = this.Element.Nodes[0];
-            FiniteElementNode node1 = this.Element.Nodes[1];
-            FiniteElementNode node2 = this.Element.Nodes[2];
-            FiniteElementNode node3 = this.Element.Nodes[3];
+            IFiniteElementNode node0 = this.Element.Nodes[0];
+            IFiniteElementNode node1 = this.Element.Nodes[1];
+            IFiniteElementNode node2 = this.Element.Nodes[2];
+            IFiniteElementNode node3 = this.Element.Nodes[3];
             
             //            double constant = 1.0 / (2.0 * quad.Area);
 //

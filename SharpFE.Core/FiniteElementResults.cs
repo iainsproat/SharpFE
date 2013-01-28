@@ -17,12 +17,12 @@ namespace SharpFE
         /// <summary>
         /// Displacements which form this set of results
         /// </summary>
-        private IDictionary<FiniteElementNode, DisplacementVector> displacements = new Dictionary<FiniteElementNode, DisplacementVector>();
+        private IDictionary<IFiniteElementNode, DisplacementVector> displacements = new Dictionary<IFiniteElementNode, DisplacementVector>();
         
         /// <summary>
         /// Reactions which form this set of results
         /// </summary>
-        private IDictionary<FiniteElementNode, ReactionVector> reactions = new Dictionary<FiniteElementNode, ReactionVector>();
+        private IDictionary<IFiniteElementNode, ReactionVector> reactions = new Dictionary<IFiniteElementNode, ReactionVector>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="FiniteElementResults" /> class.

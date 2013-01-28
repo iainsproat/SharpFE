@@ -13,7 +13,7 @@ namespace SharpFE
     /// Nodes have a position in space.
     /// Constraints and forces can be applied to nodes.
     /// </summary>
-    public class FiniteElementNode : IEquatable<FiniteElementNode>
+    public class FiniteElementNode : IFiniteElementNode
     {
         #region Constructors
         /// <summary>

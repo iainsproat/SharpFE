@@ -20,12 +20,12 @@ namespace SharpFE
         /// <summary>
         /// A reverse index for quickly looking up the elements to which finite elment nodes are linked.
         /// </summary>
-        private Index<FiniteElementNode, IFiniteElement> nodeToElementIndex = new Index<FiniteElementNode, IFiniteElement>();
+        private Index<IFiniteElementNode, IFiniteElement> nodeToElementIndex = new Index<IFiniteElementNode, IFiniteElement>();
         
         /// <summary>
         /// A reverse index for quickly looking up other nodes to which finite element nodes are linked via finite elements.
         /// </summary>
-        private Index<FiniteElementNode, FiniteElementNode> nodeToNodeIndex = new Index<FiniteElementNode, FiniteElementNode>();
+        private Index<IFiniteElementNode, IFiniteElementNode> nodeToNodeIndex = new Index<IFiniteElementNode, IFiniteElementNode>();
         
         /// <summary>
         /// 
@@ -45,7 +45,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node for which to search for connected finite elements.</param>
         /// <returns>A list of all finite elements connecting the node.</returns>
-        public IList<IFiniteElement> GetAllElementsConnectedTo(FiniteElementNode node)
+        public IList<IFiniteElement> GetAllElementsConnectedTo(IFiniteElementNode node)
         {
             return this.nodeToElementIndex.Get(node);
         }
@@ -59,7 +59,7 @@ namespace SharpFE
         /// A list of elements directly connecting both the nodes.
         /// If node1 is equal to node2 (i.e. they are the same nodes), then all the elements connected to that node will be returned.
         /// </returns>
-        public IList<IFiniteElement> GetAllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
+        public IList<IFiniteElement> GetAllElementsDirectlyConnecting(IFiniteElementNode node1, IFiniteElementNode node2)
         {
             Guard.AgainstNullArgument(node1, "node1");
             Guard.AgainstNullArgument(node2, "node2");
@@ -95,7 +95,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node for which to search for connected nodes.</param>
         /// <returns>A list of all connected nodes.</returns>
-        public IList<FiniteElementNode> GetAllNodesConnectedViaElementsTo(FiniteElementNode node)
+        public IList<IFiniteElementNode> GetAllNodesConnectedViaElementsTo(IFiniteElementNode node)
         {
             return this.nodeToNodeIndex.Get(node);
         }
@@ -134,7 +134,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="element">The new finite element to register.</param>
         /// <param name="nodes">The nodes which form part of the element and should be used to update the various indexes.</param>
-        private void RegisterNewElement(IFiniteElement element, IList<FiniteElementNode> nodes)
+        private void RegisterNewElement(IFiniteElement element, IList<IFiniteElementNode> nodes)
         {
             int numNodes = nodes.Count;
             for (int i = 0; i < numNodes; i++)
@@ -155,7 +155,7 @@ namespace SharpFE
         /// <param name="element">the item to remove</param>
         /// <param name="nodes">the nodes of the item to remove</param>
         /// <returns>true if the item was successfully removed; otherwise, false. Returns false if the item was not found in any index</returns>
-        private bool RemoveItemFromRepositoryIndices(IFiniteElement element, IList<FiniteElementNode> nodes)
+        private bool RemoveItemFromRepositoryIndices(IFiniteElement element, IList<IFiniteElementNode> nodes)
         {
             bool success = false;
             int numNodes = nodes.Count;
@@ -191,19 +191,19 @@ namespace SharpFE
             /// <summary>
             /// 
             /// </summary>
-            private FiniteElementNode n1;
+            private IFiniteElementNode n1;
             
             /// <summary>
             /// 
             /// </summary>
-            private FiniteElementNode n2;
+            private IFiniteElementNode n2;
             
             /// <summary>
             /// 
             /// </summary>
             /// <param name="node1"></param>
             /// <param name="node2"></param>
-            public NodeTuple(FiniteElementNode node1, FiniteElementNode node2)
+            public NodeTuple(IFiniteElementNode node1, IFiniteElementNode node2)
             {
                 this.n1 = node1;
                 this.n2 = node2;

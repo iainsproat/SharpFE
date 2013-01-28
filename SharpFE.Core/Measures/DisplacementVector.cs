@@ -18,7 +18,7 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="DisplacementVector" /> class.
         /// </summary>
         /// <param name="locationNode">The node to which this displacement occurs.</param>
-        public DisplacementVector(FiniteElementNode locationNode)
+        public DisplacementVector(IFiniteElementNode locationNode)
             : this(locationNode, 0, 0)
         {
             // empty
@@ -30,7 +30,7 @@ namespace SharpFE
         /// <param name="locationNode">The node to which this displacement occurs.</param>
         /// <param name="valueInXComponent">The component of the displacement along the global x-axis</param>
         /// <param name="valueInYComponent">The component of the displacement along the global y-axis</param>
-        public DisplacementVector(FiniteElementNode locationNode, double valueInXComponent, double valueInYComponent)
+        public DisplacementVector(IFiniteElementNode locationNode, double valueInXComponent, double valueInYComponent)
             : base(6)
         {
             this.Location = locationNode;
@@ -41,7 +41,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the node to which this displacement occurs.
         /// </summary>
-        public FiniteElementNode Location
+        public IFiniteElementNode Location
         {
             get;
             private set;

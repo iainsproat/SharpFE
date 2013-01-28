@@ -19,7 +19,7 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="ReactionVector" /> class.
         /// </summary>
         /// <param name="locationNode">The node at which these reaction forces occur.</param>
-        public ReactionVector(FiniteElementNode locationNode)
+        public ReactionVector(IFiniteElementNode locationNode)
             : this(locationNode, 0, 0)
         {
             // empty
@@ -31,7 +31,7 @@ namespace SharpFE
         /// <param name="locationNode">The node at which these reaction forces occur.</param>
         /// <param name="valueOfXComponent">The component of translational force along the global x-axis.</param>
         /// <param name="valueOfYComponent">The component of translational force along the global y-axis.</param>
-        public ReactionVector(FiniteElementNode locationNode, double valueOfXComponent, double valueOfYComponent)
+        public ReactionVector(IFiniteElementNode locationNode, double valueOfXComponent, double valueOfYComponent)
             : base(valueOfXComponent, valueOfYComponent)
         {
             this.Location = locationNode;
@@ -40,7 +40,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the node at which these reactions occur.
         /// </summary>
-        public FiniteElementNode Location
+        public IFiniteElementNode Location
         {
             get;
             private set;

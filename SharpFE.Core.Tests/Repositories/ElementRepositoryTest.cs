@@ -102,7 +102,7 @@ namespace SharpFE.Core.Tests.Repositories
         [Test]
         public void AllNodesConnectedViaElementsToANodeCanBeFound()
         {
-            IList<FiniteElementNode> results = SUT.GetAllNodesConnectedViaElementsTo(node1);
+            IList<IFiniteElementNode> results = SUT.GetAllNodesConnectedViaElementsTo(node1);
             Assert.IsNotNull(results);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(node2, results[0]);

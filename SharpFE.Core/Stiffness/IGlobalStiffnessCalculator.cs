@@ -26,6 +26,6 @@ namespace SharpFE.Stiffness
         /// <param name="columnNode"></param>
         /// <param name="columnDegreeOfFreedom"></param>
         /// <returns></returns>
-        double GetStiffnessInGlobalCoordinatesAt(FiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, FiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
+        double GetStiffnessInGlobalCoordinatesAt(IFiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, IFiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom);
     }
 }

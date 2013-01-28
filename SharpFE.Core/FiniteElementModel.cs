@@ -288,7 +288,7 @@ namespace SharpFE
         /// <exception cref="ArgumentException">
         /// Thrown if the given node does not exist in the model or no elements are attached to it.
         /// </exception>
-        public IList<IFiniteElement> AllElementsConnectedTo(FiniteElementNode node)
+        public IList<IFiniteElement> AllElementsConnectedTo(IFiniteElementNode node)
         {
             Guard.AgainstNullArgument(node, "node");
             
@@ -308,7 +308,7 @@ namespace SharpFE
         /// <param name="node1">The first node connected to the elements to be sought</param>
         /// <param name="node2">The second node connected to the elements to be sought</param>
         /// <returns>A list of all the finite elements which directly connect the two nodes.  An empty list is returned if the nodes are equal.</returns>
-        public IList<IFiniteElement> AllElementsDirectlyConnecting(FiniteElementNode node1, FiniteElementNode node2)
+        public IList<IFiniteElement> AllElementsDirectlyConnecting(IFiniteElementNode node1, IFiniteElementNode node2)
         {
             return this.elements.GetAllElementsDirectlyConnecting(node1, node2);
         }

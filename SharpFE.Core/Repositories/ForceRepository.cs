@@ -17,7 +17,7 @@ namespace SharpFE
         /// <summary>
         /// A reverse index for quickly getting all the forces which relate to a node
         /// </summary>
-        private Index<FiniteElementNode, ForceVector> nodalForces = new Index<FiniteElementNode, ForceVector>();
+        private Index<IFiniteElementNode, ForceVector> nodalForces = new Index<IFiniteElementNode, ForceVector>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ForceRepository" /> class.
@@ -48,7 +48,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node for which all applied forces will be sought.</param>
         /// <returns>A list of all forces applied to the provided node.</returns>
-        public IList<ForceVector> GetAllForcesAppliedTo(FiniteElementNode node)
+        public IList<ForceVector> GetAllForcesAppliedTo(IFiniteElementNode node)
         {
             Guard.AgainstNullArgument(node, "node");
             
@@ -66,7 +66,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node for which we wish to calculate the combined force vector</param>
         /// <returns>A single force vector representing the combined force on the node</returns>
-        public ForceVector GetCombinedForceOn(FiniteElementNode node) // TODO filter for different loadcases
+        public ForceVector GetCombinedForceOn(IFiniteElementNode node) // TODO filter for different loadcases
         {
             Guard.AgainstNullArgument(node, "node");
             
@@ -96,7 +96,7 @@ namespace SharpFE
             Guard.AgainstNullArgument(nodalDegreeOfFreedoms, "nodalDegreeOfFreedoms");
             
             KeyedVector<NodalDegreeOfFreedom> result = new KeyedVector<NodalDegreeOfFreedom>(nodalDegreeOfFreedoms);
-            IDictionary<FiniteElementNode, ForceVector> cache = new Dictionary<FiniteElementNode, ForceVector>();
+            IDictionary<IFiniteElementNode, ForceVector> cache = new Dictionary<IFiniteElementNode, ForceVector>();
             ForceVector combinedForceOnNode;
 
             foreach (NodalDegreeOfFreedom item in nodalDegreeOfFreedoms)

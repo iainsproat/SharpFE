@@ -115,7 +115,7 @@ namespace SharpFE.Stiffness
         /// <param name="nodeComponentOfColumnKey">the node which in part defines the column of the element</param>
         /// <param name="degreeOfFreedomComponentOfColumnKey">the degree of freedom which in part defines the column of the element</param>
         /// <returns>The requested element</returns>
-        public double At(FiniteElementNode nodeComponentOfRowKey, DegreeOfFreedom degreeOfFreedomComponentOfRowKey, FiniteElementNode nodeComponentOfColumnKey, DegreeOfFreedom degreeOfFreedomComponentOfColumnKey)
+        public double At(IFiniteElementNode nodeComponentOfRowKey, DegreeOfFreedom degreeOfFreedomComponentOfRowKey, IFiniteElementNode nodeComponentOfColumnKey, DegreeOfFreedom degreeOfFreedomComponentOfColumnKey)
         {
             return this.At(new NodalDegreeOfFreedom(nodeComponentOfRowKey, degreeOfFreedomComponentOfRowKey), new NodalDegreeOfFreedom(nodeComponentOfColumnKey, degreeOfFreedomComponentOfColumnKey));
         }
@@ -128,7 +128,7 @@ namespace SharpFE.Stiffness
         /// <param name="nodeComponentOfColumnKey">the node which in part defines the column of the element</param>
         /// <param name="degreeOfFreedomComponentOfColumnKey">the degree of freedom which in part defines the column of the element</param>
         /// <param name="value">The value with which to set the value of the element</param>
-        public void At(FiniteElementNode nodeComponentOfRowKey, DegreeOfFreedom degreeOfFreedomComponentOfRowKey, FiniteElementNode nodeComponentOfColumnKey, DegreeOfFreedom degreeOfFreedomComponentOfColumnKey, double value)
+        public void At(IFiniteElementNode nodeComponentOfRowKey, DegreeOfFreedom degreeOfFreedomComponentOfRowKey, IFiniteElementNode nodeComponentOfColumnKey, DegreeOfFreedom degreeOfFreedomComponentOfColumnKey, double value)
         {
             this.At(new NodalDegreeOfFreedom(nodeComponentOfRowKey, degreeOfFreedomComponentOfRowKey), new NodalDegreeOfFreedom(nodeComponentOfColumnKey, degreeOfFreedomComponentOfColumnKey), value);
         }

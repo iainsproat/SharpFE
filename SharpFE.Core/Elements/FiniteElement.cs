@@ -23,7 +23,7 @@ namespace SharpFE
         /// <summary>
         /// The nodes of this element.
         /// </summary>
-        private IList<FiniteElementNode> nodeStore = new List<FiniteElementNode>();
+        private IList<IFiniteElementNode> nodeStore = new List<IFiniteElementNode>();
         
         /// <summary>
         /// The nodal degrees of freedom supported by this element.
@@ -48,11 +48,11 @@ namespace SharpFE
         /// Gets the nodes which comprise this element.
         /// </summary>
         /// <returns>Returns a shallow copy of the list of nodes which comprise this element.</returns>
-        public IList<FiniteElementNode> Nodes
+        public IList<IFiniteElementNode> Nodes
         {
             get
             {
-                return new List<FiniteElementNode>(this.nodeStore);
+                return new List<IFiniteElementNode>(this.nodeStore);
             }
         }
         

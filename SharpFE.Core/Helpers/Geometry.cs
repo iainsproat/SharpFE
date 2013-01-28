@@ -23,7 +23,7 @@ namespace SharpFE
         /// <param name="vectorDefiningLine"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OnLine", Justification = "Not referring to Online, i.e. internet, but a geometric description")]
-        public static Vector VectorBetweenPointAndLine(FiniteElementNode point, FiniteElementNode pointOnLine, Vector vectorDefiningLine)
+        public static Vector VectorBetweenPointAndLine(IFiniteElementNode point, IFiniteElementNode pointOnLine, Vector vectorDefiningLine)
         {
             return Geometry.VectorBetweenPointAndLine(Geometry.NodeToVector(point), Geometry.NodeToVector(pointOnLine), vectorDefiningLine);
         }
@@ -56,7 +56,7 @@ namespace SharpFE
         /// <param name="node1"></param>
         /// <param name="node2"></param>
         /// <returns></returns>
-        public static double AreaTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2)
+        public static double AreaTriangle(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2)
         {
             return Geometry.AreaTriangle(Geometry.NodeToVector(node0), Geometry.NodeToVector(node1), Geometry.NodeToVector(node2));
         }
@@ -87,7 +87,7 @@ namespace SharpFE
         /// <param name="node3"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray", Justification = "Requires exactly four points, so an adjustable params array is not necessary")]
-        public static double AreaQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3)
+        public static double AreaQuadrilateral(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2, IFiniteElementNode node3)
         {
             return Geometry.AreaQuadrilateral(Geometry.NodeToVector(node0), Geometry.NodeToVector(node1), Geometry.NodeToVector(node2), Geometry.NodeToVector(node3));
         }
@@ -115,7 +115,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private static Vector NodeToVector(FiniteElementNode node)
+        private static Vector NodeToVector(IFiniteElementNode node)
         {
             Vector result = new DenseVector(3);
             result[0] = node.OriginalX;

@@ -106,9 +106,17 @@ namespace SharpFE.Core.Tests.Solvers
         public void UnknownForcesKnownDisplacementsMatrixCanBeGenerated()
         {
             ExpectCallForConstrainedNodalDegreeOfFreedoms().Repeat.Twice();
-            ExpectCallForElementsDirectlyConnectingNode1();
-            ExpectCallForElementsDirectlyConnectingNode3();
             
+            ExpectCallForElementsDirectlyConnectingNode1();
+            Expect.Call(spring1Calculator.GetStiffnessInGlobalCoordinatesAt(node1, DegreeOfFreedom.X, node1, DegreeOfFreedom.X))
+                .Return(3);
+            
+            ExpectCallForElementsDirectlyConnectingNode1Node3();
+            ExpectCallForElementsDirectlyConnectingNode3Node1();
+            
+            ExpectCallForElementsDirectlyConnectingNode3();
+            Expect.Call(spring2Calculator.GetStiffnessInGlobalCoordinatesAt(node3, DegreeOfFreedom.X, node3, DegreeOfFreedom.X))
+                .Return(2);
             mocks.ReplayAll();
             
             StiffnessMatrix result = SUT.BuildUnknownForcesKnownDisplacementStiffnessMatrix();
@@ -120,69 +128,21 @@ namespace SharpFE.Core.Tests.Solvers
         [Test]
         public void UnknownForcesUnknownDisplacementsMatrixCanBeGenerated()
         {
+            ExpectCallForUnconstrainedNodalDegreeOfFreedoms();
+            ExpectCallForConstrainedNodalDegreeOfFreedoms();
+            
+            ExpectCallForElementsDirectlyConnectingNode1Node2();
+            Expect.Call(spring1Calculator.GetStiffnessInGlobalCoordinatesAt(node1, DegreeOfFreedom.X, node2, DegreeOfFreedom.X))
+                .Return(-3);
+            
+            ExpectCallForElementsDirectlyConnectingNode3Node2();
+            Expect.Call(spring2Calculator.GetStiffnessInGlobalCoordinatesAt(node3, DegreeOfFreedom.X, node2, DegreeOfFreedom.X))
+                .Return(-2);
+            
             mocks.ReplayAll();
             StiffnessMatrix result = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
             mocks.VerifyAll();
             Helpers.AssertMatrix(result, 2, 1, -3, -2);
-        }
-        
-        [Test]
-        public void Can_build_matrices_for_beam_frame()
-        {
-            nodeFactory = new NodeFactory(ModelType.Frame2D);
-            
-            node1 = nodeFactory.CreateForTruss(0, 0);
-            node2 = nodeFactory.CreateForTruss(1, 0);
-            node3 = nodeFactory.CreateForTruss(2, 0);
-            
-            IMaterial material = new GenericElasticMaterial(0, 1, 0.3, 1);
-            ICrossSection section = new SolidRectangle(1, 1);
-            
-            ElementFactory elementFactory = new ElementFactory();
-            Linear1DBeam beam1 = elementFactory.CreateLinear1DBeam(node1, node2, material, section);
-            Linear1DBeam beam2 = elementFactory.CreateLinear1DBeam(node2, node3, material, section);
-            
-            topologyQueryable = mocks.StrictMock<ITopologyQueryable>();
-            
-            constraintProvider = mocks.StrictMock<IModelConstraintProvider>();
-            Expect.Call(constraintProvider.ConstrainedNodalDegreeOfFreedoms).Return(
-                new List<NodalDegreeOfFreedom>(2){
-                    new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X),
-                    new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Z),
-                    new NodalDegreeOfFreedom(node3, DegreeOfFreedom.X)
-                });
-            
-            SUT = new GlobalModelStiffnessMatrixBuilder(topologyQueryable, constraintProvider);
-            
-            StiffnessMatrix globalModelStiffnessMatrix = SUT.BuildGlobalStiffnessMatrix();
-            StiffnessMatrix knownForcesKnownDisplacements = SUT.BuildKnownForcesKnownDisplacementStiffnessMatrix();
-            StiffnessMatrix knownForcesUnknownDisplacements = SUT.BuildKnownForcesUnknownDisplacementStiffnessMatrix();
-            StiffnessMatrix unknownForcesKnownDisplacements = SUT.BuildUnknownForcesKnownDisplacementStiffnessMatrix();
-            StiffnessMatrix unknownForcesUnknownDisplacements = SUT.BuildUnknownForcesUnknownDisplacementStiffnessMatrix();
-            
-            
-            //            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(globalModelStiffnessMatrix));
-            //            Console.WriteLine("Determinant = " + globalModelStiffnessMatrix.Determinant());
-            //            Console.WriteLine("KnownForcesKnownDisplacements");
-            //            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(knownForcesKnownDisplacements));
-            //            Console.WriteLine();
-            //            Console.WriteLine("KnownForcesUnknownDisplacements");
-            //            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(knownForcesUnknownDisplacements));
-            //            Console.WriteLine();
-            //            Console.WriteLine("UnknownForcesKnownDisplacements");
-            //            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(unknownForcesKnownDisplacements));
-            //            Console.WriteLine();
-            //            Console.WriteLine("UnknownForcesUnknownDisplacements");
-            //            Console.WriteLine(Helpers.PrettyPrintKeyedRowColumnMatrix(unknownForcesUnknownDisplacements));
-            
-            
-            Helpers.AssertMatrix(knownForcesKnownDisplacements, 6, 3,
-                                 0, -0.5,  0,
-                                 -1,  0,   -1,
-                                 0, -1,    0,
-                                 0, -0.5,  0,
-                                 0,  0,    0,
-                                 0,  0,    0);
         }
         
         private Rhino.Mocks.Interfaces.IMethodOptions<IList<NodalDegreeOfFreedom>> ExpectCallForConstrainedNodalDegreeOfFreedoms()
@@ -230,6 +190,15 @@ namespace SharpFE.Core.Tests.Solvers
                 });
         }
         
+        private Rhino.Mocks.Interfaces.IMethodOptions<IList<IFiniteElement>> ExpectCallForElementsDirectlyConnectingNode1Node2()
+        {
+            return Expect.Call(topologyQueryable.AllElementsDirectlyConnecting(node1, node2)).Return(
+                new List<IFiniteElement>(1)
+                {
+                    spring1
+                });
+        }
+        
         private Rhino.Mocks.Interfaces.IMethodOptions<IList<IFiniteElement>> ExpectCallForElementsDirectlyConnectingNode2Node1()
         {
             return Expect.Call(topologyQueryable.AllElementsDirectlyConnecting(node2, node1)).Return(
@@ -246,6 +215,27 @@ namespace SharpFE.Core.Tests.Solvers
                 {
                     spring2
                 });
+        }
+        
+        private Rhino.Mocks.Interfaces.IMethodOptions<IList<IFiniteElement>> ExpectCallForElementsDirectlyConnectingNode3Node2()
+        {
+            return Expect.Call(topologyQueryable.AllElementsDirectlyConnecting(node3, node2)).Return(
+                new List<IFiniteElement>(1)
+                {
+                    spring2
+                });
+        }
+        
+        private Rhino.Mocks.Interfaces.IMethodOptions<IList<IFiniteElement>> ExpectCallForElementsDirectlyConnectingNode1Node3()
+        {
+            return Expect.Call(topologyQueryable.AllElementsDirectlyConnecting(node1, node3)).Return(
+                new List<IFiniteElement>(0));
+        }
+        
+        private Rhino.Mocks.Interfaces.IMethodOptions<IList<IFiniteElement>> ExpectCallForElementsDirectlyConnectingNode3Node1()
+        {
+            return Expect.Call(topologyQueryable.AllElementsDirectlyConnecting(node3, node1)).Return(
+                new List<IFiniteElement>(0));
         }
     }
 }
