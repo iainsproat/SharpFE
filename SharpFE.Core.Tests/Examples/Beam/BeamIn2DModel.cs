@@ -191,6 +191,10 @@ namespace SharpFE.Examples.Beam
             model.ApplyForceToNode(force, node2);
             
             IFiniteElementSolver solver = new LinearSolver(model);
+            
+            Stiffness.GlobalModelStiffnessMatrixBuilder gmsmb = new SharpFE.Stiffness.GlobalModelStiffnessMatrixBuilder(model);
+            Console.WriteLine(gmsmb.BuildKnownForcesUnknownDisplacementStiffnessMatrix());
+            
             FiniteElementResults results = solver.Solve();
             
             DisplacementVector node1Displacement = results.GetDisplacement(node1);
@@ -209,12 +213,12 @@ namespace SharpFE.Examples.Beam
             Console.WriteLine("node5Reaction : " + node3Reaction);
             
             Assert.AreEqual(0, node2Displacement.XX, 0.001);
-            Assert.AreEqual(-0.00096, node2Displacement.Z, 0.001);
+            Assert.AreEqual(-0.000002, node2Displacement.Z, 0.0000001);
             Assert.AreEqual(5000, node1Reaction.Z, 0.001);
             Assert.AreEqual(5000, node3Reaction.Z, 0.001);
             Assert.AreEqual(0, node2Displacement.YY, 0.0001);
-            Assert.AreEqual(0.00143, node1Displacement.YY, 0.00001);
-            Assert.AreEqual(-0.00143, node3Displacement.YY, 0.00001);
+            Assert.AreEqual( 0.000003, node1Displacement.YY, 0.0000001);
+            Assert.AreEqual(-0.000003, node3Displacement.YY, 0.0000001);
         }
         
         /// <summary>
