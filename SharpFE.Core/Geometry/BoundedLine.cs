@@ -48,6 +48,14 @@ namespace SharpFE.Geometry
 //            }
         }
         
+        public double Length
+        {
+            get
+            {
+                return this.Vector.Norm(2);
+            }
+        }
+        
         public override bool IsOnLine(Point pointToCheck)
         {
             

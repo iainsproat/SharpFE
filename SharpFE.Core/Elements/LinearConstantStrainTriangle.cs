@@ -62,9 +62,9 @@ namespace SharpFE
         {
             get
             {
-                double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].OriginalX - this.Nodes[0].OriginalX;
-                double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].OriginalY - this.Nodes[0].OriginalY;
-                double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].OriginalZ - this.Nodes[0].OriginalZ;
+                double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].X - this.Nodes[0].X;
+                double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].Y - this.Nodes[0].Y;
+                double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].Z - this.Nodes[0].Z;
                 return new KeyedVector<DegreeOfFreedom>(
                     new double[]
                     {

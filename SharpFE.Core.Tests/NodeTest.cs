@@ -25,11 +25,11 @@ namespace SharpFE.Core.Tests
         public void NodesHaveAnOriginalGlobalLocation()
         {
             FiniteElementNode SUT = factory.Create(0);
-            Assert.AreEqual(0, SUT.OriginalX);
-            Assert.AreEqual(0, SUT.OriginalY);
+            Assert.AreEqual(0, SUT.X);
+            Assert.AreEqual(0, SUT.Y);
             
             SUT = factory.Create(100);
-            Assert.AreEqual(100, SUT.OriginalX);
+            Assert.AreEqual(100, SUT.X);
         }
         
         [Test]

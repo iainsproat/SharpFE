@@ -45,9 +45,7 @@ namespace SharpFE
         /// <param name="locationAlongZAxis">The location of this node along the z axis</param>
         internal FiniteElementNode(double locationAlongXAxis, double locationAlongYAxis, double locationAlongZAxis)
         {
-            this.OriginalX = locationAlongXAxis;
-            this.OriginalY = locationAlongYAxis;
-            this.OriginalZ = locationAlongZAxis;
+            this.Location = new SharpFE.Geometry.Point( locationAlongXAxis, locationAlongYAxis, locationAlongZAxis);
         }
         
         /// <summary>
@@ -62,30 +60,45 @@ namespace SharpFE
         // TODO include an identifier, which is anything hashable and may be user defined.  The noderepository will have to check that the Ids do not conflict as they are added or edited.
         
         /// <summary>
-        /// Gets the original location of this node along the global x-axis.
+        /// The original location of this node
         /// </summary>
-        public double OriginalX
+        public Geometry.Point Location
         {
             get;
             private set;
+        }
+        
+        /// <summary>
+        /// Gets the original location of this node along the global x-axis.
+        /// </summary>
+        public double X
+        {
+            get
+            {
+                return this.Location.X;
+            }
         }
         
         /// <summary>
         /// Gets the original location of this node along the global y-axis.
         /// </summary>
-        public double OriginalY
+        public double Y
         {
-            get;
-            private set;
+            get
+            {
+                return this.Location.Y;
+            }
         }
         
         /// <summary>
         /// Gets the original location of this node along the global z-axis.
         /// </summary>
-        public double OriginalZ
+        public double Z
         {
-            get;
-            private set;
+            get
+            {
+                return this.Location.Z;
+            }
         }
         
         #region Equals and GetHashCode implementation
@@ -144,7 +157,7 @@ namespace SharpFE
                 return false;
             }
             
-            return object.Equals(this.OriginalX, other.OriginalX) && object.Equals(this.OriginalY, other.OriginalY) && object.Equals(this.OriginalZ, other.OriginalZ);
+            return object.Equals(this.X, other.X) && object.Equals(this.Y, other.Y) && object.Equals(this.Z, other.Z);
         }
         
         /// <summary>
@@ -156,9 +169,9 @@ namespace SharpFE
             int hashCode = 0;
             unchecked
             {
-                hashCode += 1000000007 * this.OriginalX.GetHashCode();
-                hashCode += 1000000009 * this.OriginalY.GetHashCode();
-                hashCode += 1000000021 * this.OriginalZ.GetHashCode();
+                hashCode += 1000000007 * this.X.GetHashCode();
+                hashCode += 1000000009 * this.Y.GetHashCode();
+                hashCode += 1000000012 * this.Z.GetHashCode();
             }
             
             return hashCode;
@@ -173,9 +186,9 @@ namespace SharpFE
             return string.Format(
                 System.Globalization.CultureInfo.InvariantCulture,
                 "[{0}, {1}, {2}]",
-                this.OriginalX,
-                this.OriginalY,
-                this.OriginalZ);
+                this.X,
+                this.Y,
+                this.Z);
         }
         #endregion
     }

@@ -54,9 +54,9 @@ namespace SharpFE
         {
             get
             {
-                double lengthX = this.EndNode.OriginalX - this.StartNode.OriginalX;
-                double lengthY = this.EndNode.OriginalY - this.StartNode.OriginalY;
-                double lengthZ = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
+                double lengthX = this.EndNode.X - this.StartNode.X;
+                double lengthY = this.EndNode.Y - this.StartNode.Y;
+                double lengthZ = this.EndNode.Z - this.StartNode.Z;
                 return Math.Sqrt((lengthX * lengthX) + (lengthY * lengthY) + (lengthZ * lengthZ));
             }
         }
@@ -68,9 +68,9 @@ namespace SharpFE
         {
             get
             {
-                double initialLengthProjectedInXAxis = this.EndNode.OriginalX - this.StartNode.OriginalX;
-                double initialLengthProjectedInYAxis = this.EndNode.OriginalY - this.StartNode.OriginalY;
-                double initialLengthProjectedInZAxis = this.EndNode.OriginalZ - this.StartNode.OriginalZ;
+                double initialLengthProjectedInXAxis = this.EndNode.X - this.StartNode.X;
+                double initialLengthProjectedInYAxis = this.EndNode.Y - this.StartNode.Y;
+                double initialLengthProjectedInZAxis = this.EndNode.Z - this.StartNode.Z;
 
                 return new KeyedVector<DegreeOfFreedom>(
                     new double[]

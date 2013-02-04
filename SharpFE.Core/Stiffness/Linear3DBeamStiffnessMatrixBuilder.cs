@@ -32,12 +32,12 @@ namespace SharpFE.Stiffness
         {
             IFiniteElementNode start = this.Element.StartNode;
             IFiniteElementNode end = this.Element.EndNode;
-            double locationAlongBeamAsProjectedInGlobalXAxis = location.OriginalX - start.OriginalX;
-            double locationAlongBeamAsProjectedInGlobalYAxis = location.OriginalY - start.OriginalY;
+            double locationAlongBeamAsProjectedInGlobalXAxis = location.X - start.X;
+            double locationAlongBeamAsProjectedInGlobalYAxis = location.Y - start.Y;
             double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
             
-            double beamLengthProjectedInGlobalXAxis = end.OriginalX - start.OriginalX;
-            double beamLengthProjectedInGlobalYAxis = end.OriginalY - start.OriginalY;
+            double beamLengthProjectedInGlobalXAxis = end.X - start.X;
+            double beamLengthProjectedInGlobalYAxis = end.Y - start.Y;
             double beamLength = Math.Sqrt((beamLengthProjectedInGlobalXAxis * beamLengthProjectedInGlobalXAxis) + (beamLengthProjectedInGlobalYAxis * beamLengthProjectedInGlobalYAxis));
             
             ////TODO check that the location is on the line

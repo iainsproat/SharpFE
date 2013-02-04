@@ -24,7 +24,7 @@ namespace SharpFE.Core.Tests.Factory
         {
             FiniteElementNode result = SUT.Create(3);
             Assert.IsNotNull(result);
-            Assert.AreEqual(3, result.OriginalX);
+            Assert.AreEqual(3, result.X);
         }
         
         [Test]

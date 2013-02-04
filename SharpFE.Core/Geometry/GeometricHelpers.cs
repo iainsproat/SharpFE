@@ -118,9 +118,9 @@ namespace SharpFE
         private static Vector NodeToVector(IFiniteElementNode node)
         {
             Vector result = new DenseVector(3);
-            result[0] = node.OriginalX;
-            result[1] = node.OriginalY;
-            result[2] = node.OriginalZ;
+            result[0] = node.X;
+            result[1] = node.Y;
+            result[2] = node.Z;
             return result;
         }
     }

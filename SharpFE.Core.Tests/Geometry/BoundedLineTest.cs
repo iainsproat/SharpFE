@@ -91,5 +91,12 @@ namespace SharpFE.Core.Tests.Geometry
             Assert.IsFalse(SUT.IsOnLine(pointBeyondEndOfLine));
             Assert.IsFalse(SUT.IsOnLine(pointBeyondStartOfLine));
         }
+        
+        [Test]
+        public void Can_calculate_length()
+        {
+            double result = SUT.Length;
+            Assert.AreEqual(5.38516, result, 0.00001);
+        }
     }
 }

@@ -9,10 +9,8 @@ namespace SharpFE
 {
     using System;
 
-    public interface IFiniteElementNode : IEquatable<FiniteElementNode>
+    public interface IFiniteElementNode : XYZ, IEquatable<FiniteElementNode>
     {
-        double OriginalX { get; }
-        double OriginalY { get; }
-        double OriginalZ { get; }
+        Geometry.Point Location { get; }
     }
 }
