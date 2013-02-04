@@ -7,6 +7,7 @@
 namespace SharpFE.Stiffness
 {
     using System;
+    using System.Collections.Generic;
     
     /// <summary>
     /// </summary>
@@ -29,14 +30,40 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
         {
-            throw new NotImplementedException();
+            IFiniteElementNode start = this.Element.StartNode;
+            IFiniteElementNode end = this.Element.EndNode;
+            double locationAlongBeamAsProjectedInGlobalXAxis = location.OriginalX - start.OriginalX;
+            double locationAlongBeamAsProjectedInGlobalYAxis = location.OriginalY - start.OriginalY;
+            double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
+            
+            double beamLengthProjectedInGlobalXAxis = end.OriginalX - start.OriginalX;
+            double beamLengthProjectedInGlobalYAxis = end.OriginalY - start.OriginalY;
+            double beamLength = Math.Sqrt((beamLengthProjectedInGlobalXAxis * beamLengthProjectedInGlobalXAxis) + (beamLengthProjectedInGlobalYAxis * beamLengthProjectedInGlobalYAxis));
+            
+            ////TODO check that the location is on the line
+            
+            double N1 = 1 - ((3 * x * x) / (beamLength * beamLength)) + ((2 * x * x * x) / (beamLength * beamLength * beamLength));
+            double N2 = x - ((2 * x * x) / beamLength) + ((x * x * x) / (beamLength * beamLength)); ////FIXME the angle might be reversed (i.e. this is positive for anti-clockwise rotation, rather than for clockwise)
+            double N3 = ((3 * x * x) / (beamLength * beamLength)) - ((2 * x * x) / (beamLength * beamLength * beamLength));
+            double N4 = ((x * x * x) / (beamLength * beamLength)) - ((x * x) / beamLength); ////FIXME the angle might be reversed (i.e. this is positive for anti-clockwise rotation, rather than for clockwise)
+            
+            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
+            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
+            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
+            
+            shapeFunctions.At( DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.Z), N1);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.YY), N2);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.Z), N3);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.YY), N4);
+            
+            return shapeFunctions;
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
         {
             throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
         }
@@ -47,7 +74,7 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
-            double length = this.Element.OriginalLength;                    
+            double length = this.Element.OriginalLength;
             StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
             
             double axialStiffness = this.Element.CrossSection.Area * this.Element.Material.YoungsModulus / length;
@@ -55,7 +82,7 @@ namespace SharpFE.Stiffness
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.EndNode,   DegreeOfFreedom.X, -axialStiffness);
             matrix.At(this.Element.EndNode,   DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, -axialStiffness);
             matrix.At(this.Element.EndNode,   DegreeOfFreedom.X, this.Element.EndNode,   DegreeOfFreedom.X,  axialStiffness);
-                        
+            
             double shearStiffnessInY = 12.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundZZ / (length * length * length);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.Y, this.Element.StartNode, DegreeOfFreedom.Y,  shearStiffnessInY);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.Y, this.Element.EndNode,   DegreeOfFreedom.Y, -shearStiffnessInY);

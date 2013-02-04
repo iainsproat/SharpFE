@@ -72,20 +72,20 @@ namespace SharpFE.Stiffness
         {
             get;
             private set;
-        }
+        }           
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location);
+        public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInGlobalCoordinates);
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix();
+        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode locationInGlobalCoordinates);
         
         /// <summary>
         /// 

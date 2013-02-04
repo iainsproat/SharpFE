@@ -45,10 +45,11 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
         {
+            ////TODO check that location is within or on the bounds of the finite element.
             ////TODO should be able to get the below from the ModelType
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2);
-            supportedDegreesOfFreedom.Add(DegreeOfFreedom.X);
-            supportedDegreesOfFreedom.Add(DegreeOfFreedom.Y);
+            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2){
+                DegreeOfFreedom.X,
+                DegreeOfFreedom.Y};
             
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
@@ -86,7 +87,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
         {
             IList<Strain> supportedStrains = LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains;
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
@@ -124,7 +125,7 @@ namespace SharpFE.Stiffness
         {
             double elementVolume = this.Element.Thickness * this.Element.Area;
             KeyedMatrix<Strain> materialMatrix = this.MaterialMatrix();
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = this.StrainDisplacementMatrix();
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = null; ////FIXME //this.StrainDisplacementMatrix();
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> transposedStrainDisplacementMatrix = strainDisplacementMatrix.Transpose();
             
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> bte = transposedStrainDisplacementMatrix.Multiply<Strain, Strain>(materialMatrix);

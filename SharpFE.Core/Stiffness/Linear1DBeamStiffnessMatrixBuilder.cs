@@ -7,6 +7,7 @@
 namespace SharpFE.Stiffness
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -28,16 +29,37 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInGlobalCoordinates)
         {
-            throw new NotImplementedException();
+            IFiniteElementNode start = this.Element.StartNode;
+            IFiniteElementNode end = this.Element.EndNode;
+            double locationAlongBeamAsProjectedInGlobalXAxis = locationInGlobalCoordinates.OriginalX - start.OriginalX;
+            double locationAlongBeamAsProjectedInGlobalYAxis = locationInGlobalCoordinates.OriginalY - start.OriginalY;
+            double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
+            
+            double beamLengthProjectedInGlobalXAxis = end.OriginalX - start.OriginalX;
+            double beamLengthProjectedInGlobalYAxis = end.OriginalY - start.OriginalY;
+            double beamLength = Math.Sqrt((beamLengthProjectedInGlobalXAxis * beamLengthProjectedInGlobalXAxis) + (beamLengthProjectedInGlobalYAxis * beamLengthProjectedInGlobalYAxis));
+            
+            ////TODO check that the location lies on the beam
+            
+            double N1 = 1 - (x / beamLength); ////FIXME  this is in local coordinates.
+            double N2 = x / beamLength; ////FIXME this is in local coordinates.
+            
+            
+            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
+            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
+            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.X), N1);
+            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.X), N2);
+            return shapeFunctions;
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
         {
             throw new NotImplementedException();
         }

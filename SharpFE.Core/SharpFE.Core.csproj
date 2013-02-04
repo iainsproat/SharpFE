@@ -68,7 +68,13 @@
     <Compile Include="FiniteElementModel.cs" />
     <Compile Include="FiniteElementResults.cs" />
     <Compile Include="GeometryDimensionality.cs" />
-    <Compile Include="Helpers\Geometry.cs" />
+    <Compile Include="Geometry\BoundedLine.cs" />
+    <Compile Include="Geometry\GeometricVector.cs" />
+    <Compile Include="Geometry\GeometricHelpers.cs" />
+    <Compile Include="Geometry\Plane.cs" />
+    <Compile Include="Geometry\UnboundedLine.cs" />
+    <Compile Include="Geometry\XYZ.cs" />
+    <Compile Include="Geometry\Point.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="IFiniteElementNode.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
@@ -122,6 +128,7 @@
     <Folder Include="Materials" />
     <Folder Include="CrossSections" />
     <Folder Include="Cache" />
+    <Folder Include="Geometry" />
     <Folder Include="Stiffness" />
     <Folder Include="Repositories" />
     <Folder Include="Solvers" />

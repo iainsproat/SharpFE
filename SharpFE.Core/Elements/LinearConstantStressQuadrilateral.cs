@@ -90,7 +90,7 @@ namespace SharpFE
         {
             get
             {
-                Vector result = Geometry.VectorBetweenPointAndLine(this.Nodes[3], this.Nodes[0], this.LocalXAxis);
+                Vector result = GeometricHelpers.VectorBetweenPointAndLine(this.Nodes[3], this.Nodes[0], this.LocalXAxis);
                 return new KeyedVector<DegreeOfFreedom>(result.Negate(), DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
             }
         }
@@ -102,7 +102,7 @@ namespace SharpFE
         {
             get
             {
-                return Geometry.AreaQuadrilateral(this.Nodes[0], this.Nodes[1], this.Nodes[2], this.Nodes[3]);
+                return GeometricHelpers.AreaQuadrilateral(this.Nodes[0], this.Nodes[1], this.Nodes[2], this.Nodes[3]);
             }
         }
         

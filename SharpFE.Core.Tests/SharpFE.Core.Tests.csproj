@@ -67,6 +67,11 @@
     <Compile Include="Factory\ElementFactoryTest.cs" />
     <Compile Include="Factory\ForceFactoryTest.cs" />
     <Compile Include="Factory\NodeFactoryTest.cs" />
+    <Compile Include="Geometry\BoundedLineTest.cs" />
+    <Compile Include="Geometry\GeometricVectorTest.cs" />
+    <Compile Include="Geometry\PlaneTest.cs" />
+    <Compile Include="Geometry\PointTest.cs" />
+    <Compile Include="Geometry\UnboundedLineTest.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Maths\KeyCompatibilityValidatorTest.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrixTest.cs" />
@@ -102,6 +107,7 @@
     <Folder Include="Measures" />
     <Folder Include="Factory" />
     <Folder Include="Maths" />
+    <Folder Include="Geometry" />
     <Folder Include="Stiffness" />
     <Folder Include="Solvers" />
     <Folder Include="Repositories" />
