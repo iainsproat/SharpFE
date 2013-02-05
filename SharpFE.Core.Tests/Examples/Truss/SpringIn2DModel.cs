@@ -6,7 +6,6 @@
 using System;
 using SharpFE;
 using NUnit.Framework;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpFE.Examples
 {

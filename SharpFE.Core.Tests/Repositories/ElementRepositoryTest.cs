@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using SharpFE;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpFE.Core.Tests.Repositories
 {

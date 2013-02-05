@@ -8,8 +8,8 @@
 namespace SharpFE.Core.Tests.Elements
 {
 	using System;
-	using MathNet.Numerics.LinearAlgebra.Double;
 	using NUnit.Framework;
+	using SharpFE.Geometry;
 
 	[TestFixture]
 	public class LinearConstantStressQuadrilateralTest
@@ -60,21 +60,21 @@ namespace SharpFE.Core.Tests.Elements
 		[Test]
 		public void It_can_calculate_X_axis()
 		{
-			Vector result = SUT.LocalXAxis;
+			GeometricVector result = SUT.LocalXAxis;
 			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result[0]);
-			Assert.AreEqual(0, result[1]);
-			Assert.AreEqual(0, result[2]);
+			Assert.AreEqual(2, result[DegreeOfFreedom.X]);
+			Assert.AreEqual(0, result[DegreeOfFreedom.Y]);
+			Assert.AreEqual(0, result[DegreeOfFreedom.Z]);
 		}
 		
 		[Test]
 		public void It_can_calculate_Y_axis()
 		{
-			Vector result = SUT.LocalYAxis;
+			GeometricVector result = SUT.LocalYAxis;
 			Assert.IsNotNull(result);
-			Assert.AreEqual(0, result[0]);
-			Assert.AreEqual(2, result[1]);
-			Assert.AreEqual(0, result[2]);
+			Assert.AreEqual(0, result[DegreeOfFreedom.X]);
+			Assert.AreEqual(2, result[DegreeOfFreedom.Y]);
+			Assert.AreEqual(0, result[DegreeOfFreedom.Z]);
 		}
 		
 		[Test]

@@ -7,12 +7,12 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
+    using System.Collections.Generic;
 
     /// <summary>
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Vector is more specific and is used instead of Collection")]
-    public class DisplacementVector : DenseVector
+    public class DisplacementVector : KeyedVector<DegreeOfFreedom>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DisplacementVector" /> class.
@@ -31,11 +31,11 @@ namespace SharpFE
         /// <param name="valueInXComponent">The component of the displacement along the global x-axis</param>
         /// <param name="valueInYComponent">The component of the displacement along the global y-axis</param>
         public DisplacementVector(IFiniteElementNode locationNode, double valueInXComponent, double valueInYComponent)
-            : base(6)
+            : base(new List<DegreeOfFreedom>(6){ DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z, DegreeOfFreedom.XX, DegreeOfFreedom.YY, DegreeOfFreedom.ZZ})
         {
             this.Location = locationNode;
-            this.At(0, valueInXComponent);
-            this.At(1, valueInYComponent);
+            this[DegreeOfFreedom.X] =  valueInXComponent;
+            this[DegreeOfFreedom.Y] = valueInYComponent;
         }
         
         /// <summary>
@@ -53,7 +53,7 @@ namespace SharpFE
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X", Justification = "X is the common nomenclature for translation along the x-axis")]
         public double X
         {
-            get { return this.GetValue(DegreeOfFreedom.X); }
+            get { return this[DegreeOfFreedom.X]; }
         }
         
         /// <summary>
@@ -62,7 +62,7 @@ namespace SharpFE
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y", Justification = "Y is the common nomenclature for translation along the y-axis")]
         public double Y
         {
-            get { return this.GetValue(DegreeOfFreedom.Y); }
+            get { return this[DegreeOfFreedom.Y]; }
         }
         
         /// <summary>
@@ -71,7 +71,7 @@ namespace SharpFE
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Z", Justification = "Z is the common nomenclature for translation along the z-axis")]
         public double Z
         {
-            get { return this.GetValue(DegreeOfFreedom.Z); }
+            get { return this[DegreeOfFreedom.Z]; }
         }
         
         /// <summary>
@@ -80,7 +80,7 @@ namespace SharpFE
         /// </summary>
         public double XX
         {
-            get { return this.GetValue(DegreeOfFreedom.XX); }
+            get { return this[DegreeOfFreedom.XX]; }
         }
         
         /// <summary>
@@ -89,7 +89,7 @@ namespace SharpFE
         /// </summary>
         public double YY
         {
-            get { return this.GetValue(DegreeOfFreedom.YY); }
+            get { return this[DegreeOfFreedom.YY]; }
         }
         
         /// <summary>
@@ -98,18 +98,7 @@ namespace SharpFE
         /// </summary>
         public double ZZ
         {
-            get { return this.GetValue(DegreeOfFreedom.ZZ); }
-        }
-        
-        /// <summary>
-        /// Gets the component of displacement in the given degree of freedom.
-        /// </summary>
-        /// <param name="degreeOfFreedom">The degree of freedom for the component we wish to retrieve.</param>
-        /// <returns>A double representing the value of the component of displacement in the given degree of freedom.</returns>
-        /// <remarks>The callee is responsible for ensuring the degreeOfFreedom makes sense in their particular context.</remarks>
-        public double GetValue(DegreeOfFreedom degreeOfFreedom)
-        {
-            return this.At((int)degreeOfFreedom);
+            get { return this[DegreeOfFreedom.ZZ]; }
         }
         
         /// <summary>
@@ -120,7 +109,7 @@ namespace SharpFE
         /// <remarks>The callee is responsible for ensuring the degreeOfFreedom makes sense in their particular context.</remarks>
         public void SetValue(DegreeOfFreedom degreeOfFreedom, double value)
         {
-            this.At((int)degreeOfFreedom, value);
+            this[degreeOfFreedom] = value;
         }
     }
 }

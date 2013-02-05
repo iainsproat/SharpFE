@@ -27,16 +27,18 @@ namespace SharpFE.Geometry
             // empty
         }
         
-        public GeometricVector(KeyedVector<DegreeOfFreedom> coords)
-            : this((MathNet.Numerics.LinearAlgebra.Generic.Vector<double>)coords)
+        public GeometricVector(KeyedVector<DegreeOfFreedom> vectorToClone)
+            : base(vectorToClone)
         {
-            // empty
-        }
-        
-        public GeometricVector(MathNet.Numerics.LinearAlgebra.Generic.Vector<double> coords)
-            : base(coords, geometricKeys)
-        {
-            // empty
+            Guard.AgainstBadArgument(() => {
+                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.X);
+                                     }, "DegreeOfFreedom.X was expected as a key", "vectorToClone");
+            Guard.AgainstBadArgument(() => {
+                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.Y);
+                                     }, "DegreeOfFreedom.Y was expected as a key", "vectorToClone");
+            Guard.AgainstBadArgument(() => {
+                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.Z);
+                                     }, "DegreeOfFreedom.Z was expected as a key", "vectorToClone");
         }
         #endregion
         
@@ -79,6 +81,11 @@ namespace SharpFE.Geometry
         #endregion
         
         #region Overridden KeyedVector Methods
+        public GeometricVector CrossProduct(GeometricVector other)
+        {
+            return new GeometricVector(base.CrossProduct(other));
+        }
+        
         public new GeometricVector Multiply(double scalar)
         {
             return new GeometricVector(base.Multiply(scalar));
@@ -94,6 +101,24 @@ namespace SharpFE.Geometry
             return new GeometricVector(base.Normalize(p));
         }
         #endregion
+        
+        /// <summary>
+        /// Calculates the perpendicular line from this line to the given point
+        /// </summary>
+        /// <param name="pointNotOnLine"></param>
+        /// <returns></returns>
+        public GeometricVector PerpendicularLineTo(Point pointOnLine, Point pointToCalculatePerpendicularVectorTo)
+        {
+            GeometricVector betweenPoints = pointToCalculatePerpendicularVectorTo.Subtract(pointOnLine);
+            GeometricVector normalizedLineVector = this.Normalize(2);
+            double projectionDistanceOfEndPointAlongLine = betweenPoints.DotProduct(normalizedLineVector);
+            
+            GeometricVector scaledVectorAlongLine = normalizedLineVector.Multiply(projectionDistanceOfEndPointAlongLine);
+            Point startPointOfPerpendicularLine = pointOnLine.Add(scaledVectorAlongLine);
+            
+            GeometricVector result = pointToCalculatePerpendicularVectorTo.Subtract(startPointOfPerpendicularLine);
+            return result;
+        }
         
         /// <summary>
         /// IEquatable implementation

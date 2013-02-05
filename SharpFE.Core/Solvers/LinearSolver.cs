@@ -8,7 +8,6 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double.Factorization;
     using SharpFE.Stiffness;
 
     /// <summary>

@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using SharpFE;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpFE.Core.Tests
 {
@@ -90,7 +89,6 @@ namespace SharpFE.Core.Tests
             KeyedVector<NodalDegreeOfFreedom> result = SUT.KnownForceVector();
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(20, result[0]);
             
             // can be accessed by a key
             NodalDegreeOfFreedom ndof1 = new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X);
@@ -103,8 +101,6 @@ namespace SharpFE.Core.Tests
             KeyedVector<NodalDegreeOfFreedom> result = SUT.KnownDisplacementVector();
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(0, result[0]);
-            Assert.AreEqual(0, result[1]);
             
             // can be accessed by a key
             NodalDegreeOfFreedom ndof1 = new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X);

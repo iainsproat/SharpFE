@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using MathNet.Numerics.LinearAlgebra.Generic;
 
 namespace SharpFE.Core.Tests
 {
@@ -16,7 +15,7 @@ namespace SharpFE.Core.Tests
     /// </summary>
     public static class Helpers
     {
-        public static void AssertMatrix(Matrix<double> actual, int expectedRowCount, int expectedColumnCount, params double[] expectedValues)
+        public static void AssertMatrix<TRowKey, TColumnKey>(KeyedRowColumnMatrix<TRowKey, TColumnKey> actual, int expectedRowCount, int expectedColumnCount, params double[] expectedValues)
         {
             if(expectedValues == null)
             {
@@ -41,13 +40,13 @@ namespace SharpFE.Core.Tests
             Assert.AreEqual(expectedColumnCount, actual.ColumnCount, "ColumnCount");
             
             int currentArrayIndex = 0;
-            for (int i = 0; i < expectedRowCount; i++)
+            foreach (TRowKey rowKey in actual.RowKeys)
             {
-                for (int j = 0; j < expectedColumnCount; j++)
+                foreach (TColumnKey columnKey in actual.ColumnKeys)
                 {
-                    Assert.AreEqual(expectedValues[currentArrayIndex], actual.At(i, j), 0.0005, String.Format("Row : {0}; Column : {1},\r\n" +
+                    Assert.AreEqual(expectedValues[currentArrayIndex], actual.At(rowKey, columnKey), 0.0005, String.Format("Row : {0}; Column : {1},\r\n" +
                                                                                                               "Actual : \r\n" +
-                                                                                                              "{2}", i, j, actual));
+                                                                                                              "{2}", rowKey, columnKey, actual));
                     currentArrayIndex++;
                 }
             }

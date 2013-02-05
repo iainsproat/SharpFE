@@ -75,6 +75,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Maths\KeyCompatibilityValidatorTest.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrixTest.cs" />
+    <Compile Include="Maths\KeyedVectorTest.cs" />
     <Compile Include="Measures\ForceTest.cs" />
     <Compile Include="ModelTest.cs" />
     <Compile Include="NodalDegreeOfFreedomTest.cs" />

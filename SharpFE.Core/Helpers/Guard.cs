@@ -63,5 +63,13 @@ namespace SharpFE
                 throw new ArgumentException(failureMessage, parameterName);
             }
         }
+        
+        public static void AgainstInvalidState(ArgumentComparator testForFailure, string failureMessage)
+        {
+            if (testForFailure())
+            {
+                throw new InvalidOperationException(failureMessage);
+            }
+        }
     }
 }

@@ -7,12 +7,12 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
+    using System.Collections.Generic;
 
     /// <summary>
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Vector is a more specific name and will be used instead of Collection")]
-    public class ForceVector : DenseVector
+    public class ForceVector : KeyedVector<DegreeOfFreedom>
     {
         #region Constructors
         /// <summary>
@@ -58,7 +58,7 @@ namespace SharpFE
         /// <param name="valueOfRotationalComponentAroundYYAxis">The component of rotational force around the global y-axis.</param>
         /// <param name="valueOfRotationalComponentAroundZZAxis">The component of rotational force around the global z-axis.</param>
         public ForceVector(double valueOfXComponent, double valueOfYComponent, double valueOfZComponent, double valueOfRotationalComponentAroundXXAxis, double valueOfRotationalComponentAroundYYAxis, double valueOfRotationalComponentAroundZZAxis)
-            : base(6)
+            : base(new List<DegreeOfFreedom>(6){ DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z, DegreeOfFreedom.XX, DegreeOfFreedom.YY, DegreeOfFreedom.ZZ})
         {
             this.Id = Guid.NewGuid();
             this.SetValue(DegreeOfFreedom.X, valueOfXComponent);
@@ -69,26 +69,14 @@ namespace SharpFE
             this.SetValue(DegreeOfFreedom.ZZ, valueOfRotationalComponentAroundZZAxis);
         }
         
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ForceVector" /> class.
-        /// </summary>
-        /// <param name="vectorToClone">An instance of the ForceVector class which will be cloned to create the new instance.</param>
-        public ForceVector(Vector vectorToClone)
-            : base(6)
+        public ForceVector(KeyedVector<DegreeOfFreedom> vectorToClone)
+            : base(vectorToClone.Keys)
         {
-            Guard.AgainstNullArgument(vectorToClone, "vectorToClone");
-            Guard.AgainstBadArgument(
-                () => { return vectorToClone.Count != 6; },
-                "Can only clone from a vector of a length of 6",
-                "vectorToClone");
-            
             this.Id = Guid.NewGuid();
-            this.SetValue(DegreeOfFreedom.X, vectorToClone[(int)DegreeOfFreedom.X]);
-            this.SetValue(DegreeOfFreedom.Y, vectorToClone[(int)DegreeOfFreedom.Y]);
-            this.SetValue(DegreeOfFreedom.Z, vectorToClone[(int)DegreeOfFreedom.Z]);
-            this.SetValue(DegreeOfFreedom.XX, vectorToClone[(int)DegreeOfFreedom.XX]);
-            this.SetValue(DegreeOfFreedom.YY, vectorToClone[(int)DegreeOfFreedom.YY]);
-            this.SetValue(DegreeOfFreedom.ZZ, vectorToClone[(int)DegreeOfFreedom.ZZ]);
+            foreach( KeyValuePair<DegreeOfFreedom, double> kvp in vectorToClone)
+            {
+                this.SetValue(kvp.Key, kvp.Value);
+            }
         }
         #endregion
         
@@ -120,7 +108,7 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.X);
+                return this[DegreeOfFreedom.X];
             }
         }
         
@@ -132,7 +120,7 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.Y);
+                return this[DegreeOfFreedom.Y];
             }
         }
         
@@ -144,7 +132,7 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.Z);
+                return this[DegreeOfFreedom.Z];
             }
         }
         
@@ -155,7 +143,7 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.XX);
+                return this[DegreeOfFreedom.XX];
             }
         }
         
@@ -166,7 +154,7 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.YY);
+                return this[DegreeOfFreedom.YY];
             }
         }
         
@@ -177,19 +165,8 @@ namespace SharpFE
         {
             get
             {
-                return this.GetValue(DegreeOfFreedom.ZZ);
+                return this[DegreeOfFreedom.ZZ];
             }
-        }
-        
-        /// <summary>
-        /// Gets the component of force in the given global degree of freedom.
-        /// </summary>
-        /// <param name="degreeOfFreedom">The degree of freedom for which the component of force should be sought.</param>
-        /// <returns>A double representing the value of the component of force in a particular degree of freedom.</returns>
-        /// <remarks>The callee is responsible for ensuring the degreeOfFreedom makes sense in their particular context.</remarks>
-        public double GetValue(DegreeOfFreedom degreeOfFreedom)
-        {
-            return this.At((int)degreeOfFreedom);
         }
         
         /// <summary>
@@ -200,7 +177,7 @@ namespace SharpFE
         /// <remarks>The callee is responsible for ensuring the degreeOfFreedom makes sense in their particular context.</remarks>
         internal void SetValue(DegreeOfFreedom degreeOfFreedom, double value)
         {
-            this.At((int)degreeOfFreedom, value);
+            this[degreeOfFreedom] = value;
         }
     }
 }

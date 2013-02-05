@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using SharpFE;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpFE.Core.Tests.Repositories
 {
@@ -90,14 +89,14 @@ namespace SharpFE.Core.Tests.Repositories
                 nodeDof
             };
             
-            Vector result = SUT.GetCombinedForcesFor(nodeDofList);
+            KeyedVector<NodalDegreeOfFreedom> result = SUT.GetCombinedForcesFor(nodeDofList);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(0, result[0]);
+            Assert.AreEqual(0, result[nodeDof]);
             
             SUT.ApplyForceToNode(exampleForce2, node);
             result = SUT.GetCombinedForcesFor(nodeDofList);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(2, result[0]);
+            Assert.AreEqual(2, result[nodeDof]);
         }
     }
 }

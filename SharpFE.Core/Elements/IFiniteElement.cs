@@ -9,12 +9,14 @@ namespace SharpFE
     using System;
     using System.Collections.Generic;
     
+    using SharpFE.Geometry;
+    
     public interface IFiniteElement
     {
         IList<IFiniteElementNode> Nodes { get; }
-        KeyedVector<DegreeOfFreedom> LocalXAxis { get; }
-        KeyedVector<DegreeOfFreedom> LocalYAxis { get; }
-        KeyedVector<DegreeOfFreedom> LocalZAxis { get; }
+        GeometricVector LocalXAxis { get; }
+        GeometricVector LocalYAxis { get; }
+        GeometricVector LocalZAxis { get; }
         bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
         bool IsDirty(int previousHash);
     }

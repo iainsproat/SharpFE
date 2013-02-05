@@ -9,7 +9,6 @@ namespace SharpFE.Core.Tests.Solvers
     using System;
     using System.Collections.Generic;
     using NUnit.Framework;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using Rhino.Mocks;
     using SharpFE;
     using SharpFE.Stiffness;

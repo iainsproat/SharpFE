@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 using System;
 
-using MathNet.Numerics.LinearAlgebra.Double;
-
 namespace SharpFE
 {
     /// <summary>

@@ -76,6 +76,7 @@
     <Compile Include="Geometry\XYZ.cs" />
     <Compile Include="Geometry\Point.cs" />
     <Compile Include="Helpers\Guard.cs" />
+    <Compile Include="Helpers\IListExtensions.cs" />
     <Compile Include="IFiniteElementNode.cs" />
     <Compile Include="IFiniteElementSolver.cs" />
     <Compile Include="IModelConstraintProvider.cs" />
@@ -84,11 +85,12 @@
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
-    <Compile Include="MathNetExtensions\KeyCompatibilityValidator.cs" />
-    <Compile Include="MathNetExtensions\KeyedRowColumnMatrix.cs" />
-    <Compile Include="MathNetExtensions\KeyedVector.cs" />
-    <Compile Include="MathNetExtensions\VectorExtensions.cs" />
-    <Compile Include="MathNetExtensions\KeyedMatrix.cs" />
+    <Compile Include="Maths\KeyCompatibilityValidator.cs" />
+    <Compile Include="Maths\KeyedRowColumnMatrix.cs" />
+    <Compile Include="Maths\KeyedVector.cs" />
+    <Compile Include="Maths\KeyedMatrix.cs" />
+    <Compile Include="Maths\MatrixSolvers\IMatrixSolver.cs" />
+    <Compile Include="Maths\MatrixSolvers\SVD.cs" />
     <Compile Include="Measures\DisplacementVector.cs" />
     <Compile Include="Measures\ForceVector.cs" />
     <Compile Include="Measures\ReactionVector.cs" />
@@ -121,9 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />
+    <Folder Include="Maths\MatrixSolvers" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
-    <Folder Include="MathNetExtensions" />
+    <Folder Include="Maths" />
     <Folder Include="Helpers" />
     <Folder Include="Materials" />
     <Folder Include="CrossSections" />

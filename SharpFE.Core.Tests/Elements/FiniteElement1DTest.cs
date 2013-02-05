@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 using System;
 using NUnit.Framework;
-using MathNet.Numerics.LinearAlgebra.Double;
 using SharpFE.Elements;
+using SharpFE.Geometry;
 
 namespace SharpFE.Core.Tests.Elements
 {
@@ -38,11 +38,11 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void It_can_calculate_the_xAxis()
         {
-        	Vector result = SUT.LocalXAxis;
+        	GeometricVector result = SUT.LocalXAxis;
         	Assert.AreEqual(3, result.Count);
-        	Assert.AreEqual(1, result[0]);
-        	Assert.AreEqual(-1, result[1]);
-        	Assert.AreEqual(2, result[2]);
+        	Assert.AreEqual(1, result[DegreeOfFreedom.X]);
+        	Assert.AreEqual(-1, result[DegreeOfFreedom.Y]);
+        	Assert.AreEqual(2, result[DegreeOfFreedom.Z]);
         }
         
         [Test]
@@ -56,7 +56,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             this.CreateFiniteElement1D(-10, 0, 0, -10, 0, 10);
             
-            Vector axisY = SUT.LocalYAxis;
+            GeometricVector axisY = SUT.LocalYAxis;
             
             Assert.AreNotEqual(0, axisY.SumMagnitudes());
         }

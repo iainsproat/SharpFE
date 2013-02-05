@@ -7,7 +7,6 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// ReactionVector are the forces at a node which are calculated in an analysis.

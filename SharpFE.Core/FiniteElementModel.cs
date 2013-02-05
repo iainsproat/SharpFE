@@ -328,7 +328,7 @@ namespace SharpFE
             foreach (NodalDegreeOfFreedom currentNodalDegreeOfFreedom in knownForces)
             {
                 nodalForce = this.forces.GetCombinedForceOn(currentNodalDegreeOfFreedom.Node);
-                result[currentNodalDegreeOfFreedom] = nodalForce.GetValue(currentNodalDegreeOfFreedom.DegreeOfFreedom);
+                result[currentNodalDegreeOfFreedom] = nodalForce[currentNodalDegreeOfFreedom.DegreeOfFreedom];
             }
             
             return result;

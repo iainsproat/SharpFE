@@ -134,9 +134,10 @@ namespace SharpFE
             
             int numberOfDisplacements = displacements.Count;
             
-            for (int i = 0; i < numberOfDisplacements; i++)
+            IList<NodalDegreeOfFreedom> keys = displacements.Keys;
+            foreach (NodalDegreeOfFreedom key in keys)
             {
-                this.AddDisplacement(displacements.Keys[i], displacements[i]);
+                this.AddDisplacement(key, displacements[key]);
             }
         }
         
@@ -150,9 +151,10 @@ namespace SharpFE
             
             int numberOfReactions = reactions.Count;
             
-            for (int i = 0; i < numberOfReactions; i++)
+            IList<NodalDegreeOfFreedom> keys = reactions.Keys;
+            foreach (NodalDegreeOfFreedom key in keys)
             {
-                this.AddReaction(reactions.Keys[i], reactions[i]);
+                this.AddReaction(key, reactions[key]);
             }
         }
     }

@@ -7,9 +7,8 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double.Factorization;
-    using MathNet.Numerics.LinearAlgebra.Generic;
     using SharpFE.Stiffness;
+    using SharpFE.Maths.MatrixSolvers;
 
     /// <summary>
     /// Linear solver using Singular Value Decomposition
@@ -35,9 +34,8 @@ namespace SharpFE
         /// <returns></returns>
         protected override KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
         {
-            Svd svd = new DenseSvd(stiffnessMatrix, true);
-            Vector<double> solution = svd.Solve(forceVector);
-            return new KeyedVector<NodalDegreeOfFreedom>(solution, forceVector.Keys);
+            Svd<NodalDegreeOfFreedom, NodalDegreeOfFreedom> svd = new Svd<NodalDegreeOfFreedom, NodalDegreeOfFreedom>(stiffnessMatrix, true);
+            return svd.Solve(forceVector);
         }
     }
 }

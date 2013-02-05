@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using SharpFE.MathNetExtensions;
+using SharpFE.Maths;
 
 namespace SharpFE.Core.Tests.Maths
 {
@@ -82,8 +82,7 @@ namespace SharpFE.Core.Tests.Maths
         }
         
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void It_will_throw_with_swapped_items()
+        public void It_will_validate_swapped_items()
         {
             IList<string> lhs = new List<string>(3){ item0, item2, item1 };
             IList<string> rhs = new List<string>(3){ item0, item1, item2 };

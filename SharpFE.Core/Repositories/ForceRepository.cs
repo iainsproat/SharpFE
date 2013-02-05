@@ -8,7 +8,6 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// </summary>
@@ -71,15 +70,15 @@ namespace SharpFE
             Guard.AgainstNullArgument(node, "node");
             
             IList<ForceVector> forces = this.GetAllForcesAppliedTo(node);
-            if (forces.Count == 0)
+            if (forces.IsEmpty())
             {
                 return ForceVector.Zero;
             }
             
-            Vector combined = new ForceVector(0, 0);
+            KeyedVector<DegreeOfFreedom> combined = new ForceVector(0, 0);
             foreach (ForceVector f in forces)
             {
-                combined = (Vector)combined.Add(f);
+                combined = combined.Add(f);
             }
             
             return new ForceVector(combined);
@@ -111,7 +110,7 @@ namespace SharpFE
                 if (cache.ContainsKey(item.Node))
                 {
                     combinedForceOnNode = cache[item.Node];
-                    result[item] = combinedForceOnNode.GetValue(item.DegreeOfFreedom);
+                    result[item] = combinedForceOnNode[item.DegreeOfFreedom];
                 }
                 else
                 {
@@ -162,7 +161,7 @@ namespace SharpFE
             
             combinedForceOnNode = this.GetCombinedForceOn(item.Node);
             
-            return combinedForceOnNode.GetValue(item.DegreeOfFreedom);
+            return combinedForceOnNode[item.DegreeOfFreedom];
         }
     }
 }

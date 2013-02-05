@@ -132,7 +132,7 @@ namespace SharpFE.Stiffness
             
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> bteb = bte.Multiply<Strain, NodalDegreeOfFreedom>(strainDisplacementMatrix);
             
-            StiffnessMatrix k = new StiffnessMatrix(bteb.Multiply(elementVolume), bteb.RowKeys, bteb.ColumnKeys);
+            StiffnessMatrix k = new StiffnessMatrix(bteb.Multiply(elementVolume));
             return k;
         }
         

@@ -7,7 +7,7 @@
 namespace SharpFE
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra.Double;
+    using SharpFE.Geometry;
 
     /// <summary>
     /// Triangular shaped element which calculates membrane forces only
@@ -54,27 +54,20 @@ namespace SharpFE
             get;
             private set;
         }
-                
+        
         /// <summary>
         /// Gets or sets the vector representing the local x axis
         /// </summary>
-        public override KeyedVector<DegreeOfFreedom> LocalXAxis
+        public override GeometricVector LocalXAxis
         {
             get
             {
-                double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].X - this.Nodes[0].X;
-                double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].Y - this.Nodes[0].Y;
-                double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].Z - this.Nodes[0].Z;
-                return new KeyedVector<DegreeOfFreedom>(
-                    new double[]
-                    {
-                        initialLengthOfSide1ProjectedInXAxis,
-                        initialLengthOfSide1ProjectedInYAxis,
-                        initialLengthOfSide1ProjectedInZAxis
-                    },
-                    DegreeOfFreedom.X,
-                    DegreeOfFreedom.Y,
-                    DegreeOfFreedom.Z);
+                double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].X - this.LocalOrigin.X;
+                double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].Y - this.LocalOrigin.Y;
+                double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].Z - this.LocalOrigin.Z;
+                return new GeometricVector(initialLengthOfSide1ProjectedInXAxis,
+                                           initialLengthOfSide1ProjectedInYAxis,
+                                           initialLengthOfSide1ProjectedInZAxis);
             }
         }
         
@@ -84,12 +77,12 @@ namespace SharpFE
         /// <remarks>
         /// Uses the right-angled vector from side1 to the third point as the Y-axis.
         /// </remarks>
-        public override KeyedVector<DegreeOfFreedom> LocalYAxis
+        public override GeometricVector LocalYAxis
         {
             get
             {
-                Vector result = GeometricHelpers.VectorBetweenPointAndLine(this.Nodes[2], this.Nodes[0], this.LocalXAxis);
-                return new KeyedVector<DegreeOfFreedom>(result.Negate(), DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
+                GeometricVector result = this.LocalXAxis.PerpendicularLineTo(this.LocalOrigin, this.Nodes[2].Location);
+                return result;
             }
         }
         

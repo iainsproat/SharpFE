@@ -8,7 +8,6 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Generic;
 
     /// <summary>
     /// ElementStiffnessMatrix is a KeyedMatrix which uses NodalDegreeOfFreedom structs as the keys.
@@ -50,22 +49,16 @@ namespace SharpFE.Stiffness
         }
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="StiffnessMatrix" /> class
-        /// </summary>
-        /// <param name="matrix">The matrix which holds the data to copy into this new matrix</param>
-        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
-        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
-        public StiffnessMatrix(Matrix<double> matrix, IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns)
-            : base(matrix, keysForRows, keysForColumns)
-        {
-            // empty
-        }
-        
-        /// <summary>
         /// Initializes a new instance of the <see cref="StiffnessMatrix" /> class.
         /// </summary>
         /// <param name="matrix"></param>
         public StiffnessMatrix(KeyedMatrix<NodalDegreeOfFreedom> matrix)
+            : base(matrix)
+        {
+            // empty
+        }
+        
+        public StiffnessMatrix(KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> matrix)
             : base(matrix)
         {
             // empty
@@ -137,7 +130,7 @@ namespace SharpFE.Stiffness
         /// Clones this matrix
         /// </summary>
         /// <returns>A deep clone of the data of this matrix, but only a shallow clone of the keys</returns>
-        public override Matrix<double> Clone()
+        public new StiffnessMatrix Clone()
         {
             return new StiffnessMatrix(this);
         }

@@ -1,6 +1,34 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="KeyedMatrix.cs" company="SharpFE">
-//     Copyright Iain Sproat, 2012.
+// <copyright file="KeyedMatrix.cs" company="Iain Sproat">
+//     Copyright Iain Sproat, 2013.
+//
+// Based in part on:
+//
+// Math.NET Numerics, part of the Math.NET Project
+// http://numerics.mathdotnet.com
+// http://github.com/mathnet/mathnet-numerics
+// http://mathnetnumerics.codeplex.com
+//
+// Copyright (c) 2009-2010 Math.NET
+//
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -8,9 +36,7 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using MathNet.Numerics.LinearAlgebra.Double;
-    using MathNet.Numerics.LinearAlgebra.Generic;
-    using SharpFE.MathNetExtensions;
+    using SharpFE.Maths;
 
     /// <summary>
     /// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
@@ -52,14 +78,8 @@ namespace SharpFE
             // empty
         }
         
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
-        /// </summary>
-        /// <param name="matrix">The matrix which holds data to copy into this new matrix</param>
-        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
-        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
-        public KeyedMatrix(Matrix<double> matrix, IList<TKey> keysForRows, IList<TKey> keysForColumns)
-            : base(matrix, keysForRows, keysForColumns)
+        public KeyedMatrix(KeyedRowColumnMatrix<TKey, TKey> matrix)
+            : base(matrix)
         {
             // empty
         }
@@ -82,19 +102,15 @@ namespace SharpFE
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "hiding base method avoids the need for calling members to cast")]
         public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
-            KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.ColumnKeys, other.RowKeys);
-            kcv.ThrowIfInvalid();
-            ////TODO If the keys match but are in the wrong order, copy the other matrix and swap its rows and row keys so they match exactly
-            
-            Matrix<double> result = ((Matrix<double>)this).Multiply((Matrix<double>)other);
-            return new KeyedMatrix<TKey>(result, this.RowKeys, other.ColumnKeys);
+            KeyedRowColumnMatrix<TKey, TKey> result = base.Multiply(other);
+            return new KeyedMatrix<TKey>(result);
         }
         
         /// <summary>
         /// Clones this matrix
         /// </summary>
         /// <returns>A shallow clone of this matrix</returns>
-        public override Matrix<double> Clone()
+        public new KeyedMatrix<TKey> Clone()
         {
             return new KeyedMatrix<TKey>(this);
         }
@@ -105,8 +121,8 @@ namespace SharpFE
         /// <returns></returns>
         public new KeyedMatrix<TKey> Inverse()
         {
-            Matrix<double> result = ((Matrix<double>)this).Inverse();
-            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
+            KeyedRowColumnMatrix<TKey, TKey> result = base.Inverse();
+            return new KeyedMatrix<TKey>(result);
         }
         
         /// <summary>
@@ -115,8 +131,8 @@ namespace SharpFE
         /// <returns></returns>
         public new KeyedMatrix<TKey> Transpose()
         {
-            Matrix<double> result = ((Matrix<double>)this).Transpose();
-            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
+            KeyedRowColumnMatrix<TKey, TKey> result = base.Transpose();
+            return new KeyedMatrix<TKey>(result);
         }
         
         /// <summary>
@@ -125,10 +141,10 @@ namespace SharpFE
         /// <param name="p"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p", Justification = "Following Math.net library convention")]
-        public new KeyedMatrix<TKey> NormalizeRows(int p)
+        public KeyedMatrix<TKey> NormalizeRows(int p)
         {
-            Matrix<double> result = ((Matrix<double>)this).NormalizeRows(p);
-            return new KeyedMatrix<TKey>(result, this.ColumnKeys, this.RowKeys);
+            KeyedRowColumnMatrix<TKey, TKey> result = base.NormalizeRows(p);
+            return new KeyedMatrix<TKey>(result);
         }
         
         /// <summary>

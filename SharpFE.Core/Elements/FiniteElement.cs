@@ -9,8 +9,8 @@ namespace SharpFE
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE.Stiffness;
+    using SharpFE.Geometry;
 
     /// <summary>
     /// Finite elements connect nodes and define the relationship between these nodes.
@@ -57,9 +57,20 @@ namespace SharpFE
         }
         
         /// <summary>
+        /// The point in the global coordinate frame which represents the origin in the local coordinate frame.
+        /// </summary>
+        public Point LocalOrigin
+        {
+            get
+            {
+                return this.Nodes[0].Location;
+            }
+        }
+        
+        /// <summary>
         /// Gets the local x-axis of this finite element
         /// </summary>
-        public abstract KeyedVector<DegreeOfFreedom> LocalXAxis
+        public abstract GeometricVector LocalXAxis
         {
             get;
         }
@@ -67,7 +78,7 @@ namespace SharpFE
         /// <summary>
         /// Gets the local y-axis of this finite element.
         /// </summary>
-        public abstract KeyedVector<DegreeOfFreedom> LocalYAxis
+        public abstract GeometricVector LocalYAxis
         {
             get;
         }
@@ -78,7 +89,7 @@ namespace SharpFE
         /// <remarks>
         /// Calculates the normalised cross-product of the x and y axes.
         /// </remarks>
-        public KeyedVector<DegreeOfFreedom> LocalZAxis
+        public GeometricVector LocalZAxis
         {
             get
             {

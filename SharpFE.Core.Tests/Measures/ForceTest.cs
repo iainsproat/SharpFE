@@ -36,8 +36,8 @@ namespace SharpFE.Core.Tests.Measures
         [Test]
         public void CanGetComponent()
         {
-            Assert.AreEqual(12, SUT.GetValue(DegreeOfFreedom.X));
-            Assert.AreEqual(0, SUT.GetValue(DegreeOfFreedom.ZZ));
+            Assert.AreEqual(12, SUT[DegreeOfFreedom.X]);
+            Assert.AreEqual(0, SUT[DegreeOfFreedom.ZZ]);
         }
     }
 }

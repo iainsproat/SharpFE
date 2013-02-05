@@ -53,15 +53,20 @@ namespace SharpFE.Core.Tests
 		public void CanAddMultipleDisplacements()
 		{			
 			FiniteElementNode node1 = model.NodeFactory.Create(1);
+			
+			NodalDegreeOfFreedom ndof1 = new NodalDegreeOfFreedom(node, DegreeOfFreedom.X);
+			NodalDegreeOfFreedom ndof2 = new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y);
+			NodalDegreeOfFreedom ndof3 = new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y);
+			
 			IList<NodalDegreeOfFreedom> identifiers = new List<NodalDegreeOfFreedom>(3);
-			identifiers.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X));
-			identifiers.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y));
-			identifiers.Add(new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y));
+			identifiers.Add(ndof1);
+			identifiers.Add(ndof2);
+			identifiers.Add(ndof3);
 			
 			KeyedVector<NodalDegreeOfFreedom> displacements = new KeyedVector<NodalDegreeOfFreedom>(identifiers);
-			displacements[0] = 10;
-			displacements[1] = 12;
-			displacements[2] = 13;
+			displacements[ndof1] = 10;
+			displacements[ndof2] = 12;
+			displacements[ndof3] = 13;
 			
 			SUT.AddMultipleDisplacements(displacements);
 			

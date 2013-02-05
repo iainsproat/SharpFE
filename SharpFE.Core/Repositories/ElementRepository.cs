@@ -9,7 +9,6 @@ namespace SharpFE
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using MathNet.Numerics.LinearAlgebra.Double;
     using SharpFE.Cache;
 
     /// <summary>

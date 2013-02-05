@@ -7,7 +7,9 @@
 namespace SharpFE
 {
     using System;
+    using SharpFE.Geometry;
     using SharpFE.Stiffness;
+    
     
     /// <summary>
     /// One dimensional finite element. i.e. a line
@@ -64,31 +66,22 @@ namespace SharpFE
         /// <summary>
         /// Gets or sets the vector representing the local x axis
         /// </summary>
-        public override KeyedVector<DegreeOfFreedom> LocalXAxis
+        public override GeometricVector LocalXAxis
         {
             get
             {
-                double initialLengthProjectedInXAxis = this.EndNode.X - this.StartNode.X;
-                double initialLengthProjectedInYAxis = this.EndNode.Y - this.StartNode.Y;
-                double initialLengthProjectedInZAxis = this.EndNode.Z - this.StartNode.Z;
+                double initialLengthProjectedInXAxis = this.EndNode.X - this.LocalOrigin.X;
+                double initialLengthProjectedInYAxis = this.EndNode.Y - this.LocalOrigin.Y;
+                double initialLengthProjectedInZAxis = this.EndNode.Z - this.LocalOrigin.Z;
 
-                return new KeyedVector<DegreeOfFreedom>(
-                    new double[]
-                    {
-                        initialLengthProjectedInXAxis,
-                        initialLengthProjectedInYAxis,
-                        initialLengthProjectedInZAxis
-                    },
-                    DegreeOfFreedom.X,
-                    DegreeOfFreedom.Y,
-                    DegreeOfFreedom.Z);
+                return new GeometricVector(initialLengthProjectedInXAxis, initialLengthProjectedInYAxis, initialLengthProjectedInZAxis);
             }
         }
         
         /// <summary>
         /// Gets or sets the vector representing the direction of the local y axis
         /// </summary>
-        public override KeyedVector<DegreeOfFreedom> LocalYAxis
+        public override GeometricVector LocalYAxis
         {
             get
             {
@@ -188,17 +181,17 @@ namespace SharpFE
         /// In that case the up direction is aligned with global y axis.
         /// </summary>
         /// <returns>A vector representing the 'up' direction.</returns>
-        private KeyedVector<DegreeOfFreedom> UpDirection() // HACK
+        private GeometricVector UpDirection() // HACK
         {
             if (this.LocalXAxis[DegreeOfFreedom.X] == 0 && this.LocalXAxis[DegreeOfFreedom.Y] == 0 && this.LocalXAxis[DegreeOfFreedom.Z] != 0)
             {
                 // localXAxis is in global Z axis direction which will give poor results so assume the local upright direction is in global -x direction
-                return new KeyedVector<DegreeOfFreedom>(new double[] { -1, 0, 0 }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
+                return new GeometricVector(-1, 0, 0);
             }
             else
             {
                 // make the global vertical the default
-                return new KeyedVector<DegreeOfFreedom>(new double[] { 0, 0, 1 }, DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z);
+                return new GeometricVector(0, 0, 1);
             }
         }
     }
