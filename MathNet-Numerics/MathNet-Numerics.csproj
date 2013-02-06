@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="LinearAlgebra\Keyed\Double\DenseKeyedMatrix.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\DenseVector.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\DiagonalKeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\ExtensionMethods.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\Factorization\DenseKeyedLU.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\Factorization\DenseKeyedSvd.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\Factorization\KeyedLU.cs" />
@@ -67,6 +69,8 @@
     <Compile Include="LinearAlgebra\Keyed\Double\Factorization\UserKeyedSvd.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\KeyedMatrix.cs" />
     <Compile Include="LinearAlgebra\Keyed\Double\KeyedVector.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\SparseKeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\SparseVector.cs" />
     <Compile Include="LinearAlgebra\Keyed\Generic\Factorization\KeyedLU.cs" />
     <Compile Include="LinearAlgebra\Keyed\Generic\Factorization\KeyedSvd.cs" />
     <Compile Include="LinearAlgebra\Keyed\Generic\IKeyedSolver.cs" />
@@ -76,10 +80,13 @@
     <Compile Include="LinearAlgebra\Keyed\Generic\KeyedVector.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedVectorStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedColumnMajorMatrixStorage.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\DiagonalKeyedMatrixStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedMatrixStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedMatrixStorage.Validation.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedVectorStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedVectorStorage.Validation.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\SparseKeyedCompressedRowMatrixStorage.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\SparseKeyedVectorStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

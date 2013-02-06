@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\MathNet-Numerics\lib\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="NUnit.Framework">
       <HintPath>$(SharpDevelopBinPath)\Tools\NUnit\NUnit.Framework.dll</HintPath>
     </Reference>
@@ -39,12 +42,38 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssertHelpers.cs" />
+    <Compile Include="LinearAlgebra\Double\DenseKeyedMatrixTests.cs" />
+    <Compile Include="LinearAlgebra\Double\DenseKeyedVectorArithmeticTheory.cs" />
+    <Compile Include="LinearAlgebra\Double\DenseKeyedVectorTest.TextHandling.cs" />
+    <Compile Include="LinearAlgebra\Double\DenseKeyedVectorTests.cs" />
+    <Compile Include="LinearAlgebra\Double\DiagonalKeyedMatrixTests.cs" />
+    <Compile Include="LinearAlgebra\Double\Factorization\KeyedLUTests.cs" />
+    <Compile Include="LinearAlgebra\Double\Factorization\KeyedSvdTests.cs" />
+    <Compile Include="LinearAlgebra\Double\Factorization\UserKeyedLUTests.cs" />
+    <Compile Include="LinearAlgebra\Double\Factorization\UserKeyedSvdTests.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedMatrixLoader.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedMatrixStructureTheory.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedMatrixTests.Arithmetic.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedMatrixTests.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedVectorArithmeticTheory.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedVectorTests.Arithmetic.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedVectorTests.cs" />
+    <Compile Include="LinearAlgebra\Double\KeyedVectorTests.Norm.cs" />
+    <Compile Include="LinearAlgebra\Double\UserDefinedKeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Double\UserDefinedKeyedMatrixTests.cs" />
+    <Compile Include="LinearAlgebra\Double\UserDefinedKeyedVector.cs" />
+    <Compile Include="LinearAlgebra\Double\UserDefinedKeyedVectorTests.cs" />
+    <Compile Include="LinearAlgebra\KeyedMatrixStructureTheory.Access.cs" />
+    <Compile Include="LinearAlgebra\KeyedMatrixStructureTheory.cs" />
+    <Compile Include="LinearAlgebra\KeyedMatrixStructureTheory.Reform.cs" />
     <Compile Include="LinearAlgebra\KeyedVectorArithmeticTheory.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedColumnMajorMatrixStorageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,6 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="LinearAlgebra" />
+    <Folder Include="LinearAlgebra\Double" />
+    <Folder Include="LinearAlgebra\Double\Factorization" />
     <Folder Include="LinearAlgebra\Keyed" />
     <Folder Include="LinearAlgebra\Keyed\Storage" />
   </ItemGroup>
