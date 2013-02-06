@@ -195,7 +195,10 @@ namespace SharpFE
                 foreach (FiniteElementNode node in this.nodeStore)
                 {
                     hashCode += (1000000000 + i++) * node.GetHashCode();
+                    
                 }
+                
+                hashCode += 1000000007 * this.LocalOrigin.GetHashCode();
             }
             
             return hashCode;
@@ -215,7 +218,8 @@ namespace SharpFE
             int numNodes = this.nodeStore.Count;
             if (numNodes == 0)
             {
-                sb.Append("<no nodes>]");
+                sb.Append("<no nodes>");
+                sb.Append("]");
                 return sb.ToString();
             }
             
@@ -237,6 +241,36 @@ namespace SharpFE
 
         #endregion
 
+        public Point ConvertGlobalCoordinatesToLocalCoordinates(Point globalPoint)
+        {
+            GeometricVector localCoordRelativeToLocalOrigin = globalPoint.Subtract(this.LocalOrigin);
+            
+            KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = CalculateElementRotationMatrix();
+            Point localCoord = new Point(rotationMatrix.Multiply(localCoordRelativeToLocalOrigin));
+            
+            return new Point(localCoord);
+        }
+        
+        public Point ConvertLocalCoordinatesToGlobalCoordinates(Point localPoint)
+        {
+            KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = CalculateElementRotationMatrix().Transpose();
+            Point globalCoordRelativeToLocalOrigin = new Point(rotationMatrix.Multiply(localPoint));
+            
+            GeometricVector globalCoord = globalCoordRelativeToLocalOrigin.Add(this.LocalOrigin);
+            return new Point(globalCoord);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KeyedSquareMatrix<DegreeOfFreedom> CalculateElementRotationMatrix()
+        {
+            KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = FiniteElement.CreateFromRows(this.LocalXAxis, this.LocalYAxis, this.LocalZAxis);
+            rotationMatrix = rotationMatrix.NormalizeRows(2);
+            return rotationMatrix;
+        }
+        
         /// <summary>
         /// Determines whether a degree of freedom is supported by this element
         /// </summary>
@@ -313,6 +347,70 @@ namespace SharpFE
             }
             
             return nodalDegreeOfFreedoms;
+        }
+        
+        /// <summary>
+        /// Creates a new keyed matrix from keyed vectors representing the rows of the new matrix
+        /// </summary>
+        /// <param name="axis1">The vector representing the first row</param>
+        /// <param name="axis2">The vector representing the second row</param>
+        /// <param name="axis3">The vector representing the third row</param>
+        /// <returns>A matrix built from the vectors</returns>
+        protected static KeyedSquareMatrix<DegreeOfFreedom> CreateFromRows(KeyedVector<DegreeOfFreedom> axis1, KeyedVector<DegreeOfFreedom> axis2, KeyedVector<DegreeOfFreedom> axis3)
+        {
+            ////TODO this should be devolved to the KeyedMatrix class
+            Guard.AgainstBadArgument(
+                () => { return axis1.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis1");
+            Guard.AgainstBadArgument(
+                () => { return axis2.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis2");
+            Guard.AgainstBadArgument(
+                () => { return axis3.Count != 3; },
+                "All axes should be 3D, i.e. have 3 items",
+                "axis3");
+            Guard.AgainstBadArgument(
+                () => { return axis1.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis1),
+                "axis1");
+            Guard.AgainstBadArgument(
+                () => { return axis2.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis2),
+                "axis2");
+            Guard.AgainstBadArgument(
+                () => { return axis3.SumMagnitudes() == 0; },
+                string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Axis should not be zero: {0}",
+                    axis3),
+                "axis3");
+            
+            KeyedVector<DegreeOfFreedom> axis1Norm = axis1.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis2Norm = axis2.Normalize(2);
+            KeyedVector<DegreeOfFreedom> axis3Norm = axis3.Normalize(2);
+            
+            IList<DegreeOfFreedom> dof = new List<DegreeOfFreedom>(3) { DegreeOfFreedom.X, DegreeOfFreedom.Y, DegreeOfFreedom.Z };
+            
+            KeyedSquareMatrix<DegreeOfFreedom> result = new KeyedSquareMatrix<DegreeOfFreedom>(dof);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.X, axis1Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Y, axis1Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.X, DegreeOfFreedom.Z, axis1Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.X, axis2Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y, axis2Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z, axis2Norm[DegreeOfFreedom.Z]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.X, axis3Norm[DegreeOfFreedom.X]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y, axis3Norm[DegreeOfFreedom.Y]);
+            result.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z, axis3Norm[DegreeOfFreedom.Z]);
+            
+            return result;
         }
     }
 }

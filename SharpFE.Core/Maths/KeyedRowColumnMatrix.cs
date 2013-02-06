@@ -28,8 +28,12 @@ namespace SharpFE
         /// </summary>
         private IDictionary<TColumnKey, int> keysForColumns;
         
+        /// <summary>
+        /// The underlying matrix which holds the data and is delegated to for the majority of operations on the data
+        /// </summary>
         private Matrix<double> underlyingMatrix;
         
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
         /// </summary>
@@ -55,7 +59,7 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
         /// </summary>
         /// <param name="matrix">The matrix which holds the keys and data to copy into this new matrix</param>
-        public KeyedRowColumnMatrix(KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
+        protected KeyedRowColumnMatrix(KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
             : this(matrix.keysForRows, matrix.keysForColumns, matrix.underlyingMatrix)
         {
             // empty
@@ -81,6 +85,9 @@ namespace SharpFE
             this.underlyingMatrix = dataToCopy.Clone();
         }
         
+        #endregion
+        
+        #region Properties
         /// <summary>
         /// Gets the keys for the rows
         /// </summary>
@@ -124,6 +131,8 @@ namespace SharpFE
                 return this.ColumnKeys.Count;
             }
         }
+        #endregion
+        
         
         /// <summary>
         /// Creates a matrix which contains values from the requested sub-matrix
@@ -300,6 +309,12 @@ namespace SharpFE
             return new KeyedRowColumnMatrix<TColumnKey, TRowKey>(this.keysForColumns, this.keysForRows, transposedUnderlyingMatrix);
         }
         
+        public Matrix<double> ToMatrix()
+        {
+            return this.underlyingMatrix.Clone();
+        }
+        
+        #region Key and Data initialization
         private void CheckAndAddKeys(IList<TRowKey> keysRows, IList<TColumnKey> keysColumns)
         {
             this.CheckAndAddKeys(keysRows, keysColumns, 0);
@@ -340,17 +355,6 @@ namespace SharpFE
             
             this.underlyingMatrix = new DenseMatrix(numRowKeys, numColKeys, initialValueOfAllData);
         }
-        
-        private void ClearKeysAndData()
-        {
-            this.keysForRows.Clear();
-            this.keysForColumns.Clear();
-            this.underlyingMatrix.Clear();
-        }
-        
-        public Matrix<double> ToMatrix()
-        {
-            return this.underlyingMatrix.Clone();
-        }
+        #endregion
     }
 }

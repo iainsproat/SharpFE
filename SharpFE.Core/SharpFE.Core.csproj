@@ -8,7 +8,8 @@
     <RootNamespace>SharpFE</RootNamespace>
     <AssemblyName>SharpFE.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
@@ -88,7 +89,7 @@
     <Compile Include="Maths\KeyCompatibilityValidator.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrix.cs" />
     <Compile Include="Maths\KeyedVector.cs" />
-    <Compile Include="Maths\KeyedMatrix.cs" />
+    <Compile Include="Maths\KeyedSquareMatrix.cs" />
     <Compile Include="Maths\MatrixSolvers\IMatrixSolver.cs" />
     <Compile Include="Maths\MatrixSolvers\SVD.cs" />
     <Compile Include="Measures\DisplacementVector.cs" />

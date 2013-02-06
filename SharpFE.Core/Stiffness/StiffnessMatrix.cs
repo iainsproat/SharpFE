@@ -13,7 +13,7 @@ namespace SharpFE.Stiffness
     /// ElementStiffnessMatrix is a KeyedMatrix which uses NodalDegreeOfFreedom structs as the keys.
     /// It is designed to be used for holding data about stiffnesses of finite elements.
     /// </summary>
-    public class StiffnessMatrix : KeyedMatrix<NodalDegreeOfFreedom>
+    public class StiffnessMatrix : KeyedSquareMatrix<NodalDegreeOfFreedom>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class.
@@ -52,7 +52,7 @@ namespace SharpFE.Stiffness
         /// Initializes a new instance of the <see cref="StiffnessMatrix" /> class.
         /// </summary>
         /// <param name="matrix"></param>
-        public StiffnessMatrix(KeyedMatrix<NodalDegreeOfFreedom> matrix)
+        public StiffnessMatrix(KeyedSquareMatrix<NodalDegreeOfFreedom> matrix)
             : base(matrix)
         {
             // empty

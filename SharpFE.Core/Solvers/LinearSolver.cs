@@ -75,7 +75,7 @@ namespace SharpFE
         /// <returns></returns>
         protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
         {
-            KeyedMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
+            KeyedSquareMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
             KeyedVector<NodalDegreeOfFreedom> solution = inverse.Multiply(forceVector);
             return solution;
         }

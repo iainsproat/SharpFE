@@ -8,7 +8,8 @@
     <RootNamespace>SharpFE.Core.Tests</RootNamespace>
     <AssemblyName>SharpFE.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
   </PropertyGroup>
@@ -53,6 +54,8 @@
   <ItemGroup>
     <Compile Include="Elements\FiniteElement1DTest.cs" />
     <Compile Include="Elements\FiniteElementTest.cs" />
+    <Compile Include="Elements\FiniteElementTest.LocalCoordinates.cs" />
+    <Compile Include="Elements\FiniteElementTest.Rotation.cs" />
     <Compile Include="Elements\Linear3DBeamTest.cs" />
     <Compile Include="Elements\Linear1DBeamTest.cs" />
     <Compile Include="Elements\LinearConstantStrainTriangleTest.cs" />
@@ -96,7 +99,6 @@
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\StiffnessHelpers.cs" />
-    <Compile Include="Stiffness\StiffnessMatrixBuilderTest.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

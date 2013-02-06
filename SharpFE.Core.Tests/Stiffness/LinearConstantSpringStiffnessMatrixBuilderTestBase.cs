@@ -9,9 +9,6 @@ using SharpFE.Stiffness;
 
 namespace SharpFE.Core.Tests.Stiffness
 {
-    /// <summary>
-    /// Description of SpringElementTestBase.
-    /// </summary>
     public class LinearConstantSpringStiffnessMatrixBuilderTestBase
     {
         protected NodeFactory nodeFactory;
@@ -57,20 +54,6 @@ namespace SharpFE.Core.Tests.Stiffness
         protected void Assert12x12StiffnessMatrix(params double[] expectedValues)
         {
         	StiffnessHelpers.Assert12x12StiffnessMatrix(SUT, expectedValues);
-        }
-        
-        protected void Assert3x3RotationMatrix(params double[] expectedValues)
-        {
-        	// a rotation matrix has a determinant of +1
-        	double det = SUT.CalculateElementRotationMatrix().Determinant();
-        	Assert.AreEqual(1, 
-        	                det,
-        	                0.0001,
-        	                String.Format("A rotation matrix should have a determinant of + 1. \n\r Determinant of {0} from actual matrix: \n\r {1}", 
-        	                              det, 
-        	                              SUT.CalculateElementRotationMatrix()));
-        	
-            Helpers.AssertMatrix(SUT.CalculateElementRotationMatrix(), 3, 3, expectedValues);
         }
     }
 }

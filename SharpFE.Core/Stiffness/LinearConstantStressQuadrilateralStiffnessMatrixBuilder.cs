@@ -122,7 +122,7 @@ namespace SharpFE.Stiffness
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double elementVolume = this.Element.Thickness * this.Element.Area; ////FIXME
-            KeyedMatrix<Strain> materialMatrix = this.MaterialMatrix();
+            KeyedSquareMatrix<Strain> materialMatrix = this.MaterialMatrix();
             KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = null; ////FIXME //this.StrainDisplacementMatrix();
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> transposedStrainDisplacementMatrix = strainDisplacementMatrix.Transpose();
             
@@ -138,12 +138,12 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        private KeyedMatrix<Strain> MaterialMatrix()
+        private KeyedSquareMatrix<Strain> MaterialMatrix()
         {
             IMaterial material = this.Element.Material;
             double constant = material.YoungsModulus / ((1.0 + material.PoissonsRatio) * (1.0 - (2.0 * material.PoissonsRatio)));
             
-            KeyedMatrix<Strain> E = new KeyedMatrix<Strain>(this.SupportedStrains);
+            KeyedSquareMatrix<Strain> E = new KeyedSquareMatrix<Strain>(this.SupportedStrains);
             
             ////FIXME the below is for constant strain, not constant stress
             //            E.At(Strain.LinearStrainX, Strain.LinearStrainX, constant * (1.0 - material.PoissonsRatio));

@@ -43,13 +43,13 @@ namespace SharpFE
     /// This is roughly analagous to what a Dictionary is to a List.
     /// </summary>
     /// <typeparam name="TKey">The type of the instances which form the keys to this KeyedMatrix</typeparam>
-    public class KeyedMatrix<TKey> : KeyedRowColumnMatrix<TKey, TKey>
+    public class KeyedSquareMatrix<TKey> : KeyedRowColumnMatrix<TKey, TKey>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
         /// </summary>
         /// <param name="keys">The keys which will be used to look up rows and columns of this square matrix. One unique key is expected per row.</param>
-        public KeyedMatrix(IList<TKey> keys)
+        public KeyedSquareMatrix(IList<TKey> keys)
             : base(keys, keys)
         {
             // empty
@@ -60,7 +60,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
         /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
-        public KeyedMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns)
+        public KeyedSquareMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns)
             : base(keysForRows, keysForColumns)
         {
             // empty
@@ -72,13 +72,13 @@ namespace SharpFE
         /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
         /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
         /// <param name="initialValueOfAllElements">The value to which we assign to each element of the matrix</param>
-        public KeyedMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns, double initialValueOfAllElements)
+        public KeyedSquareMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns, double initialValueOfAllElements)
             : base(keysForRows, keysForColumns, initialValueOfAllElements)
         {
             // empty
         }
         
-        public KeyedMatrix(KeyedRowColumnMatrix<TKey, TKey> matrix)
+        public KeyedSquareMatrix(KeyedRowColumnMatrix<TKey, TKey> matrix)
             : base(matrix)
         {
             // empty
@@ -88,7 +88,7 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
         /// </summary>
         /// <param name="matrix">The matrix which holds the keys and data to copy into this new matrix</param>
-        public KeyedMatrix(KeyedMatrix<TKey> matrix)
+        public KeyedSquareMatrix(KeyedSquareMatrix<TKey> matrix)
             : base(matrix)
         {
             // empty
@@ -100,39 +100,39 @@ namespace SharpFE
         /// <param name="other"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "hiding base method avoids the need for calling members to cast")]
-        public KeyedMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
+        public KeyedSquareMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.Multiply(other);
-            return new KeyedMatrix<TKey>(result);
+            return new KeyedSquareMatrix<TKey>(result);
         }
         
         /// <summary>
         /// Clones this matrix
         /// </summary>
         /// <returns>A shallow clone of this matrix</returns>
-        public new KeyedMatrix<TKey> Clone()
+        public new KeyedSquareMatrix<TKey> Clone()
         {
-            return new KeyedMatrix<TKey>(this);
+            return new KeyedSquareMatrix<TKey>(this);
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public new KeyedMatrix<TKey> Inverse()
+        public new KeyedSquareMatrix<TKey> Inverse()
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.Inverse();
-            return new KeyedMatrix<TKey>(result);
+            return new KeyedSquareMatrix<TKey>(result);
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public new KeyedMatrix<TKey> Transpose()
+        public new KeyedSquareMatrix<TKey> Transpose()
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.Transpose();
-            return new KeyedMatrix<TKey>(result);
+            return new KeyedSquareMatrix<TKey>(result);
         }
         
         /// <summary>
@@ -141,10 +141,10 @@ namespace SharpFE
         /// <param name="p"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p", Justification = "Following Math.net library convention")]
-        public KeyedMatrix<TKey> NormalizeRows(int p)
+        public new KeyedSquareMatrix<TKey> NormalizeRows(int p)
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.NormalizeRows(p);
-            return new KeyedMatrix<TKey>(result);
+            return new KeyedSquareMatrix<TKey>(result);
         }
         
         /// <summary>
@@ -153,9 +153,9 @@ namespace SharpFE
         /// <param name="rowsToInclude">A list of the keys of rows to include in the new matrix</param>
         /// <param name="columnsToInclude">A list of the keys of columns to include in the new matrix</param>
         /// <returns>A KeyedMatrix which contains values from the requested sub-matrix</returns>
-        public new KeyedMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
+        public new KeyedSquareMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
         {
-            return (KeyedMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
+            return (KeyedSquareMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
         }
     }
 }
