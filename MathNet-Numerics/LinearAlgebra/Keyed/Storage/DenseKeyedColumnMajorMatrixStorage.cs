@@ -35,20 +35,20 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
     using MathNet.Numerics.Properties;
     
     [Serializable]
-    public class KeyedDenseColumnMajorMatrixStorage<T> : KeyedMatrixStorage<T>
+    public class DenseKeyedColumnMajorMatrixStorage<T> : KeyedMatrixStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {
         // [ruegg] public fields are OK here
 
         public readonly T[] Data;
 
-        public KeyedDenseColumnMajorMatrixStorage(int rows, int columns)
+        public DenseKeyedColumnMajorMatrixStorage(int rows, int columns)
             : base(rows, columns)
         {
             Data = new T[rows * columns];
         }
 
-        public KeyedDenseColumnMajorMatrixStorage(int rows, int columns, T[] data)
+        public DenseKeyedColumnMajorMatrixStorage(int rows, int columns, T[] data)
             : base(rows, columns)
         {
             if (data == null)
@@ -101,7 +101,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
 
         internal override void CopyToUnchecked(KeyedMatrixStorage<T> target, bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseColumnMajorMatrixStorage<T>;
+            var denseTarget = target as DenseKeyedColumnMajorMatrixStorage<T>;
             if (denseTarget != null)
             {
                 CopyToUnchecked(denseTarget);
@@ -119,7 +119,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             }
         }
 
-        void CopyToUnchecked(KeyedDenseColumnMajorMatrixStorage<T> target)
+        void CopyToUnchecked(DenseKeyedColumnMajorMatrixStorage<T> target)
         {
             //Buffer.BlockCopy(Data, 0, target.Data, 0, Data.Length * System.Runtime.InteropServices.Marshal.SizeOf(typeof(T)));
             Array.Copy(Data, 0, target.Data, 0, Data.Length);
@@ -130,7 +130,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             int sourceColumnIndex, int targetColumnIndex, int columnCount,
             bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseColumnMajorMatrixStorage<T>;
+            var denseTarget = target as DenseKeyedColumnMajorMatrixStorage<T>;
             if (denseTarget != null)
             {
                 CopySubMatrixToUnchecked(denseTarget, sourceRowIndex, targetRowIndex, rowCount, sourceColumnIndex, targetColumnIndex, columnCount);
@@ -142,7 +142,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             base.CopySubMatrixToUnchecked(target, sourceRowIndex, targetRowIndex, rowCount, sourceColumnIndex, targetColumnIndex, columnCount, skipClearing);
         }
 
-        void CopySubMatrixToUnchecked(KeyedDenseColumnMajorMatrixStorage<T> target,
+        void CopySubMatrixToUnchecked(DenseKeyedColumnMajorMatrixStorage<T> target,
             int sourceRowIndex, int targetRowIndex, int rowCount,
             int sourceColumnIndex, int targetColumnIndex, int columnCount)
         {
@@ -155,7 +155,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
 
         internal override void CopySubRowToUnchecked(KeyedVectorStorage<T> target, int rowIndex, int sourceColumnIndex, int targetColumnIndex, int columnCount, bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseVectorStorage<T>;
+            var denseTarget = target as DenseKeyedVectorStorage<T>;
             if (denseTarget != null)
             {
                 CopySubRowToUnchecked(denseTarget, rowIndex, sourceColumnIndex, targetColumnIndex, columnCount);
@@ -170,7 +170,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             }
         }
 
-        void CopySubRowToUnchecked(KeyedDenseVectorStorage<T> target, int rowIndex, int sourceColumnIndex, int targetColumnIndex, int columnCount, bool skipClearing = false)
+        void CopySubRowToUnchecked(DenseKeyedVectorStorage<T> target, int rowIndex, int sourceColumnIndex, int targetColumnIndex, int columnCount, bool skipClearing = false)
         {
             for (int j = 0; j<columnCount; j++)
             {
@@ -180,7 +180,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
 
         internal override void CopySubColumnToUnchecked(KeyedVectorStorage<T> target, int columnIndex, int sourceRowIndex, int targetRowIndex, int rowCount, bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseVectorStorage<T>;
+            var denseTarget = target as DenseKeyedVectorStorage<T>;
             if (denseTarget != null)
             {
                 CopySubColumnToUnchecked(denseTarget, columnIndex, sourceRowIndex, targetRowIndex, rowCount);
@@ -196,7 +196,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             }
         }
 
-        void CopySubColumnToUnchecked(KeyedDenseVectorStorage<T> target, int columnIndex, int sourceRowIndex, int targetRowIndex, int rowCount, bool skipClearing = false)
+        void CopySubColumnToUnchecked(DenseKeyedVectorStorage<T> target, int columnIndex, int sourceRowIndex, int targetRowIndex, int rowCount, bool skipClearing = false)
         {
             Array.Copy(Data, columnIndex*RowCount + sourceRowIndex, target.Data, targetRowIndex, rowCount);
         }

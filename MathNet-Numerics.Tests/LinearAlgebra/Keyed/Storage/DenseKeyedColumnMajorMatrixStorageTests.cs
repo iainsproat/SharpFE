@@ -11,12 +11,12 @@ using MathNet.Numerics.LinearAlgebra.Keyed.Storage;
 namespace MathNet.Numerics.Tests.LinearAlgebra.Keyed.Storage
 {
     [TestFixture]
-    public class KeyedDenseColumnMajorMatrixStorageTests
+    public class DenseKeyedColumnMajorMatrixStorageTests
     {
         [Test]
         public void TestMethod()
         {
-            KeyedDenseColumnMajorMatrixStorage<double> SUT = new KeyedDenseColumnMajorMatrixStorage<double>(1, 1);
+            DenseKeyedColumnMajorMatrixStorage<double> SUT = new DenseKeyedColumnMajorMatrixStorage<double>(1, 1);
         }
     }
 }

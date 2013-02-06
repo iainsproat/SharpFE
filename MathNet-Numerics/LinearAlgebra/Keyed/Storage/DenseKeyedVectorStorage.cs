@@ -34,20 +34,20 @@ using MathNet.Numerics.Properties;
 namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
 {
     [Serializable]
-    public class KeyedDenseVectorStorage<T> : KeyedVectorStorage<T>
+    public class DenseKeyedVectorStorage<T> : KeyedVectorStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {
         // [ruegg] public fields are OK here
 
         public readonly T[] Data;
 
-        internal KeyedDenseVectorStorage(int length)
+        internal DenseKeyedVectorStorage(int length)
             : base(length)
         {
             Data = new T[length];
         }
 
-        internal KeyedDenseVectorStorage(int length, T[] data)
+        internal DenseKeyedVectorStorage(int length, T[] data)
             : base(length)
         {
             if (data == null)
@@ -91,7 +91,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
 
         internal override void CopyToUnchecked(KeyedVectorStorage<T> target, bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseVectorStorage<T>;
+            var denseTarget = target as DenseKeyedVectorStorage<T>;
             if (denseTarget != null)
             {
                 CopyToUnchecked(denseTarget);
@@ -106,7 +106,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             }
         }
 
-        void CopyToUnchecked(KeyedDenseVectorStorage<T> target)
+        void CopyToUnchecked(DenseKeyedVectorStorage<T> target)
         {
             if (ReferenceEquals(this, target))
             {
@@ -126,7 +126,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             int sourceIndex, int targetIndex, int count,
             bool skipClearing = false)
         {
-            var denseTarget = target as KeyedDenseVectorStorage<T>;
+            var denseTarget = target as DenseKeyedVectorStorage<T>;
             if (denseTarget != null)
             {
                 CopySubVectorToUnchecked(denseTarget, sourceIndex, targetIndex, count);
@@ -138,7 +138,7 @@ namespace MathNet.Numerics.LinearAlgebra.Keyed.Storage
             base.CopySubVectorToUnchecked(target, sourceIndex, targetIndex, count, skipClearing);
         }
 
-        void CopySubVectorToUnchecked(KeyedDenseVectorStorage<T> target,
+        void CopySubVectorToUnchecked(DenseKeyedVectorStorage<T> target,
             int sourceIndex, int targetIndex, int count)
         {
             Array.Copy(Data, sourceIndex, target.Data, targetIndex, count);

@@ -50,14 +50,32 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LinearAlgebra\Keyed\Storage\KeyedDenseVectorStorage.cs" />
-    <Compile Include="LinearAlgebra\Keyed\Storage\KeyedDenseColumnMajorMatrixStorage.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\DenseKeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\DenseVector.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\DenseKeyedLU.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\DenseKeyedSvd.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\KeyedLU.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\KeyedSvd.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\UserKeyedLU.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\Factorization\UserKeyedSvd.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\KeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Double\KeyedVector.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\Factorization\KeyedLU.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\Factorization\KeyedSvd.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\IKeyedSolver.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\KeyedCommon.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\KeyedMatrix.Arithmetic.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\KeyedMatrix.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Generic\KeyedVector.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedVectorStorage.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedColumnMajorMatrixStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedMatrixStorage.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedMatrixStorage.Validation.cs" />
     <Compile Include="LinearAlgebra\Keyed\Storage\KeyedVectorStorage.cs" />
@@ -66,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="LinearAlgebra" />
+    <Folder Include="LinearAlgebra\Keyed\Double\Factorization" />
     <Folder Include="LinearAlgebra\Keyed\Generic" />
     <Folder Include="LinearAlgebra\Keyed\Double" />
     <Folder Include="LinearAlgebra\Keyed\Generic\Factorization" />

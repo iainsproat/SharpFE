@@ -45,7 +45,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LinearAlgebra\Keyed\Storage\KeyedDenseColumnMajorMatrixStorageTests.cs" />
+    <Compile Include="LinearAlgebra\KeyedVectorArithmeticTheory.cs" />
+    <Compile Include="LinearAlgebra\Keyed\Storage\DenseKeyedColumnMajorMatrixStorageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
