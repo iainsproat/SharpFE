@@ -10,18 +10,12 @@ namespace SharpFE.Maths
     using System.Collections.Generic;
     
     /// <summary>
-    /// Compares two lists for equality in both contained items
-    /// and order of items
+    /// Compares two lists to ensure they contain the same items but in any order.
     /// </summary>
     /// <typeparam name="TLeftKey"></typeparam>
     /// <typeparam name="TRightKey"></typeparam>
     public class KeyCompatibilityValidator<TLeftKey, TRightKey>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        private IList<string> errorMessages;
-        
         /// <summary>
         /// 
         /// </summary>
@@ -44,12 +38,17 @@ namespace SharpFE.Maths
         }
         
         /// <summary>
-        /// 
+        /// The two lists of keys are expected to contain exactly the same items, but in any order.
+        /// The lists are therefore to be the same length
         /// </summary>
+        /// <remarks>
+        /// Checks keys by comparing their hashcodes only
+        /// </remarks>
         public void ThrowIfInvalid()
         {
             Guard.AgainstNullArgument(this.lhs, "lhs");
             Guard.AgainstNullArgument(this.rhs, "rhs");
+            
             
             if (this.lhs.Count != this.rhs.Count)
             {
@@ -60,26 +59,13 @@ namespace SharpFE.Maths
                     this.rhs.Count));
             }
             
-            this.errorMessages = new List<string>();
-            
-            int max = rhs.Count;
-            IList<int> rhsHashCodes = new List<int>(max);
-            for( int i = 0; i < max; i++)
-            {
-                TRightKey rhsItem = rhs[i];
-                if (rhsItem == null)
-                {
-                    throw new ArgumentException(string.Format("rhs contains a null value at index {0}", i));
-                }
-                
-                rhsHashCodes.Add(rhsItem.GetHashCode());
-            }
+            IList<int> rhsHashCodes = GenerateListOfHashCodes(this.rhs);
             
             foreach ( TLeftKey lhsItem in this.lhs)
             {
                 if (lhsItem == null)
                 {
-                    throw new ArgumentException("lhs contains a null value");
+                    throw new ArgumentException("lhs contains a null value. Null values are not acceptable as keys.");
                 }
                 
                 if (!rhsHashCodes.Contains(lhsItem.GetHashCode()))
@@ -87,6 +73,23 @@ namespace SharpFE.Maths
                     throw new ArgumentException(string.Format("Item {0} in the left hand list is not present in the right hand list", lhsItem));
                 }
             }
+        }
+        
+        private IList<int> GenerateListOfHashCodes(IList<TRightKey> itemsFromWhichToGetHashCodes)
+        {
+            int max = itemsFromWhichToGetHashCodes.Count;
+            IList<int> rhsHashCodes = new List<int>(max);
+            for( int i = 0; i < max; i++)
+            {
+                TRightKey item = itemsFromWhichToGetHashCodes[i];
+                if (item == null)
+                {
+                    throw new ArgumentException(string.Format("A null value was found at index {0}.  Null values are not acceptable as keys.", i), "itemsFromWhichToGetHashCodes");
+                }
+                
+                rhsHashCodes.Add(item.GetHashCode());
+            }
+            return rhsHashCodes;
         }
     }
 }
