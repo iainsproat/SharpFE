@@ -47,6 +47,7 @@ namespace SharpFE.Examples.Membrane
 			model.ApplyForceToNode(force, node3); // Apply that force to the third node
 			model.ApplyForceToNode(force, node4);
 			
+			Assert.Ignore("2D elements have not yet been fully implemented");
 			IFiniteElementSolver solver = new LinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			

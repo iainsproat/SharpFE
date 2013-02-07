@@ -272,6 +272,7 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(5000, node1Reaction.Z, 1);
             Assert.AreEqual(5000, node3Reaction.Z, 1);
             
+            Assert.Ignore("The actual expected values for the displacements have not been independently calculated."); //the below values are just placeholders
             Assert.AreEqual(0, node2Displacement.YY, 0.001);
             Assert.AreEqual(0.0457, node1Displacement.YY, 0.0001);
             Assert.AreEqual(0.122, node2Displacement.X, 0.001);
@@ -336,6 +337,8 @@ namespace SharpFE.Examples.Beam
             Console.WriteLine("node4 displacements : " + node4Displacement);
             Console.WriteLine("node1 reactions : " + node1Reaction);
             Console.WriteLine("node5 reactions : " + node5Reaction);
+            
+            Assert.Ignore("The actual expected values for the displacements have not been independently calculated."); //the below values are just placeholders
             
             Assert.AreEqual(-0.0972, node2Displacement.X, 0.001);
             Assert.AreEqual(0, node2Displacement.Z, 0.001);
