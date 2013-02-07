@@ -2,6 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 # SharpDevelop 4.3
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{6A7CF02D-7F68-49A0-8A3A-523BE88FD363}"
+	ProjectSection(SolutionItems) = postProject
+		Documentation\RoadMap.markdown = Documentation\RoadMap.markdown
+		LICENSE.markdown = LICENSE.markdown
+		README.markdown = README.markdown
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core", "SharpFE.Core\SharpFE.Core.csproj", "{17CB0AD8-2C64-4FB2-88DC-891043DC9C22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core.Tests", "SharpFE.Core.Tests\SharpFE.Core.Tests.csproj", "{62D8C935-A60E-47CA-B913-B32250036252}"
