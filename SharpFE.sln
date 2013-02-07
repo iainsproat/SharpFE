@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\RoadMap.markdown = Documentation\RoadMap.markdown
 		LICENSE.markdown = LICENSE.markdown
 		README.markdown = README.markdown
+		AUTHORS.markdown = AUTHORS.markdown
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core", "SharpFE.Core\SharpFE.Core.csproj", "{17CB0AD8-2C64-4FB2-88DC-891043DC9C22}"
