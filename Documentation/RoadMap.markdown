@@ -43,9 +43,16 @@ A loose specification and list of things still to implement or refactor
     * Add ICloneable interface
     * Add IEquatable<T> interface
 * KeyedVector and KeyedMatrix should duplicate all Vector and Matrix methods respectively
+* Improve upon StyleCop and FxCop results
+* Review analysis speed
+    * Create Profiler
+    * Review profiler results for areas which can be sped up
+    * Use .Net Parallel library where appropriate
+    
 
 ## Documentation
 
 * Improve Xml classdocs
+* Add Xml classdocs to all unit tests
 * Contributors guidance/manual
 * QuickStart guide

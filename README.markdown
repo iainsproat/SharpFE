@@ -1,5 +1,7 @@
 # SharpFE
 
-SharpFE is lightweight, expandable finite element solver for .Net.
+SharpFE is an open source finite element solver for .Net.  It is designed to be lightweight, API based, relatively fast for relatively small models.
 
-The only official interface is the API, around which other interfaces can be built.
+It is targeted at the analysis of small models in parametric modelling tools, with the aim to return results in near real-time as the parameters are adjusted.
+
+SharpFE is currently in an Alpha state of development and is therefore unstable and unverified.
