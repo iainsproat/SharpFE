@@ -14,7 +14,7 @@ namespace SharpFE
     /// <summary>
     /// A spring is a 1D linear element which has a constant stiffness along the local x-axis.
     /// </summary>
-    public class LinearConstantSpring : FiniteElement1D
+    public class LinearConstantSpring : FiniteElement1D, IEquatable<LinearConstantSpring>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantLinearSpring" /> class.
@@ -77,7 +77,11 @@ namespace SharpFE
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            LinearConstantSpring other = obj as LinearConstantSpring;
+            return this.Equals(obj as LinearConstantSpring);            
+        }
+        
+        public bool Equals(LinearConstantSpring other)
+        {
             if (other == null)
             {
                 return false;
@@ -85,6 +89,7 @@ namespace SharpFE
             
             return base.Equals(other) && object.Equals(this.SpringConstant, other.SpringConstant);
         }
+
         
         /// <summary>
         /// 

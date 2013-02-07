@@ -14,7 +14,7 @@ namespace SharpFE
     /// <summary>
     /// One dimensional finite element. i.e. a line
     /// </summary>
-    public abstract class FiniteElement1D : FiniteElement
+    public abstract class FiniteElement1D : FiniteElement, IEquatable<FiniteElement1D>
     {
         /// <summary>
         /// 
@@ -129,7 +129,11 @@ namespace SharpFE
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            FiniteElement1D other = obj as FiniteElement1D;
+            return this.Equals(obj as FiniteElement1D);
+        }
+        
+        public bool Equals(FiniteElement1D other)
+        {
             if (other == null)
             {
                 return false;

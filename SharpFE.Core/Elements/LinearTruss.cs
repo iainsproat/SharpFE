@@ -90,7 +90,11 @@ namespace SharpFE
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            LinearTruss other = obj as LinearTruss;
+            return this.Equals(obj as LinearTruss);
+            }
+        
+        public bool Equals(LinearTruss other)
+        {
             if (other == null)
             {
                 return false;
