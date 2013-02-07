@@ -6,10 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core", "SharpFE.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFE.Core.Tests", "SharpFE.Core.Tests\SharpFE.Core.Tests.csproj", "{62D8C935-A60E-47CA-B913-B32250036252}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathNet-Numerics", "MathNet-Numerics\MathNet-Numerics.csproj", "{CE0100FA-D456-4BDC-9B56-061D82B24AC9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathNet-Numerics.Tests", "MathNet-Numerics.Tests\MathNet-Numerics.Tests.csproj", "{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -34,21 +30,5 @@ Global
 		{62D8C935-A60E-47CA-B913-B32250036252}.Release|x86.ActiveCfg = Release|x86
 		{62D8C935-A60E-47CA-B913-B32250036252}.Release|Any CPU.Build.0 = Release|x86
 		{62D8C935-A60E-47CA-B913-B32250036252}.Release|Any CPU.ActiveCfg = Release|x86
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Debug|x86.Build.0 = Debug|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Release|x86.Build.0 = Release|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Release|x86.ActiveCfg = Release|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE0100FA-D456-4BDC-9B56-061D82B24AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Debug|x86.Build.0 = Debug|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Release|x86.Build.0 = Release|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Release|x86.ActiveCfg = Release|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{043ADCED-2F08-46BF-87DF-F3C881C2C4ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal
