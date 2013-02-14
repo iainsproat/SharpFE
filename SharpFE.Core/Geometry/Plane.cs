@@ -12,7 +12,7 @@ namespace SharpFE.Geometry
     /// </summary>
     public class Plane
     {
-        public Plane(GeometricVector planeNormal, Point pointOnPlane)
+        public Plane(GeometricVector planeNormal, CartesianPoint pointOnPlane)
         {
             this.Normal = planeNormal;
             this.Point = pointOnPlane;
@@ -27,7 +27,7 @@ namespace SharpFE.Geometry
         /// <summary>
         /// Point on the plane
         /// </summary>
-        public Point Point
+        public CartesianPoint Point
         {
             get;
             protected set;
@@ -38,9 +38,9 @@ namespace SharpFE.Geometry
         /// </summary>
         /// <param name="pointToCheck"></param>
         /// <returns></returns>
-        public bool IsInPlane(Point pointToCheck)
+        public bool IsInPlane(CartesianPoint pointToCheck)
         {
-            double dotProductOfPlane = Point.DotProduct(Normal);
+            double dotProductOfPlane = this.Point.DotProduct(Normal);
             double dotProductOfPointToCheck = pointToCheck.DotProduct(Normal);
             double delta = dotProductOfPlane - dotProductOfPointToCheck;
             double tolerance = 0.001;

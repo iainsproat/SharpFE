@@ -55,7 +55,7 @@ namespace SharpFE.Maths.MatrixSolvers
         public KeyedVector<TColumnKey> Solve(KeyedVector<TRowKey> b)
         {
             Vector<double> solution = this._underlyingSvd.Solve(b.ToVector());
-            return new KeyedVector<TColumnKey>(solution.ToArray(), data.ColumnKeys);
+            return new KeyedVector<TColumnKey>(data.ColumnKeys, solution);
         }
     }
 }

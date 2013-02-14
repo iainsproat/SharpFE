@@ -12,19 +12,19 @@ namespace SharpFE.Geometry
     /// </summary>
     public class BoundedLine : UnboundedLine
     {
-        public BoundedLine(Point startOfLine, GeometricVector vectorOfLineFromStartToEnd)
+        public BoundedLine(CartesianPoint startOfLine, GeometricVector vectorOfLineFromStartToEnd)
             : base(vectorOfLineFromStartToEnd, startOfLine)
         {
             // empty
         }
         
-        public BoundedLine(Point startOfLine, Point endOfLine)
+        public BoundedLine(CartesianPoint startOfLine, CartesianPoint endOfLine)
             : base(endOfLine.Subtract(startOfLine), startOfLine)
         {
             // empty
         }
         
-        public Point Start
+        public CartesianPoint Start
         {
             get
             {
@@ -36,7 +36,7 @@ namespace SharpFE.Geometry
 //            }
         }
         
-        public Point End
+        public CartesianPoint End
         {
             get
             {
@@ -56,7 +56,7 @@ namespace SharpFE.Geometry
             }
         }
         
-        public override bool IsOnLine(Point pointToCheck)
+        public override bool IsOnLine(CartesianPoint pointToCheck)
         {
             
             GeometricVector normalizedVector = this.Vector.Normalize(2);

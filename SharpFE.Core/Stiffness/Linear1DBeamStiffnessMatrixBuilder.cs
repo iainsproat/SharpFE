@@ -29,30 +29,31 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInGlobalCoordinates)
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInLocalCoordinates)
         {
+            double eta = this.ConvertLocalCoordinatesToNaturalCoordinate(locationInLocalCoordinates);
+            
+            double N1 = 0.5 * (1 - eta);
+            double N2 = 0.5 * (1 + eta);
+            
             IFiniteElementNode start = this.Element.StartNode;
             IFiniteElementNode end = this.Element.EndNode;
-            double locationAlongBeamAsProjectedInGlobalXAxis = locationInGlobalCoordinates.X - start.X;
-            double locationAlongBeamAsProjectedInGlobalYAxis = locationInGlobalCoordinates.Y - start.Y;
-            double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
-            
-            double beamLengthProjectedInGlobalXAxis = end.X - start.X;
-            double beamLengthProjectedInGlobalYAxis = end.Y - start.Y;
-            double beamLength = Math.Sqrt((beamLengthProjectedInGlobalXAxis * beamLengthProjectedInGlobalXAxis) + (beamLengthProjectedInGlobalYAxis * beamLengthProjectedInGlobalYAxis));
-            
-            ////TODO check that the location lies on the beam
-            
-            double N1 = 1 - (x / beamLength); ////FIXME  this is in local coordinates.
-            double N2 = x / beamLength; ////FIXME this is in local coordinates.
-            
-            
             IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
             shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.X), N1);
             shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.X), N2);
             return shapeFunctions;
+        }
+        
+        private double ConvertLocalCoordinatesToNaturalCoordinate(FiniteElementNode locationInLocalCoordinates)
+        {
+            ////TODO check that the location lies on the beam
+            
+            double beamLength = this.Element.OriginalLength;
+            double x = locationInLocalCoordinates.X;
+            double eta = ((2 * x) / beamLength) - 1; // in natural coordinates
+            return eta;
         }
         
         /// <summary>

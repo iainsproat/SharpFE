@@ -9,7 +9,7 @@ namespace SharpFE.Geometry
 {
     public class UnboundedLine : GeometricVector
     {
-        public UnboundedLine(GeometricVector vectorOfLine, Point pointOnLine)
+        public UnboundedLine(GeometricVector vectorOfLine, CartesianPoint pointOnLine)
         {
             Guard.AgainstNullArgument(vectorOfLine, "vectorOfLine");
             Guard.AgainstNullArgument(pointOnLine, "pointOnLine");
@@ -39,13 +39,13 @@ namespace SharpFE.Geometry
         /// Point on the line.
         /// A point through which the vector passes.  It can be any point, and does not indicate a boundary.
         /// </summary>
-        public virtual Point PointOnLine
+        public virtual CartesianPoint PointOnLine
         {
             get;
             protected set;
         }
         
-        public virtual bool IsOnLine(Point pointToCheck)
+        public virtual bool IsOnLine(CartesianPoint pointToCheck)
         {
             GeometricVector normalizedVector = Vector.Normalize(2);
             GeometricVector vectorToPointToCheck = this.PointOnLine.VectorTo(pointToCheck);
@@ -65,14 +65,14 @@ namespace SharpFE.Geometry
         /// </summary>
         /// <param name="pointNotOnLine"></param>
         /// <returns></returns>
-        public BoundedLine PerpendicularLineTo(Point pointNotOnLine)
+        public BoundedLine PerpendicularLineTo(CartesianPoint pointNotOnLine)
         {
             GeometricVector betweenPoints = pointNotOnLine.Subtract(this.PointOnLine);
             GeometricVector normalizedLineVector = this.Vector.Normalize(2);
             double projectionDistanceOfEndPointAlongLine = betweenPoints.DotProduct(normalizedLineVector);
             
             GeometricVector vectorAlongLine = normalizedLineVector.Multiply(projectionDistanceOfEndPointAlongLine);
-            Point endPointOfPerpendicularLine = this.PointOnLine.Add(vectorAlongLine);
+            CartesianPoint endPointOfPerpendicularLine = this.PointOnLine.Add(vectorAlongLine);
             
             GeometricVector result = pointNotOnLine.Subtract(endPointOfPerpendicularLine);
             return new BoundedLine(endPointOfPerpendicularLine, result);

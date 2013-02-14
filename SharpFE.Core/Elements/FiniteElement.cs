@@ -8,6 +8,7 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using SharpFE.Stiffness;
     using SharpFE.Geometry;
@@ -59,7 +60,7 @@ namespace SharpFE
         /// <summary>
         /// The point in the global coordinate frame which represents the origin in the local coordinate frame.
         /// </summary>
-        public Point LocalOrigin
+        public CartesianPoint LocalOrigin
         {
             get
             {
@@ -200,7 +201,6 @@ namespace SharpFE
                 foreach (FiniteElementNode node in this.nodeStore)
                 {
                     hashCode += (1000000000 + i++) * node.GetHashCode();
-                    
                 }
                 
                 hashCode += 1000000007 * this.LocalOrigin.GetHashCode();
@@ -216,7 +216,7 @@ namespace SharpFE
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("[");
+            sb.Append("{");
             sb.Append(this.GetType().FullName);
             sb.Append(", ");
             
@@ -227,42 +227,43 @@ namespace SharpFE
                 sb.Append("]");
                 return sb.ToString();
             }
-            
-            for (int i = 0; i < numNodes; i++)
-            {
-                sb.Append("<");
-                sb.Append(this.nodeStore[i].ToString());
-                sb.Append(">");
-                if (i < numNodes - 1)
-                {
-                    sb.Append(", ");
-                }
-            }
-            
-            sb.Append("]");
+
+            sb.Append("[");
+            sb.Append(this.NodesToString());
+            sb.Append("]}");
             
             return sb.ToString();
+        }
+        
+        private string NodesToString()
+        {
+            const string delimiter = ", ";
+            IEnumerable<string> nodes = this.nodeStore.Select(node => {
+                                                       return node.ToString();
+                                                   });
+            string nodesJoined = nodes.Aggregate((current, next) => current.ToString() + delimiter + next.ToString());
+            return nodesJoined;
         }
 
         #endregion
 
-        public Point ConvertGlobalCoordinatesToLocalCoordinates(Point globalPoint)
+        public CartesianPoint ConvertGlobalCoordinatesToLocalCoordinates(CartesianPoint globalPoint)
         {
             GeometricVector localCoordRelativeToLocalOrigin = globalPoint.Subtract(this.LocalOrigin);
             
             KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = CalculateElementRotationMatrix();
-            Point localCoord = new Point(rotationMatrix.Multiply(localCoordRelativeToLocalOrigin));
+            CartesianPoint localCoord = new CartesianPoint(rotationMatrix.Multiply(localCoordRelativeToLocalOrigin));
             
-            return new Point(localCoord);
+            return new CartesianPoint(localCoord);
         }
         
-        public Point ConvertLocalCoordinatesToGlobalCoordinates(Point localPoint)
+        public CartesianPoint ConvertLocalCoordinatesToGlobalCoordinates(CartesianPoint localPoint)
         {
             KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = CalculateElementRotationMatrix().Transpose();
-            Point globalCoordRelativeToLocalOrigin = new Point(rotationMatrix.Multiply(localPoint));
+            CartesianPoint globalCoordRelativeToLocalOrigin = new CartesianPoint(rotationMatrix.Multiply(localPoint));
             
             GeometricVector globalCoord = globalCoordRelativeToLocalOrigin.Add(this.LocalOrigin);
-            return new Point(globalCoord);
+            return new CartesianPoint(globalCoord);
         }
         
         /// <summary>

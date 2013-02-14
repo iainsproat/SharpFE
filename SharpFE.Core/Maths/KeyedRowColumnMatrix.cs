@@ -290,7 +290,7 @@ namespace SharpFE
             ////FIXME If the column keys and vector keys are compatible but are stored or returned in the wrong order then this will return the wrong results.  Need to swap the vector items and keys to match exactly
             
             Vector<double> result = this.underlyingMatrix.Multiply(rightSide.ToVector());
-            return new KeyedVector<TRowKey>(result, this.RowKeys);
+            return new KeyedVector<TRowKey>(this.RowKeys, result);
         }
         
         public KeyedRowColumnMatrix<TRowKey, TColumnKey> NormalizeRows(int p)

@@ -66,7 +66,7 @@ namespace SharpFE.Core.Tests.Elements
             section = new SolidRectangle(0.1, 0.1);
             SUT = elementFactory.CreateLinear1DBeam(start, end, material, section);
             
-            Assert.Ignore();
+            Assert.Inconclusive("Have not yet properly calculated as to what is expected");
             Assert.AreEqual(675508000, SUT.ShearStiffnessGAz, 1);
         }
         

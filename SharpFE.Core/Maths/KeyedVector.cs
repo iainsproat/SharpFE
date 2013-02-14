@@ -36,6 +36,7 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     
     using SharpFE.Maths;
     using MathNet.Numerics.LinearAlgebra.Generic;
@@ -80,7 +81,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="array"></param>
         /// <param name="keysForVector"></param>
-        public KeyedVector(double[] array, IList<TKey> keysForVector)
+        public KeyedVector(IList<TKey> keysForVector, params double[] array)
         {
             this.InitializeKeysAndData(keysForVector, array);
         }
@@ -90,12 +91,12 @@ namespace SharpFE
         /// </summary>
         /// <param name="array"></param>
         /// <param name="keysForVector"></param>
-        public KeyedVector(double[] array, params TKey[] keysForVector)
+        public KeyedVector(TKey[] keysForVector, double[] array)
         {
             this.InitializeKeysAndData(keysForVector, array);
         }
         
-        public KeyedVector(Vector<double> vectorToClone, IList<TKey> keysForVector)
+        public KeyedVector(IList<TKey> keysForVector, Vector<double> vectorToClone)
         {
             this.InitializeKeysAndData(keysForVector, vectorToClone.ToArray());
         }
@@ -162,8 +163,6 @@ namespace SharpFE
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
             kcv.ThrowIfInvalid();
             
-            ////TODO If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
-            
             IList<TKey> keyz = this.Keys;
             KeyedVector<TKey> result = Clone();
             foreach (TKey key in keyz)
@@ -178,13 +177,9 @@ namespace SharpFE
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
             kcv.ThrowIfInvalid();
             
-            ////TODO If the keys match but are in the wrong order, swap the other vector items and keys to match exactly
             double sum = 0.0;
             
-            foreach ( KeyValuePair<TKey, double> kvp in this.store)
-            {
-                sum += kvp.Value * other[kvp.Key];
-            }
+            sum = this.store.Sum(kvp => kvp.Value * other[kvp.Key]);
             
             return sum;
         }

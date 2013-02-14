@@ -22,7 +22,7 @@ namespace SharpFE.Core.Tests.Maths
         }
         
         [Test]
-        public void Can_be_constructed_from_List_of_keys()
+        public void Constructor_StoresKeysAndSetsAllValuesToZero()
         {
             KeyedVector<int> SUT = new KeyedVector<int>(keys);
             Assert.IsNotNull(SUT);
@@ -37,7 +37,7 @@ namespace SharpFE.Core.Tests.Maths
         }
         
         [Test]
-        public void Can_be_constructed_with_initial_value()
+        public void Constructor_WithInitialValueParameter_SetsAllValuesToTheInitialValue()
         {
             KeyedVector<int> SUT = new KeyedVector<int>(keys, 22);
             
@@ -49,6 +49,16 @@ namespace SharpFE.Core.Tests.Maths
             Assert.AreEqual(22, SUT[1]);
             Assert.AreEqual(22, SUT[4]);
             Assert.AreEqual(22, SUT[9]);
+        }
+        
+        [TestCase(20, 1, 2, 3)]
+        [TestCase(29, 2, 3, 4)]
+        public void DotProduct_WithOtherKeyedVector_IsComputed(double expected, params double[] otherVectorValues)
+        {
+            KeyedVector<int> otherVector = new KeyedVector<int>(keys, otherVectorValues);
+            KeyedVector<int> SUT = new KeyedVector<int>(keys, 2, 3, 4);
+            double result = SUT.DotProduct(otherVector);
+            Assert.AreEqual(expected, result);
         }
     }
 }

@@ -11,6 +11,6 @@ namespace SharpFE
 
     public interface IFiniteElementNode : XYZ, IEquatable<FiniteElementNode>
     {
-        Geometry.Point Location { get; }
+        Geometry.CartesianPoint Location { get; }
     }
 }

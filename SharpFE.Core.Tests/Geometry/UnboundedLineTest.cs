@@ -16,7 +16,7 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_be_created()
         {
             GeometricVector vectorOfLine = new GeometricVector(1, 2, 3);
-            Point pointOnLine = new Point(3, 4, 5);
+            CartesianPoint pointOnLine = new CartesianPoint(3, 4, 5);
             UnboundedLine SUT = new UnboundedLine(vectorOfLine, pointOnLine);
             
             Assert.AreEqual(vectorOfLine, SUT.Vector);
@@ -30,12 +30,12 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_determine_if_point_is_on_line()
         {
             GeometricVector vectorOfLine = new GeometricVector(2, 2, 2);
-            Point pointOnLine = new Point(3, 4, 5);
+            CartesianPoint pointOnLine = new CartesianPoint(3, 4, 5);
             UnboundedLine SUT = new UnboundedLine(vectorOfLine, pointOnLine);
             
-            Point aPointOnTheLine = new Point(4, 5, 6);
-            Point aPointNotOnTheLine = new Point(3, 5, 7);
-            Point aPointOnTheLineInNegativeDirectionFromDefinedPointOnLine = new Point(2, 3, 4);
+            CartesianPoint aPointOnTheLine = new CartesianPoint(4, 5, 6);
+            CartesianPoint aPointNotOnTheLine = new CartesianPoint(3, 5, 7);
+            CartesianPoint aPointOnTheLineInNegativeDirectionFromDefinedPointOnLine = new CartesianPoint(2, 3, 4);
             Assert.IsTrue(SUT.IsOnLine(aPointOnTheLine));
             Assert.IsFalse(SUT.IsOnLine(aPointNotOnTheLine));
             Assert.IsTrue(SUT.IsOnLine(aPointOnTheLineInNegativeDirectionFromDefinedPointOnLine));
@@ -45,10 +45,10 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_calculate_perpendicular_line_to_a_point()
         {
             GeometricVector vectorOfLine = new GeometricVector(2, 2, 0);
-            Point pointOnLine = new Point(3, 4, 5);
+            CartesianPoint pointOnLine = new CartesianPoint(3, 4, 5);
             UnboundedLine SUT = new UnboundedLine(vectorOfLine, pointOnLine);
             
-            Point perpendicularPoint = new Point(3, 6, 5);
+            CartesianPoint perpendicularPoint = new CartesianPoint(3, 6, 5);
             BoundedLine result = SUT.PerpendicularLineTo(perpendicularPoint);
             Assert.AreEqual(-1, result.X);
             Assert.AreEqual(1, result.Y);

@@ -78,5 +78,12 @@ namespace SharpFE.Core.Tests.Elements
         	Assert.AreNotEqual(SUTOriginalHash, SUT.GetHashCode());
         	Assert.IsTrue(SUT.IsDirty(SUTOriginalHash));
         }
+        
+        [Test]
+        public void ToString_returnsNodeList()
+        {
+            string result = SUT.ToString();
+            Assert.AreEqual("{SharpFE.LinearConstantSpring, [[0, 0, 0], [1, 0, 0]]}", result);
+        }
 	}
 }

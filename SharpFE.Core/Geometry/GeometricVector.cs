@@ -22,7 +22,7 @@ namespace SharpFE.Geometry
         }
         
         public GeometricVector(double xCoord, double yCoord, double zCoord)
-            : base(new double[3]{ xCoord, yCoord, zCoord}, geometricKeys)
+            : base(geometricKeys, xCoord, yCoord, zCoord)
         {
             // empty
         }
@@ -107,14 +107,14 @@ namespace SharpFE.Geometry
         /// </summary>
         /// <param name="pointNotOnLine"></param>
         /// <returns></returns>
-        public GeometricVector PerpendicularLineTo(Point pointOnLine, Point pointToCalculatePerpendicularVectorTo)
+        public GeometricVector PerpendicularLineTo(CartesianPoint pointOnLine, CartesianPoint pointToCalculatePerpendicularVectorTo)
         {
             GeometricVector betweenPoints = pointToCalculatePerpendicularVectorTo.Subtract(pointOnLine);
             GeometricVector normalizedLineVector = this.Normalize(2);
             double projectionDistanceOfEndPointAlongLine = betweenPoints.DotProduct(normalizedLineVector);
             
             GeometricVector scaledVectorAlongLine = normalizedLineVector.Multiply(projectionDistanceOfEndPointAlongLine);
-            Point startPointOfPerpendicularLine = pointOnLine.Add(scaledVectorAlongLine);
+            CartesianPoint startPointOfPerpendicularLine = pointOnLine.Add(scaledVectorAlongLine);
             
             GeometricVector result = pointToCalculatePerpendicularVectorTo.Subtract(startPointOfPerpendicularLine);
             return result;

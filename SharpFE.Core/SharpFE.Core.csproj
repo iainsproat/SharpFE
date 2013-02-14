@@ -75,7 +75,7 @@
     <Compile Include="Geometry\Plane.cs" />
     <Compile Include="Geometry\UnboundedLine.cs" />
     <Compile Include="Geometry\XYZ.cs" />
-    <Compile Include="Geometry\Point.cs" />
+    <Compile Include="Geometry\CartesianPoint.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\IListExtensions.cs" />
     <Compile Include="IFiniteElementNode.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Stiffness\StiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\IGlobalStiffnessCalculator.cs" />
+    <Compile Include="Stiffness\IElementStiffnessCalculator.cs" />
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />

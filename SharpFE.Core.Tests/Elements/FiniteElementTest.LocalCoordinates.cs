@@ -27,7 +27,7 @@ namespace SharpFE.Core.Tests.Elements
             Assert.AreEqual(0, SUT.LocalOrigin.Z);
             Assert.AreEqual(1, SUT.LocalXAxis.X);
             
-            Point pointInGlobalCoords = new Point(0, 0, 0);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(0, 0, 0);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 0, 0, 0);
         }
         
@@ -36,7 +36,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(0, 0, 1, 0);
             
-            Point pointInGlobalCoords = new Point(2, 0, 0);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(2, 0, 0);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 2, 0, 0);
         }
         
@@ -45,7 +45,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(1, 0, 2, 0);
             
-            Point pointInGlobalCoords = new Point(2, 0, 0);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(2, 0, 0);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 1, 0, 0);
         }
         
@@ -54,7 +54,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(0, 0, 1, 1);
             
-            Point pointInGlobalCoords = new Point(0, 0, 0);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(0, 0, 0);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 0, 0, 0);
         }
         
@@ -63,7 +63,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(1, 1, 2, 2);
             
-            Point pointInGlobalCoords = new Point(1, 0, 1);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(1, 0, 1);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 0, 0, 0);
         }
         
@@ -76,7 +76,7 @@ namespace SharpFE.Core.Tests.Elements
             Assert.AreEqual(1, SUT.LocalXAxis.X);
             Assert.AreEqual(1, SUT.LocalXAxis.Z);
             
-            Point pointInGlobalCoords = new Point(4, 0, 6);
+            CartesianPoint pointInGlobalCoords = new CartesianPoint(4, 0, 6);
             this.AssertConversionFromGlobalToLocalCoordinates(pointInGlobalCoords, 1.5 * Math.Sqrt(2), 0, 0.5 * Math.Sqrt(2));
         }
         #endregion
@@ -90,7 +90,7 @@ namespace SharpFE.Core.Tests.Elements
             Assert.AreEqual(0, SUT.LocalOrigin.Z);
             Assert.AreEqual(1, SUT.LocalXAxis.X);
             
-            Point pointInLocalCoords = new Point(0, 0, 0);
+            CartesianPoint pointInLocalCoords = new CartesianPoint(0, 0, 0);
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 0, 0, 0);
         }
         
@@ -99,7 +99,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(0, 0, 1, 0);
             
-            Point pointInLocalCoords = new Point(2, 0, 0);
+            CartesianPoint pointInLocalCoords = new CartesianPoint(2, 0, 0);
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 2, 0, 0);
         }
         
@@ -108,7 +108,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(1, 0, 2, 0);
             
-            Point pointInLocalCoords = new Point(1, 0, 0);
+            CartesianPoint pointInLocalCoords = new CartesianPoint(1, 0, 0);
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 2, 0, 0);
         }
         
@@ -117,7 +117,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(0, 0, 1, 1);
             
-            Point pointInLocalCoords = new Point(0, 0, 0);
+            CartesianPoint pointInLocalCoords = new CartesianPoint(0, 0, 0);
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 0, 0, 0);
         }
         
@@ -126,7 +126,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(1, 1, 2, 2);
             
-            Point pointInLocalCoords = new Point(0, 0, 0);
+            CartesianPoint pointInLocalCoords = new CartesianPoint(0, 0, 0);
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 1, 0, 1);
         }
         
@@ -135,7 +135,7 @@ namespace SharpFE.Core.Tests.Elements
         {
             CreateAndStore2DSpringBetween(3, 4, 4, 5);
             
-            Point pointInLocalCoords = new Point(1.5 * Math.Sqrt(2), 0, 0.5 * Math.Sqrt(2));
+            CartesianPoint pointInLocalCoords = new CartesianPoint(1.5 * Math.Sqrt(2), 0, 0.5 * Math.Sqrt(2));
             this.AssertConversionFromLocalToGlobalCoordinates(pointInLocalCoords, 4, 0, 6);
         }
         #endregion
@@ -150,18 +150,18 @@ namespace SharpFE.Core.Tests.Elements
             this.SUT = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);
         }
         
-        protected void AssertConversionFromGlobalToLocalCoordinates(Point pointInGlobalCoords, double expectedX, double expectedY, double expectedZ)
+        protected void AssertConversionFromGlobalToLocalCoordinates(CartesianPoint pointInGlobalCoords, double expectedX, double expectedY, double expectedZ)
         {
-            Point pointInLocalCoords = SUT.ConvertGlobalCoordinatesToLocalCoordinates(pointInGlobalCoords);
+            CartesianPoint pointInLocalCoords = SUT.ConvertGlobalCoordinatesToLocalCoordinates(pointInGlobalCoords);
             
             Assert.AreEqual(expectedX, pointInLocalCoords.X, 0.000001);
             Assert.AreEqual(expectedY, pointInLocalCoords.Y, 0.000001);
             Assert.AreEqual(expectedZ, pointInLocalCoords.Z, 0.000001);
         }
         
-        protected void AssertConversionFromLocalToGlobalCoordinates(Point pointInLocalCoords, double expectedX, double expectedY, double expectedZ)
+        protected void AssertConversionFromLocalToGlobalCoordinates(CartesianPoint pointInLocalCoords, double expectedX, double expectedY, double expectedZ)
         {
-            Point pointInGlobalCoords = SUT.ConvertLocalCoordinatesToGlobalCoordinates(pointInLocalCoords);
+            CartesianPoint pointInGlobalCoords = SUT.ConvertLocalCoordinatesToGlobalCoordinates(pointInLocalCoords);
             
             Assert.AreEqual(expectedX, pointInGlobalCoords.X, 0.000001);
             Assert.AreEqual(expectedY, pointInGlobalCoords.Y, 0.000001);

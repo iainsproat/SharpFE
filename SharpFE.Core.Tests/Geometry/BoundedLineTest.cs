@@ -14,14 +14,14 @@ namespace SharpFE.Core.Tests.Geometry
     public class BoundedLineTest
     {
         GeometricVector vectorOfLine;
-        Point startPoint;
+        CartesianPoint startPoint;
         BoundedLine SUT;
         
         [SetUp]
         public void SetUp()
         {
             vectorOfLine = new GeometricVector(2, 3, 4);
-            startPoint = new Point(3, 4, 5);
+            startPoint = new CartesianPoint(3, 4, 5);
             SUT = new BoundedLine(startPoint, vectorOfLine);
         }
         
@@ -75,15 +75,15 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_determine_if_point_is_on_the_line()
         {
             vectorOfLine = new GeometricVector(2, 2, 2);
-            startPoint = new Point(3, 4, 5);
+            startPoint = new CartesianPoint(3, 4, 5);
             SUT = new BoundedLine(startPoint, vectorOfLine);
             
-            Point pointOnTheLine = new Point(4, 5, 6);
-            Point pointAtEndOfLine = new Point(5, 6, 7);
-            Point pointAtStartOfLine = new Point(3, 4, 5);
+            CartesianPoint pointOnTheLine = new CartesianPoint(4, 5, 6);
+            CartesianPoint pointAtEndOfLine = new CartesianPoint(5, 6, 7);
+            CartesianPoint pointAtStartOfLine = new CartesianPoint(3, 4, 5);
             
-            Point pointBeyondEndOfLine = new Point(6, 7, 8);
-            Point pointBeyondStartOfLine = new Point(2, 3, 4);
+            CartesianPoint pointBeyondEndOfLine = new CartesianPoint(6, 7, 8);
+            CartesianPoint pointBeyondStartOfLine = new CartesianPoint(2, 3, 4);
             
             Assert.IsTrue(SUT.IsOnLine(pointOnTheLine));
             Assert.IsTrue(SUT.IsOnLine(pointAtEndOfLine));

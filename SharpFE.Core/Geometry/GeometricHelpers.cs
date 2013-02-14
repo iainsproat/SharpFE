@@ -34,7 +34,7 @@ namespace SharpFE.Geometry
         /// <param name="point1"></param>
         /// <param name="point2"></param>
         /// <returns></returns>
-        public static double AreaTriangle(Point point0, Point point1, Point point2)
+        public static double AreaTriangle(CartesianPoint point0, CartesianPoint point1, CartesianPoint point2)
         {
             GeometricVector side01 = point1.Subtract(point0);
             GeometricVector side02 = point2.Subtract(point0);
@@ -67,7 +67,7 @@ namespace SharpFE.Geometry
         /// <param name="point3"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1025:ReplaceRepetitiveArgumentsWithParamsArray", Justification = "Can only have four points, so params array is useless")]
-        public static double AreaQuadrilateral(Point point0, Point point1, Point point2, Point point3)
+        public static double AreaQuadrilateral(CartesianPoint point0, CartesianPoint point1, CartesianPoint point2, CartesianPoint point3)
         {
             GeometricVector diagonal1 = point2.Subtract(point0);
             GeometricVector diagonal2 = point3.Subtract(point1);

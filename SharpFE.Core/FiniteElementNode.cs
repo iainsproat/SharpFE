@@ -45,7 +45,7 @@ namespace SharpFE
         /// <param name="locationAlongZAxis">The location of this node along the z axis</param>
         internal FiniteElementNode(double locationAlongXAxis, double locationAlongYAxis, double locationAlongZAxis)
         {
-            this.Location = new SharpFE.Geometry.Point( locationAlongXAxis, locationAlongYAxis, locationAlongZAxis);
+            this.Location = new SharpFE.Geometry.CartesianPoint( locationAlongXAxis, locationAlongYAxis, locationAlongZAxis);
         }
         
         /// <summary>
@@ -62,7 +62,7 @@ namespace SharpFE
         /// <summary>
         /// The original location of this node
         /// </summary>
-        public Geometry.Point Location
+        public Geometry.CartesianPoint Location
         {
             get;
             private set;

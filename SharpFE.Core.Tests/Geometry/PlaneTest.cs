@@ -16,7 +16,7 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_be_constructed()
         {
             GeometricVector planeNormal = new GeometricVector(0, 0, 1);
-            Point pointOnPlane = new Point(0, 0, 0);
+            CartesianPoint pointOnPlane = new CartesianPoint(0, 0, 0);
             Plane SUT = new Plane(planeNormal, pointOnPlane);
             Assert.AreEqual(planeNormal, SUT.Normal);
             Assert.AreEqual(pointOnPlane, SUT.Point);
@@ -26,11 +26,11 @@ namespace SharpFE.Core.Tests.Geometry
         public void Can_determine_if_point_is_in_plane()
         {
             GeometricVector planeNormal = new GeometricVector(0, 0, 1);
-            Point pointOnPlane = new Point(0, 0, 0);
+            CartesianPoint pointOnPlane = new CartesianPoint(0, 0, 0);
             Plane SUT = new Plane(planeNormal, pointOnPlane);
             
-            Point pointInPlane = new Point(1, 1, 0);
-            Point pointOutOfPlane = new Point(0, 0, 1);
+            CartesianPoint pointInPlane = new CartesianPoint(1, 1, 0);
+            CartesianPoint pointOutOfPlane = new CartesianPoint(0, 0, 1);
             Assert.IsTrue(SUT.IsInPlane(pointInPlane));
             Assert.IsFalse(SUT.IsInPlane(pointOutOfPlane));
         }

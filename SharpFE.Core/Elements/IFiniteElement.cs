@@ -16,7 +16,7 @@ namespace SharpFE
         IList<IFiniteElementNode> Nodes { get; }
         
         #region Local coordinates
-        Point LocalOrigin { get; }
+        CartesianPoint LocalOrigin { get; }
         /// <summary>
         /// Vector defining the direction of the local X axis, given in global coordinates
         /// </summary>
@@ -31,8 +31,8 @@ namespace SharpFE
         /// Vector defining the direction of the local Z axis, given in global coordinates
         /// </summary>
         GeometricVector LocalZAxis { get; }
-        Point ConvertGlobalCoordinatesToLocalCoordinates(Point globalPoint);
-        Point ConvertLocalCoordinatesToGlobalCoordinates(Point localPoint);
+        CartesianPoint ConvertGlobalCoordinatesToLocalCoordinates(CartesianPoint globalPoint);
+        CartesianPoint ConvertLocalCoordinatesToGlobalCoordinates(CartesianPoint localPoint);
         KeyedSquareMatrix<DegreeOfFreedom> CalculateElementRotationMatrix();
         #endregion
        
