@@ -101,7 +101,7 @@ namespace SharpFE
         /// <param name="coordinateAlongGlobalXAxis"></param>
         /// <param name="coordinateAlongGlobalZAxis"></param>
         /// <returns></returns>
-        public FiniteElementNode CreateForTruss(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
+        public FiniteElementNode CreateFor2DTruss(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
         {
             if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)
             {

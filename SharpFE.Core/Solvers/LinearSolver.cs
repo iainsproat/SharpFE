@@ -114,7 +114,7 @@ namespace SharpFE
             KeyedVector<NodalDegreeOfFreedom> externallyAppliedForces = knownForces.Add(forcesDueToExternallyAppliedDisplacements); // Fk + (K12 * Uk)
             
             double det = knownForcesUnknownDisplacementStiffnesses.Determinant();
-            if (det == 0)
+            if (det <= double.Epsilon)  //zero or near zero
             {
                 throw new InvalidOperationException(
                     string.Format(

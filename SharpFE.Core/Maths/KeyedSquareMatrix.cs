@@ -157,5 +157,10 @@ namespace SharpFE
         {
             return (KeyedSquareMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
         }
+        
+        public override string ToString()
+		{
+			return base.ToString();
+		}
     }
 }

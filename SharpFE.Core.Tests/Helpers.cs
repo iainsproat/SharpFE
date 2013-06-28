@@ -17,6 +17,7 @@ namespace SharpFE.Core.Tests
     {
         public static void AssertMatrix<TRowKey, TColumnKey>(KeyedRowColumnMatrix<TRowKey, TColumnKey> actual, int expectedRowCount, int expectedColumnCount, params double[] expectedValues)
         {
+        	
             if(expectedValues == null)
             {
                 throw new ArgumentNullException("expectedValues");

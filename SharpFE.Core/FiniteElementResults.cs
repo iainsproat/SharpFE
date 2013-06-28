@@ -121,6 +121,13 @@ namespace SharpFE
         /// <returns>A vector representing the reaction at the support</returns>
         public ReactionVector GetReaction(FiniteElementNode supportNode)
         {
+        	if (!this.reactions.ContainsKey(supportNode))
+        	{
+        		throw new ArgumentException(String.Format(System.Globalization.CultureInfo.InvariantCulture, 
+        		                                          "Node {0} is not a support node and therefore has no reaction forces",
+        		                                          supportNode));
+        	}
+        	
             return this.reactions[supportNode];
         }
         

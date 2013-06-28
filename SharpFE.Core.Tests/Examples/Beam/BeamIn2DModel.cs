@@ -129,11 +129,11 @@ namespace SharpFE.Examples.Beam
         public void MomentThroughVerticallyOrientedSimplySupportedBeam()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D); // we will create and analyze a 1D beam system
-            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(0, 0); // create a node at the origin
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0, 0); // create a node at the origin
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
 
-            FiniteElementNode node2 = model.NodeFactory.CreateForTruss(0, 1.0); // create a second node at a distance 1 metre along the X axis
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0, 1.0); // create a second node at a distance 1 metre along the X axis
             model.ConstrainNode(node2, DegreeOfFreedom.X);
             
             IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
@@ -172,13 +172,13 @@ namespace SharpFE.Examples.Beam
         public void ThreeNodeBeam()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(0,0);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0,0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
 
-            FiniteElementNode node2 = model.NodeFactory.CreateForTruss(1,0);
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(1,0);
             
-            FiniteElementNode node3 = model.NodeFactory.CreateForTruss(2,0);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(2,0);
             model.ConstrainNode(node3, DegreeOfFreedom.Z);
             
             IMaterial material = new GenericElasticMaterial(0, 10000000000, 0.3, 1000000000);
@@ -233,13 +233,13 @@ namespace SharpFE.Examples.Beam
         public void AFrame()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(-5,0);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(-5,0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
 
-            FiniteElementNode node2 = model.NodeFactory.CreateForTruss(0,5);
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0,5);
             
-            FiniteElementNode node3 = model.NodeFactory.CreateForTruss(5,0);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(5,0);
             model.ConstrainNode(node3, DegreeOfFreedom.Z);
             
             IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
@@ -298,16 +298,16 @@ namespace SharpFE.Examples.Beam
         public void PortalFrame()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D); // we will create and analyze a 3D frame system
-            FiniteElementNode node1 = model.NodeFactory.CreateForTruss(-10,0);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(-10,0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
             model.ConstrainNode(node1, DegreeOfFreedom.YY);
 
-            FiniteElementNode node2 = model.NodeFactory.CreateForTruss(-10,10);
-            FiniteElementNode node3 = model.NodeFactory.CreateForTruss(0,14);
-            FiniteElementNode node4 = model.NodeFactory.CreateForTruss(10,10);
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(-10,10);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(0,14);
+            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(10,10);
             
-            FiniteElementNode node5 = model.NodeFactory.CreateForTruss(10,0);
+            FiniteElementNode node5 = model.NodeFactory.CreateFor2DTruss(10,0);
             model.ConstrainNode(node5, DegreeOfFreedom.X);
             model.ConstrainNode(node5, DegreeOfFreedom.Z);
             model.ConstrainNode(node5, DegreeOfFreedom.YY);

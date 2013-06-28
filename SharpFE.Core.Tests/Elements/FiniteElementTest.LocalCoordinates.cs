@@ -143,8 +143,8 @@ namespace SharpFE.Core.Tests.Elements
         protected void CreateAndStore2DSpringBetween(double startX, double startZ, double endX, double endZ)
         {
             this.nodeFactory = new NodeFactory(ModelType.Truss2D);
-            this.start = nodeFactory.CreateForTruss(startX, startZ);
-            this.end = nodeFactory.CreateForTruss(endX, endZ);
+            this.start = nodeFactory.CreateFor2DTruss(startX, startZ);
+            this.end = nodeFactory.CreateFor2DTruss(endX, endZ);
             
             this.elementFactory = new ElementFactory();
             this.SUT = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);

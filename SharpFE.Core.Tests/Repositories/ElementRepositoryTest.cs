@@ -27,9 +27,9 @@ namespace SharpFE.Core.Tests.Repositories
         public void Setup()
         {
             nodeFactory = new NodeFactory(ModelType.Truss2D);
-            node1 = nodeFactory.CreateForTruss(0, 0);
-            node2 = nodeFactory.CreateForTruss(0, 1);
-            node3 = nodeFactory.CreateForTruss(0, 2);
+            node1 = nodeFactory.CreateFor2DTruss(0, 0);
+            node2 = nodeFactory.CreateFor2DTruss(0, 1);
+            node3 = nodeFactory.CreateFor2DTruss(0, 2);
             SUT = new ElementRepository();
             elementFactory = new ElementFactory(SUT);
             spring1 = elementFactory.CreateLinearConstantSpring(node1, node2, 1);
@@ -55,7 +55,7 @@ namespace SharpFE.Core.Tests.Repositories
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results.Contains(spring2));
             
-            FiniteElementNode unconnectedNode = nodeFactory.CreateForTruss(0,3);
+            FiniteElementNode unconnectedNode = nodeFactory.CreateFor2DTruss(0,3);
             results = SUT.GetAllElementsConnectedTo(unconnectedNode);
             Assert.IsNotNull(results);
             Assert.AreEqual(0, results.Count);

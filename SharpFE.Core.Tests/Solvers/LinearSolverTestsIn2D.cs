@@ -134,8 +134,8 @@ namespace SharpFE.Core.Tests.Solvers
 		private void Create2DSingleSpringModelAroundOrigin(double x, double z)
 		{
 			model = new FiniteElementModel(ModelType.Truss2D);
-			node1 = model.NodeFactory.CreateForTruss(0, 0);
-			node2 = model.NodeFactory.CreateForTruss(x, z);
+			node1 = model.NodeFactory.CreateFor2DTruss(0, 0);
+			node2 = model.NodeFactory.CreateFor2DTruss(x, z);
 
 			spring1 = model.ElementFactory.CreateLinearConstantSpring(node1, node2, 1000);
 			

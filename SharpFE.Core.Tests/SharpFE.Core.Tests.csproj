@@ -65,8 +65,9 @@
     <Compile Include="Examples\Beam\BeamIn2DModel.cs" />
     <Compile Include="Examples\Beam\BeamIn3DModel.cs" />
     <Compile Include="Examples\Membrane\Triangle.cs" />
-    <Compile Include="Examples\Truss\SpringIn1DModel.cs" />
-    <Compile Include="Examples\Truss\SpringIn2DModel.cs" />
+    <Compile Include="Examples\Truss\TrussIn1DModel.cs" />
+    <Compile Include="Examples\Truss\TrussIn2DModel.cs" />
+    <Compile Include="Examples\Truss\TrussIn3DModel.cs" />
     <Compile Include="Factory\ElementFactoryTest.cs" />
     <Compile Include="Factory\ForceFactoryTest.cs" />
     <Compile Include="Factory\NodeFactoryTest.cs" />

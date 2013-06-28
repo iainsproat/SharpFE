@@ -176,5 +176,10 @@ namespace SharpFE.Stiffness
         {
             return StiffnessMatrix.GetAllRowKeysWithMatchingNode(this.ColumnKeys, nodeToMatch);
         }
+        
+        public override string ToString()
+		{
+			return base.ToString();
+		}
     }
 }

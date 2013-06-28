@@ -1,0 +1,48 @@
+$SOFiSTiK Export Version 10.39-27
+$Automatically generated File of ASCII Export
+
+
+
+$ Exported by AQUA         Version  16.14-27
+PROG AQUA urs:1
+HEAD 2DBar
+PAGE UNII 5
+NORM 'EN' '1993-2005' COUN 44 CAT 'A' SNOW '1'
+MATE 2 E 30 MUE 0.200000 G 12.50000 K 16.66670 GAM 25 GAMA 0 ALFA  1.00000E-05 E90 30 M90 0.200000 OAL 0 OAF 0 SPM 1 FY 0 FT 0 TITL "Elastic Material"
+HEAD 2DBar
+PAGE UNII 5
+SVAL 1 MNO 2 A 2 AY 0 AZ 0 IT 0.075991 IY 0.010417 IZ 0.010417 IYZ 0 CM 0 YSC 0 ZSC 0 YMIN -0.499998 YMAX 0.500000 ZMIN -0.499998 ZMAX 0.500000 WT 10.18600 WVY 3 WVZ 3 NPL 177500 VYPL 102480 VZPL 102480 MTPL 20121.66 MYPL 44375 MZPL 44375 BCYZ 'CC'
+END
+END
+$ Exported by SOFIMSHA     Version  16.08-27
+PROG SOFIMSHA urs:2
+HEAD 2DBar
+PAGE UNII 5
+SYST WFRA GDIV 10000 GDIR NEGY
+NODE        4 X          0.0 Y          0.0 Z          0.0
+NODE        5 X          0.0 Y   10.0000000 Z          0.0 FIX ZP
+NODE        6 X   10.0000000 Y   10.0000000 Z          0.0 FIX ZP
+NODE        7 X   10.0000000 Y          0.0 Z          0.0 FIX ZP
+GRP  0
+BEAM         1        5        4 NCS    1
+BEAM         2        6        4 NCS    1
+BEAM         3        7        4 NCS    1
+
+END
+$ Exported by SOFILOAD     Version  15.28-27
+PROG SOFILOAD urs:3
+HEAD EXPORT FROM DATABASE
+PAGE UNII 5
+ACT  'G' GAMU 1.350000 1 PSI0 1 1 1 1 PART 'G' SUP PERM TITL "dead load"
+ACT  'Q' GAMU 1.500000 0 PSI0 0.700000 0.500000 0.300000 1 PART 'Q' SUP COND TITL "variable load"
+GRP  0 VAL 'FULL' CS 999
+LC   1 'G' 1 TITL "Loadcase 1"
+NODE 4 VV 0 -10 0 0 0 0 0
+END
+
++PROG ASE urs:8 $ Linear Analysis
+HEAD Calculation of forces and moments
+PAGE UNII 0
+CTRL OPT SOLV VAL - $  Solution of the system
+LC ALL
+END

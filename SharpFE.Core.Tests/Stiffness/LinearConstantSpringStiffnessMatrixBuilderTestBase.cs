@@ -32,8 +32,8 @@ namespace SharpFE.Core.Tests.Stiffness
         protected void CreateAndStore2DSpringFromOriginTo(double x, double z)
         {
             this.nodeFactory = new NodeFactory(ModelType.Truss2D);
-            this.start = nodeFactory.CreateForTruss(0, 0);
-            this.end = nodeFactory.CreateForTruss(x, z);
+            this.start = nodeFactory.CreateFor2DTruss(0, 0);
+            this.end = nodeFactory.CreateFor2DTruss(x, z);
             
             this.elementFactory = new ElementFactory();
             this.spring = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);

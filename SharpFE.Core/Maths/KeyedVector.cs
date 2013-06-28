@@ -160,7 +160,7 @@ namespace SharpFE
         /// <returns></returns>
         public KeyedVector<TKey> Add(KeyedVector<TKey> other)
         {
-            KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
+            var kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
             kcv.ThrowIfInvalid();
             
             IList<TKey> keyz = this.Keys;

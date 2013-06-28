@@ -20,8 +20,8 @@
         public void SetUp()
         {
         	nodeFactory = new NodeFactory(ModelType.Frame2D);
-            start = nodeFactory.CreateForTruss(0, 0);
-            end = nodeFactory.CreateForTruss(1, 0);
+            start = nodeFactory.CreateFor2DTruss(0, 0);
+            end = nodeFactory.CreateFor2DTruss(1, 0);
             elementFactory = new ElementFactory();
 			material = new GenericElasticMaterial(0, 1, 0, 1);
 			section = new SolidRectangle(1, 1);

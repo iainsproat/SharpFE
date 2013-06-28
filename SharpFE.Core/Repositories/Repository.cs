@@ -16,6 +16,8 @@ namespace SharpFE
     /// <typeparam name="T">The type of instances to be stored in the repository</typeparam>
     internal abstract class Repository<T> : ICollection<T>, IEquatable<Repository<T>>
     {
+    	private bool allowDuplicates;
+    	
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}" /> class.
         /// </summary>
@@ -44,6 +46,14 @@ namespace SharpFE
             {
                 return this.InternalStore.IsReadOnly;
             }
+        }
+        
+        public bool DuplicatesAreAllowed
+        {
+        	get
+        	{
+        		return this.allowDuplicates;
+        	}
         }
         
         /// <summary>
