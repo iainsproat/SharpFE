@@ -135,16 +135,13 @@ namespace SharpFE
         /// Adds multiple displacements to the set of results
         /// </summary>
         /// <param name="displacements">The value of the displacements.  The order of this vector matches the order of the identifiers in the corresponding parameter</param>
-        public void AddMultipleDisplacements(KeyedVector<NodalDegreeOfFreedom> displacements)
+        public void AddMultipleDisplacements(KeyedVector<NodalDegreeOfFreedom> disp)
         {
-            Guard.AgainstNullArgument(displacements, "displacements");
+            Guard.AgainstNullArgument(disp, "displacements");
             
-            int numberOfDisplacements = displacements.Count;
-            
-            IList<NodalDegreeOfFreedom> keys = displacements.Keys;
-            foreach (NodalDegreeOfFreedom key in keys)
+            foreach (KeyValuePair<NodalDegreeOfFreedom, double> kvp in disp)
             {
-                this.AddDisplacement(key, displacements[key]);
+                this.AddDisplacement(kvp.Key, kvp.Value);
             }
         }
         
@@ -152,16 +149,13 @@ namespace SharpFE
         /// Adds multiple reaction to this set of results
         /// </summary>
         /// <param name="reactions">The value of the reactions.  The order of this vector matches the order of the identifiers in the corresponding parameter.</param>
-        public void AddMultipleReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
+        public void AddMultipleReactions(KeyedVector<NodalDegreeOfFreedom> react)
         {
             Guard.AgainstNullArgument(reactions, "reactions");
             
-            int numberOfReactions = reactions.Count;
-            
-            IList<NodalDegreeOfFreedom> keys = reactions.Keys;
-            foreach (NodalDegreeOfFreedom key in keys)
+            foreach (KeyValuePair<NodalDegreeOfFreedom, double> kvp in react)
             {
-                this.AddReaction(key, reactions[key]);
+                this.AddReaction(kvp.Key, kvp.Value);
             }
         }
     }
