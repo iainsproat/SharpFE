@@ -8,7 +8,6 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE.Cache;
     
     /// <summary>
     /// Builds the global stiffness matrix by summing all the
@@ -225,7 +224,7 @@ namespace SharpFE.Stiffness
                 {
                     connectedElements = this.parent.AllElementsDirectlyConnecting(row.Node, column.Node);
                     double currentResult = this.SumStiffnessesForAllElementsAt(connectedElements, row, column);
-                    if (currentResult != 0)
+                    if (Math.Abs(currentResult) > double.Epsilon)
                     {
                         result.At(row, column, currentResult);
                     }

@@ -21,7 +21,7 @@ namespace SharpFE
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}" /> class.
         /// </summary>
-        public Repository()
+        protected Repository()
         {
             this.InternalStore = new List<T>();
         }
