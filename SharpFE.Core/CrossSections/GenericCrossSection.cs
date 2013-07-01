@@ -4,13 +4,11 @@
  * Date: 28/06/2013
  * 
  */
-using System;
 
 namespace SharpFE
 {
-    /// <summary>
-    /// Description of GenericCrossSection.
-    /// </summary>
+    using System;
+    
     public class GenericCrossSection : ICrossSection
     {
         /// <summary>
@@ -19,15 +17,15 @@ namespace SharpFE
         /// <param name="height"></param>
         /// <param name="width"></param>
         public GenericCrossSection(double sectionArea)
+            : this(sectionArea, 0, 0, true)
         {
             Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
                                      "sectionArea has to be a positive, non-zero number", 
                                      "sectionArea");
-            
-            this.Area = sectionArea;
         }
         
         public GenericCrossSection(double sectionArea, double sectionSecondMomentOfAreaAroundYY)
+            : this(sectionArea, sectionSecondMomentOfAreaAroundYY, 0, true)
         {
             Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
                                      "sectionArea has to be a positive, non-zero number", 
@@ -36,8 +34,34 @@ namespace SharpFE
                                      "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number", 
                                      "sectionSecondMomentOfAreaAroundYY");
             
+        }
+        
+        public GenericCrossSection(double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ)
+            :this(sectionArea, sectionSecondMomentOfAreaAroundYY, sectionSecondMomentOfAreaAroundZZ, true)
+        {
+            Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
+                                     "sectionArea has to be a positive, non-zero number", 
+                                     "sectionArea");
+            Guard.AgainstBadArgument(() => {return sectionSecondMomentOfAreaAroundYY <= 0;},
+                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number", 
+                                     "sectionSecondMomentOfAreaAroundYY");
+            Guard.AgainstBadArgument(() => {return sectionSecondMomentOfAreaAroundZZ <= 0;},
+                                     "sectionSecondMomentOfAreaAroundZZ has to be a positive, non-zero number", 
+                                     "sectionSecondMomentOfAreaAroundZZ");
+        }
+        
+        /// <summary>
+        /// All public constructors should delegate to this constructor.
+        /// </summary>
+        /// <param name="sectionArea"></param>
+        /// <param name="sectionSecondMomentOfAreaAroundYY"></param>
+        /// <param name="sectionSecondMomentOfAreaAroundZZ"></param>
+        /// <param name="flag">Not used. The flag is only here to make this constructor signature unique and prevent compilation errors.</param>
+        protected GenericCrossSection (double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ, bool flag)
+        {
             this.Area = sectionArea;
             this.SecondMomentOfAreaAroundYY = sectionSecondMomentOfAreaAroundYY;
+            this.SecondMomentOfAreaAroundZZ = sectionSecondMomentOfAreaAroundZZ;
         }
         
         /// <summary>
@@ -47,7 +71,7 @@ namespace SharpFE
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("GenericCrossSection.MaximumDepth");
             }
         }
         
@@ -58,7 +82,7 @@ namespace SharpFE
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("GenericCrossSection.MaximumWidth");
             }
         }
         
@@ -85,10 +109,8 @@ namespace SharpFE
         /// </summary>
         public double SecondMomentOfAreaAroundZZ
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            private set;
         }
         
         /// <summary>
@@ -98,7 +120,7 @@ namespace SharpFE
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("GenericCrossSection.ExternalPerimeterLength");
             }
         }
         
@@ -109,7 +131,7 @@ namespace SharpFE
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("GenericCrossSection.MomentOfInertiaInTorsion");
             }
         }
         
