@@ -48,6 +48,7 @@
     <Compile Include="Cache\Cache.cs" />
     <Compile Include="Cache\CachedValue.cs" />
     <Compile Include="CrossSections\Coordinate2D.cs" />
+    <Compile Include="CrossSections\GenericCrossSection.cs" />
     <Compile Include="CrossSections\ICrossSection.cs" />
     <Compile Include="CrossSections\IHasConstantCrossSection.cs" />
     <Compile Include="CrossSections\IHasCrossSection.cs" />
