@@ -148,7 +148,7 @@ namespace SharpFE.Examples
 			Assert.AreEqual(812.8, reactionAtNode5.Z, 1);
 			
 			DisplacementVector displacementAtNode1 = results.GetDisplacement(node1);
-			Assert.AreEqual(-0.0003024, displacementAtNode1.X, 0.0001);
+			Assert.AreEqual(-0.0003024, displacementAtNode1.X, 0.0001); //NOTE the results given in the book are 1E03 
 			Assert.AreEqual(-0.0015177, displacementAtNode1.Y, 0.0001);
 			Assert.AreEqual(0.0002688, displacementAtNode1.Z, 0.0001);
 		}
