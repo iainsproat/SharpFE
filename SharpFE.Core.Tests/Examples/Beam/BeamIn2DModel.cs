@@ -289,7 +289,7 @@ namespace SharpFE.Examples.Beam
             
             Assert.AreEqual(0, node1Displacement.X, 0.0001);
             Assert.AreEqual(0, node1Displacement.Z, 0.0001);
-            Assert.AreEqual(0.00109, node1Displacement.YY, 0.0001);
+            Assert.AreEqual(0.0010985, node1Displacement.YY, 0.0001);
             
             Console.WriteLine(node1Reaction);
             Assert.AreEqual(-5000, node1Reaction.Z, 1);
@@ -305,7 +305,7 @@ namespace SharpFE.Examples.Beam
         ///<summary>
         /// Example problem and results are derived from:
         /// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
-        /// Section 7.2, page 73
+        /// Section 7.2, page 91
         /// </summary>
         [Test]
         public void Calculate2DFrameOf3BeamsAnd12Dof()
@@ -365,6 +365,65 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(10000, node4Reaction.Z, 1);
             Assert.AreEqual(23284, node4Reaction.YY, 1); ///NOTE this value of 23284 does not match the example, but was verified using a commercial finite element software
             
+        }
+        
+        ///<summary>
+        /// Example problem and results are derived from:
+        /// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
+        /// Section 7.3, page 95
+        /// </summary>
+        [Test]
+        public void Calculate2DPortalFrameOf3BeamsAnd12Dof()
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(-3, 0);
+            model.ConstrainNode(node1, DegreeOfFreedom.X);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(-3, 6);
+            
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(3, 6);
+            
+            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(3, 0);
+            model.ConstrainNode(node4, DegreeOfFreedom.X);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            model.ConstrainNode(node4, DegreeOfFreedom.YY);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
+            ICrossSection section = new GenericCrossSection(0.0002, 0.0002);
+            
+            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
+            
+            ForceVector force2 = model.ForceFactory.Create(15000, 0, 0, 0, -10000, 0);
+            model.ApplyForceToNode(force2, node2);
+            
+            IFiniteElementSolver solver = new LinearSolverSVD(model);
+            FiniteElementResults results = solver.Solve();
+            
+            DisplacementVector node2Displacement = results.GetDisplacement(node2);
+            DisplacementVector node3Displacement = results.GetDisplacement(node3);
+            ReactionVector node1Reaction = results.GetReaction(node1);
+            ReactionVector node4Reaction = results.GetReaction(node4);
+            
+            Assert.AreEqual(0.0052843, node2Displacement.X, 0.0001);
+            Assert.AreEqual(0.0006522, node2Displacement.Z, 0.0001);
+            Assert.AreEqual(0.0005, node2Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(0.0044052, node3Displacement.X, 0.0001);
+            Assert.AreEqual(-0.0006522, node3Displacement.Z, 0.0001);
+            Assert.AreEqual(0.0006, node3Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(-9000, node1Reaction.X, 500);
+            Assert.AreEqual(-5000, node1Reaction.Z, 500);
+            Assert.AreEqual(-30022, node1Reaction.YY, 500);
+            
+            Console.WriteLine(node4Reaction);
+            Assert.AreEqual(-6000, node4Reaction.X, 500);
+            Assert.AreEqual(5000, node4Reaction.Z, 500);
+            Assert.AreEqual(-22586, node4Reaction.YY, 500); 
         }
     }
 }
