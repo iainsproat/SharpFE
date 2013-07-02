@@ -67,26 +67,22 @@ namespace SharpFE
             
             int currentValidHashForCache = this.GetHashCode();
             ElementRepository.NodeTuple keyForCache = new ElementRepository.NodeTuple(node1, node2);
-            if (this.cacheConnectingElements.ContainsKey(keyForCache, currentValidHashForCache, out connectingElements))
-            {
-                return connectingElements;
-            }
-            
-            IList<IFiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
-            
-            if (node1.Equals(node2))
-            {
-                connectingElements = elementsConnectedToNode1;
-            }
-            else
-            {
-                IList<IFiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
-                connectingElements = elementsConnectedToNode1.Intersect(elementsConnectedToNode2).ToList();
-            }
-            
-            this.cacheConnectingElements.Save(keyForCache, connectingElements, currentValidHashForCache);
-            
-            return connectingElements;
+            return this.cacheConnectingElements.GetOrCreateAndSave(keyForCache, currentValidHashForCache,
+                                                            () => {
+                                                                IList<IFiniteElement> elementsConnectedToNode1 = this.GetAllElementsConnectedTo(node1);
+                                                                
+                                                                if (node1.Equals(node2))
+                                                                {
+                                                                    connectingElements = elementsConnectedToNode1;
+                                                                }
+                                                                else
+                                                                {
+                                                                    IList<IFiniteElement> elementsConnectedToNode2 = this.GetAllElementsConnectedTo(node2);
+                                                                    connectingElements = elementsConnectedToNode1.Intersect(elementsConnectedToNode2).ToList();
+                                                                }
+                                                                
+                                                                return connectingElements;
+                                                            });
         }
         
         /// <summary>
