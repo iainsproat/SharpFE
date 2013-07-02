@@ -68,7 +68,14 @@ namespace SharpFE
             }
         }
         
-        public static void AgainstInvalidState(ArgumentComparator testForFailure, string failureMessage, params object[] failureMessageFormatItems)
+        /// <summary>
+        /// Throws an InvalidOperationException if the testForFailure is true
+        /// </summary>
+        /// <param name="testForFailure">A comparator which returnstrue if this method is to throw an InvalidOperationException</param>
+        /// <param name="failureMessage">The message to include in the exception.  This message is parsed using string.Format</param>
+        /// <param name="failureMessageFormatItems">Parameters for inclusion in the string.Format string parse</param>
+        /// <exception cref="InvalidOperationException">Thrown if the testForFailure returns true.</exception>
+        public static void AgainstInvalidState(ArgumentComparator testForFailure, string failureMessage, params object[] failureMessageFormatItems) //TODO rename AgainstInvalidOperation
         {
             if (testForFailure())
             {

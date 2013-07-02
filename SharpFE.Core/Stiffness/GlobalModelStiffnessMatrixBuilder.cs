@@ -142,11 +142,9 @@ namespace SharpFE.Stiffness
             IList<NodalDegreeOfFreedom> knownForces = this.DegreesOfFreedomWithKnownForce;
             
             IList<NodalDegreeOfFreedom> knownDisplacements = this.DegreesOfFreedomWithKnownDisplacement;
-            if (knownDisplacements == null || knownDisplacements.IsEmpty())
-            {
-                throw new InvalidOperationException("The model has no constraints and therefore cannot be solved");
-            }
-            
+            Guard.AgainstInvalidState(() => { return knownDisplacements == null || knownDisplacements.IsEmpty(); },
+                                      "The model has no constraints and therefore cannot be solved");
+                        
             return this.BuildStiffnessSubMatrix(knownForces, knownDisplacements);
         }
         
@@ -157,10 +155,8 @@ namespace SharpFE.Stiffness
         public StiffnessMatrix BuildKnownForcesUnknownDisplacementStiffnessMatrix()
         {
             IList<NodalDegreeOfFreedom> knownForceIdentifiers = this.DegreesOfFreedomWithKnownForce;
-            if (knownForceIdentifiers == null || knownForceIdentifiers.IsEmpty())
-            {
-                throw new InvalidOperationException("The model has too many constraints and no displacements will occur.  The reactions of each node equals the forces applied to each node.");
-            }
+            Guard.AgainstInvalidState(() => { return knownForceIdentifiers == null || knownForceIdentifiers.IsEmpty(); },
+                                          "The model has too many constraints and no displacements will occur.  The reactions of each node equals the forces applied to each node.");
             
             IList<NodalDegreeOfFreedom> unknownDisplacementIdentifiers = this.DegreesOfFreedomWithUnknownDisplacement;
             

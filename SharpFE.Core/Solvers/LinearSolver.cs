@@ -80,15 +80,11 @@ namespace SharpFE.Solvers
         /// <exception cref="InvalidOperationException">Thrown if the model is invalid for solving.</exception>
         protected void ThrowIfNotAValidModel()
         {
-            if (this.model.NodeCount < 2)
-            {
-                throw new InvalidOperationException("The model has less than 2 nodes and so cannot be solved");
-            }
+            Guard.AgainstInvalidState(() => { return this.model.NodeCount < 2; },
+                                      "The model has less than 2 nodes and so cannot be solved");
             
-            if (this.model.ElementCount < 1)
-            {
-                throw new InvalidOperationException("The model has no elements and so cannot be solved");
-            }
+            Guard.AgainstInvalidState(() => { return this.model.ElementCount < 1; },
+                                      "The model has no elements and so cannot be solved");
         }
         
         /// <summary>
@@ -101,14 +97,9 @@ namespace SharpFE.Solvers
             
             //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
             double det = knownForcesUnknownDisplacementStiffnesses.Determinant();
-            if (det <= double.Epsilon)  //zero or near zero determinant
-            {
-                throw new InvalidOperationException(
-                    string.Format(
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        "We are unable to solve this model as it is able to move as a rigid body without deforming in any way.  Are you missing any constraints?\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
-                        knownForcesUnknownDisplacementStiffnesses));
-            }
+            Guard.AgainstInvalidState(() => { return det <= double.Epsilon; },
+                                      "We are unable to solve this model as it is able to move as a rigid body without deforming in any way.  Are you missing any constraints?\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
+                                      knownForcesUnknownDisplacementStiffnesses);
             
             KeyedVector<NodalDegreeOfFreedom> knownForces = this.model.KnownForceVector(); // Fk
             StiffnessMatrix knownForcesKnownDisplacementsStiffnesses = this.matrixBuilder.BuildKnownForcesKnownDisplacementStiffnessMatrix(); // K12

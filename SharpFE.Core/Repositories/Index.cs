@@ -263,10 +263,8 @@ namespace SharpFE
         /// <param name="value">The object to use as the value of the element to add</param>
         public virtual void Add(Key key, IList<Value> value)
         {
-            if (this.ContainsKey(key))
-            {
-                throw new InvalidOperationException("Cannot Add if the key is already contained in the index. Replacing the entire list is not supported.");
-            }
+            Guard.AgainstInvalidState(() => { return this.ContainsKey(key); },
+                                      "Cannot Add if the key is already contained in the index. Replacing the entire list is not supported.");
             
             foreach (Value item in value)
             {
@@ -280,10 +278,8 @@ namespace SharpFE
         /// <param name="item">The object to add to the index</param>
         public void Add(KeyValuePair<Key, IList<Value>> item)
         {
-            if (this.ContainsKey(item.Key))
-            {
-                throw new InvalidOperationException("Cannot Add if the key is already contained in the index");
-            }
+            Guard.AgainstInvalidState(() => { return this.ContainsKey(item.Key); },
+                                      "Cannot Add if the key is already contained in the index");
             
             this.internalStore.Add(item.Key, item.Value);
         }

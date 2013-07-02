@@ -50,10 +50,8 @@ namespace SharpFE
         /// <param name="value">The object to use as the value of the element to add</param>
         public override void Add(Key key, IList<Value> value)
         {
-            if (this.ContainsKey(key))
-            {
-                throw new InvalidOperationException("Cannot Add if the key is already contained in the index. Replacement of lists is not supported.");
-            }
+            Guard.AgainstInvalidState(() => { return this.ContainsKey(key); },
+                                      "Cannot Add if the key is already contained in the index. Replacement of lists is not supported.");
             
             foreach (Value item in value)
             {

@@ -50,10 +50,8 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.OneDimension)
-            {
-                throw new InvalidOperationException("Can only create a Node with an x-coordinate when a 1D system is in use");
-            }
+            Guard.AgainstInvalidState(() => { return this.modelType.GetDimensions() != GeometryDimensionality.OneDimension; },
+                                      "Can only create a Node with an x-coordinate when a 1D system is in use");
             
             FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis);
             
@@ -73,18 +71,12 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalYAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)
-            {
-                throw new InvalidOperationException("Can only create a Node with an x and y coordinate when a 2D system is in use");
-            }
+            Guard.AgainstInvalidState(() => { return this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension; },
+                                      "Can only create a Node with an x and y coordinate when a 2D system is in use");
             
-            if (!this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Y))
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Cannot define geometry in the Y-direction for model type of {0}.  Use the CreateForTruss method instead.",
-                    this.modelType));
-            }
+            Guard.AgainstInvalidState(() => { return !this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Y); },
+                                      "Cannot define geometry in the Y-direction for model type of {0}.  Use the CreateForTruss method instead.",
+                                      this.modelType);
             
             FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis, coordinateAlongGlobalYAxis);
             if (this.repo != null)
@@ -103,18 +95,12 @@ namespace SharpFE
         /// <returns></returns>
         public FiniteElementNode CreateFor2DTruss(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension)
-            {
-                throw new InvalidOperationException("Can only create a Node with an x and z coordinate when a 2D system is in use");
-            }
+            Guard.AgainstInvalidState(() => { return this.modelType.GetDimensions() != GeometryDimensionality.TwoDimension; },
+                                      "Can only create a Node with an x and z coordinate when a 2D system is in use");
             
-            if (!this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Z))
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Cannot define geometry in the Z-direction for model type of {0}.  Use the Create method instead.",
-                    this.modelType));
-            }
+            Guard.AgainstInvalidState(() => { return !this.modelType.IsAllowedDegreeOfFreedomForGeometry(DegreeOfFreedom.Z); },
+                                      "Cannot define geometry in the Z-direction for model type of {0}.  Use the Create method instead.",
+                                      this.modelType);
             
             FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis, 0, coordinateAlongGlobalZAxis);
             if (this.repo != null)
@@ -134,10 +120,8 @@ namespace SharpFE
         /// <returns>The newly created node</returns>
         public FiniteElementNode Create(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalYAxis, double coordinateAlongGlobalZAxis)
         {
-            if (this.modelType.GetDimensions() != GeometryDimensionality.ThreeDimension)
-            {
-                throw new InvalidOperationException("Can only create a Node with an x, y and z coordinate when a 3D system is in use");
-            }
+            Guard.AgainstInvalidState(() => { return this.modelType.GetDimensions() != GeometryDimensionality.ThreeDimension; },
+                                      "Can only create a Node with an x, y and z coordinate when a 3D system is in use");
             
             FiniteElementNode newNode = new FiniteElementNode(coordinateAlongGlobalXAxis, coordinateAlongGlobalYAxis, coordinateAlongGlobalZAxis);
             if (this.repo != null)

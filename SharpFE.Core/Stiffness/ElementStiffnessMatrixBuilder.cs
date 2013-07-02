@@ -107,14 +107,10 @@ namespace SharpFE.Stiffness
         protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
             StiffnessMatrix k = this.LocalStiffnessMatrix();
-            if (k.Determinant() > double.Epsilon) ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
-                    this.Element,
-                    this.Element.GetType()));
-            }
+            Guard.AgainstInvalidState(() => { return k.Determinant() > double.Epsilon; }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
+                                      "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
+                                      this.Element,
+                                      this.Element.GetType());
             
             KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
             
@@ -124,14 +120,10 @@ namespace SharpFE.Stiffness
             KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
             StiffnessMatrix globStiffMat = new StiffnessMatrix(ttransposedkt);
             
-            if (globStiffMat.Determinant() > double.Epsilon) //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "The global stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
-                    this.Element,
-                    this.Element.GetType()));
-            }
+            Guard.AgainstInvalidState(() => { return globStiffMat.Determinant() > double.Epsilon; }, //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
+                                      "The global stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
+                                      this.Element,
+                                      this.Element.GetType());
             
             return globStiffMat;
         }

@@ -198,24 +198,15 @@ namespace SharpFE
             Guard.AgainstNullArgument(rowKey, "rowKey");
             Guard.AgainstNullArgument(columnKey, "columnKey");
             
-            if (!this.keysForRows.ContainsKey(rowKey))
-            {
-                throw new InvalidOperationException(
-                    string.Format(
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        "A value could not be added to a matrix.  The key provided for the row does not exist in the matrix.  The key provided for the row is : {0}. We have not checked the key for the column, but it was : {1}",
-                        rowKey,
-                        columnKey));
-            }
+            Guard.AgainstInvalidState(() => { return !this.keysForRows.ContainsKey(rowKey);},
+                                      "A value could not be added to a matrix.  The key provided for the row does not exist in the matrix.  The key provided for the row is : {0}. We have not checked the key for the column, but it was : {1}",
+                                      rowKey,
+                                      columnKey);
 
-            if (!this.keysForColumns.ContainsKey(columnKey)){
-                throw new InvalidOperationException(
-                    string.Format(
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        "A value could not be added to a matrix.  The key provided for the column does not exist in the matrix.  The key provided for the column is : {0}. However, the key for the row could be found, for reference it was : {1}",
-                        columnKey,
-                        rowKey));
-            }
+            Guard.AgainstInvalidState(() => { return !this.keysForColumns.ContainsKey(columnKey); },
+                                      "A value could not be added to a matrix.  The key provided for the column does not exist in the matrix.  The key provided for the column is : {0}. However, the key for the row could be found, for reference it was : {1}",
+                                      columnKey,
+                                      rowKey);
             
             int rowIndex = this.keysForRows[rowKey];
             int colIndex = this.keysForColumns[columnKey];
