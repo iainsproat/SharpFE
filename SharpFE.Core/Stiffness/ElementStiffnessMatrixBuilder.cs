@@ -7,8 +7,8 @@
 namespace SharpFE.Stiffness
 {
     using System;
-    using System.Collections.Generic;
     using SharpFE;
+    using SharpFE.Cache;
     
     /// <summary>
     /// 
@@ -17,15 +17,7 @@ namespace SharpFE.Stiffness
     public abstract class ElementStiffnessMatrixBuilder<T> : IElementStiffnessCalculator
         where T : FiniteElement
     {
-        /// <summary>
-        /// The global stiffness matrix of this element
-        /// </summary>
-        private StiffnessMatrix globStiffMat;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private int elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt;
+        protected Cache<T, StiffnessMatrix>  globalStiffnessMatrixCache = new Cache<T, StiffnessMatrix>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementStiffnessMatrixBuilder">ElementStiffnessMatrixBuilder</see> class.
@@ -35,8 +27,6 @@ namespace SharpFE.Stiffness
         {
             Guard.AgainstNullArgument(finiteElement, "finiteElement");
             this.Element = finiteElement;
-            
-            this.HasBeenInitialized = true;
         }
         
         /// <summary>
@@ -45,7 +35,7 @@ namespace SharpFE.Stiffness
         public T Element
         {
             get;
-            private set;
+            protected set;
         }
         
         /// <summary>
@@ -55,24 +45,12 @@ namespace SharpFE.Stiffness
         {
             get
             {
-                if (this.Element.IsDirty(this.elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt))
-                {
-                    this.BuildGlobalStiffnessMatrix();
-                    this.elementStateAtWhichGlobalStiffnessMatrixWasLastBuilt = this.Element.GetHashCode();
-                }
-                
-                return this.globStiffMat;
+                return this.globalStiffnessMatrixCache.GetOrCreateAndSave(this.Element, this.Element.GetHashCode(), () => {
+                                                                              return this.BuildGlobalStiffnessMatrix();
+                                                                          });
             }
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        protected bool HasBeenInitialized
-        {
-            get;
-            private set;
-        }           
         
         /// <summary>
         /// 
@@ -116,19 +94,7 @@ namespace SharpFE.Stiffness
             
             return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
         }
-        
-        
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        protected void ThrowIfNotInitialized()
-        {
-            if (!this.HasBeenInitialized)
-            {
-                throw new InvalidOperationException("This StiffnessMatrixBuilder has not been initialized correctly.  The Initialize(FiniteElement) method should be called first.");
-            }
-        }
+
         
 
         
@@ -138,12 +104,10 @@ namespace SharpFE.Stiffness
         /// It calls the GenerateStiffnessMatrix method which inheriting classes are expected to implement.
         /// It sets the stiffnessMatrixHasBeenGenerated flag to true.
         /// </summary>
-        private void BuildGlobalStiffnessMatrix()
+        protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
-            this.ThrowIfNotInitialized();
-            
             StiffnessMatrix k = this.LocalStiffnessMatrix();
-            if (k.Determinant() != 0)
+            if (k.Determinant() > double.Epsilon) ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -158,9 +122,9 @@ namespace SharpFE.Stiffness
             KeyedSquareMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
             KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposed = t.Transpose(); // T^
             KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
-            this.globStiffMat = new StiffnessMatrix(ttransposedkt);
+            StiffnessMatrix globStiffMat = new StiffnessMatrix(ttransposedkt);
             
-            if (this.globStiffMat.Determinant() != 0)
+            if (globStiffMat.Determinant() > double.Epsilon) //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
             {
                 throw new InvalidOperationException(string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
@@ -168,21 +132,21 @@ namespace SharpFE.Stiffness
                     this.Element,
                     this.Element.GetType()));
             }
+            
+            return globStiffMat;
         }
         
         /// <summary>
         /// Builds the rotational matrix from local coordinates to global coordinates.
         /// </summary>
         /// <returns></returns>
-        private KeyedSquareMatrix<NodalDegreeOfFreedom> BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
+        protected KeyedSquareMatrix<NodalDegreeOfFreedom> BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates()
         {
-            this.ThrowIfNotInitialized();
-            
             KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = this.Element.CalculateElementRotationMatrix();
             
             KeyedSquareMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedSquareMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
 
-            foreach (FiniteElementNode node in this.Element.Nodes)
+            foreach (IFiniteElementNode node in this.Element.Nodes)
             {
                 elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
                 elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
