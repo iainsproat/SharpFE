@@ -213,65 +213,6 @@ namespace SharpFE.Examples.Beam
         }
         
         /// <summary>
-        ///            (2)
-        ///            / \
-        ///           /   \
-        ///          /     \
-        ///         /       \
-        ///       (1)       (3)
-        /// </summary>
-        [Test]
-        public void AFrame()
-        {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(-5, 0);
-            model.ConstrainNode(node1, DegreeOfFreedom.X);
-            model.ConstrainNode(node1, DegreeOfFreedom.Z);
-
-            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0, 5);
-            
-            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(5, 0);
-            model.ConstrainNode(node3, DegreeOfFreedom.Z);
-            
-            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
-            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
-            
-            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
-            model.ElementFactory.CreateLinear1DBeam(node2,node3,material,section);
-            
-            ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
-            model.ApplyForceToNode(force, node2);
-            
-            IFiniteElementSolver solver = new LinearSolverSVD(model);
-            FiniteElementResults results = solver.Solve();
-            
-            DisplacementVector node1Displacement = results.GetDisplacement(node1);
-            Console.WriteLine("node1Displacement : " + node1Displacement);
-            
-            DisplacementVector node2Displacement = results.GetDisplacement(node2);
-            Console.WriteLine("node2Displacement : " + node2Displacement);
-            
-            DisplacementVector node3Displacement = results.GetDisplacement(node3);
-            Console.WriteLine("node3Displacement : " + node3Displacement);
-            
-            ReactionVector node1Reaction = results.GetReaction(node1);
-            Console.WriteLine("node1Reaction : " + node1Reaction);
-            
-            ReactionVector node3Reaction = results.GetReaction(node3);
-            Console.WriteLine("node5Reaction : " + node3Reaction);
-            
-            Assert.AreEqual(5000, node1Reaction.Z, 1);
-            Assert.AreEqual(5000, node3Reaction.Z, 1);
-            
-            Assert.AreEqual(0, node2Displacement.YY, 0.0001);
-            Assert.AreEqual(0.0021, node1Displacement.YY, 0.0001);
-            Assert.AreEqual(0.00617, node2Displacement.X, 0.0001);
-            Assert.AreEqual(-0.00786, node2Displacement.Z, 0.0001);
-            Assert.AreEqual(0.01234, node3Displacement.X, 0.0001);
-            Assert.AreEqual(-0.0021, node3Displacement.YY, 0.0001);
-        }
-        
-        /// <summary>
         ///            (3)
         ///            / \
         ///           /   \
@@ -330,24 +271,24 @@ namespace SharpFE.Examples.Beam
             Console.WriteLine("node1 reactions : " + node1Reaction);
             Console.WriteLine("node5 reactions : " + node5Reaction);
             
-            Assert.AreEqual(0, node1Displacement.X, 0.001);
-            Assert.AreEqual(0, node1Displacement.Z, 0.001);
-            Assert.AreEqual(-0.00109, node1Displacement.YY, 0.0001);
+            Assert.AreEqual(0, node1Displacement.X, 0.0001);
+            Assert.AreEqual(0, node1Displacement.Z, 0.0001);
+            Assert.AreEqual(0.0010985, node1Displacement.YY, 0.0001);
             
-            Assert.AreEqual(-0.004, node2Displacement.X, 0.001);
-            Assert.AreEqual(0.00238, node2Displacement.Z, 0.001);
-            Assert.AreEqual(-0.00996, node2Displacement.YY, 0.0001);
+            Assert.AreEqual(0.004027, node2Displacement.X, 0.0001);
+            Assert.AreEqual(0.002381, node2Displacement.Z, 0.0001);
+            Assert.AreEqual(-0.000996, node2Displacement.YY, 0.0001);
             
-            Assert.AreEqual(0, node3Displacement.X, 0.001);
-            Assert.AreEqual(0.01723, node3Displacement.Z, 0.001);
+            Assert.AreEqual(0, node3Displacement.X, 0.0001);
+            Assert.AreEqual(0.01723, node3Displacement.Z, 0.0001);
             Assert.AreEqual(0, node3Displacement.YY, 0.0001);
             
-            Assert.AreEqual(-0.004, node4Displacement.X);
-            Assert.AreEqual(0.00238, node4Displacement.Z, 0.001);
-            Assert.AreEqual(0.00996, node4Displacement.YY, 0.0001);
+            Assert.AreEqual(-0.004027, node4Displacement.X, 0.0001);
+            Assert.AreEqual(0.002381, node4Displacement.Z, 0.0001);
+            Assert.AreEqual(0.000996, node4Displacement.YY, 0.0001);
             
-            Assert.AreEqual(0, node1Displacement.X, 0.001);
-            Assert.AreEqual(0, node1Displacement.Z, 0.001);
+            Assert.AreEqual(0, node1Displacement.X, 0.0001);
+            Assert.AreEqual(0, node1Displacement.Z, 0.0001);
             Assert.AreEqual(0.00109, node1Displacement.YY, 0.0001);
             
             Console.WriteLine(node1Reaction);
@@ -364,7 +305,7 @@ namespace SharpFE.Examples.Beam
         ///<summary>
         /// Example problem and results are derived from:
         /// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
-        /// Section 5.3, page 73
+        /// Section 7.2, page 73
         /// </summary>
         [Test]
         public void Calculate2DFrameOf3BeamsAnd12Dof()
@@ -423,86 +364,6 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(0, node4Reaction.X, 1);
             Assert.AreEqual(10000, node4Reaction.Z, 1);
             Assert.AreEqual(23284, node4Reaction.YY, 1); ///NOTE this value of 23284 does not match the example, but was verified using a commercial finite element software
-            
-        }
-        
-        /// <summary>
-        ///       (2)--------------(3)
-        ///        |                |
-        ///        |                |
-        ///        |                |
-        ///        |                |
-        ///       (1)              (4)
-        /// </summary>
-        [Test]
-        public void FlatRoofedPortalFrame() //TODO we can remove this example once ReverseCantilever is working!
-        {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0, 0);
-            model.ConstrainNode(node1, DegreeOfFreedom.X);
-            model.ConstrainNode(node1, DegreeOfFreedom.Z);
-
-            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0, 5);
-            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(20, 5);
-            
-            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(20, 0);
-            model.ConstrainNode(node4, DegreeOfFreedom.X);
-            model.ConstrainNode(node4, DegreeOfFreedom.Z);
-            
-            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
-            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
-            
-            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
-            model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
-            model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
-            
-            ForceVector force2 = model.ForceFactory.Create(0, 0, 0, 0,  10000, 0);
-            model.ApplyForceToNode(force2, node2);
-            ForceVector force3 = model.ForceFactory.Create(0, 0, 0, 0, -10000, 0);
-            model.ApplyForceToNode(force3, node3);
-            
-            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
-            FiniteElementResults results = solver.Solve();
-            
-            DisplacementVector node1Displacement = results.GetDisplacement(node1);
-            DisplacementVector node2Displacement = results.GetDisplacement(node2);
-            DisplacementVector node3Displacement = results.GetDisplacement(node3);
-            DisplacementVector node4Displacement = results.GetDisplacement(node4);
-            ReactionVector node1Reaction = results.GetReaction(node1);
-            ReactionVector node4Reaction = results.GetReaction(node4);
-            
-            Console.WriteLine("\nnode1 displacements : \n" + node1Displacement);
-            Console.WriteLine("\nnode2 displacements : \n" + node2Displacement);
-            Console.WriteLine("\nnode3 displacements : \n" + node3Displacement);
-            Console.WriteLine("\nnode4 displacements : \n" + node4Displacement);
-            Console.WriteLine("\nnode1 reactions : \n" + node1Reaction);
-            Console.WriteLine("\nnode4 reactions : \n" + node4Reaction);
-            
-            Assert.AreEqual(0, node1Displacement.X, 0.001);
-            Assert.AreEqual(0, node1Displacement.Z, 0.001);
-            Assert.AreEqual(-0.000367, node1Displacement.YY, 0.0001);
-            
-            Assert.AreEqual(-0.004, node2Displacement.X, 0.001);
-            Assert.AreEqual(0.00238, node2Displacement.Z, 0.001);
-            Assert.AreEqual(-0.00996, node2Displacement.YY, 0.0001);
-            
-            Assert.AreEqual(-0.004, node3Displacement.X);
-            Assert.AreEqual(0.00238, node3Displacement.Z, 0.001);
-            Assert.AreEqual(0.00996, node3Displacement.YY, 0.0001);
-            
-            Assert.AreEqual(0, node4Displacement.X, 0.001);
-            Assert.AreEqual(0, node4Displacement.Z, 0.001);
-            Assert.AreEqual(0.00109, node4Displacement.YY, 0.0001);
-            
-            Console.WriteLine(node1Reaction);
-            Assert.AreEqual(-5000, node1Reaction.Z, 1);
-            Assert.AreEqual(-1759, node1Reaction.X, 1);
-            Assert.AreEqual(0, node1Reaction.YY, 1);
-            
-            Console.WriteLine(node4Reaction);
-            Assert.AreEqual(-5000, node4Reaction.Z, 1);
-            Assert.AreEqual(1759, node4Reaction.X, 1);
-            Assert.AreEqual(0, node4Reaction.YY, 1);
             
         }
     }

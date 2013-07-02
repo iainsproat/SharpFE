@@ -150,9 +150,15 @@ namespace SharpFE.Stiffness
                 elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
                 elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
                 
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), 1.0);
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), 1.0);
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), 1.0);
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
+                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
             }
             
             return elementRotationMatrixFromLocalToGlobalCoordinates;
