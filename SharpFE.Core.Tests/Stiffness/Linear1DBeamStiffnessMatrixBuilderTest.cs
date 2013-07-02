@@ -17,7 +17,7 @@ namespace SharpFE.Core.Tests.Stiffness
 		private FiniteElementNode start;
 		private FiniteElementNode end;
 		private GenericElasticMaterial material;
-		private SolidRectangle section;
+		private ICrossSection section;
 		private Linear1DBeam beam;
 		private ElementStiffnessMatrixBuilder<Linear1DBeam> SUT;
 		
@@ -29,7 +29,7 @@ namespace SharpFE.Core.Tests.Stiffness
 			end = nodeFactory.CreateFor2DTruss(1, 0);
 			elementFactory = new ElementFactory();
 			material = new GenericElasticMaterial(0, 1, 0, 0);
-			section = new SolidRectangle(1, 1);
+			section = new GenericCrossSection(1, 1);
 			beam = elementFactory.CreateLinear1DBeam(start, end, material, section);
 			SUT = new Linear1DBeamStiffnessMatrixBuilder(beam);
 		}
@@ -37,22 +37,42 @@ namespace SharpFE.Core.Tests.Stiffness
 		[Test]
 		public void CanCreateGlobalStiffnessMatrixForBeamAlignedToGlobalXAxis()
 		{
-			double a = 1.0 / 3.0;
-			double b = a / 2.0;
 			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
-			                                            1, 0,  0,   0,  0,   0,  -1, 0,  0,   0,  0,   0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
-			                                            0, 0,  1,   0, -0.5, 0,   0, 0, -1,   0, -0.5, 0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
-			                                            0, 0, -0.5, 0,  a,   0,   0, 0,  0.5, 0,  b,   0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
+			                                            1, 0,   0,   0,  0,   0,  -1, 0,   0,   0,  0,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  12,   0, -6,   0,   0, 0, -12,   0, -6,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  -6,   0,  4,   0,   0, 0,   6,   0,  2,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
 			                                            
-			                                           -1, 0,  0,   0,  0,   0,   1, 0,  0,   0,  0,   0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
-			                                            0, 0, -1,   0,  0.5, 0,   0, 0,  1,   0,  0.5, 0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0,
-			                                            0, 0, -0.5, 0,  b,   0,   0, 0,  0.5, 0,  a,   0,
-			                                            0, 0,  0,   0,  0,   0,   0, 0,  0,   0,  0,   0);
+			                                           -1, 0,   0,   0,  0,   0,   1, 0,   0,   0,  0,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0, -12,   0,  6,   0,   0, 0,  12,   0,  6,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  -6,   0,  2,   0,   0, 0,   6,   0,    4,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0);
+		}
+	
+		[Test]
+		public void CanCreateGlobalStiffnessMatrixForBeamAlignedToGlobalXAxisInReverseOrientation()
+		{
+		    elementFactory = new ElementFactory();
+		    beam = elementFactory.CreateLinear1DBeam(end, start, material, section);
+			SUT = new Linear1DBeamStiffnessMatrixBuilder(beam);
+			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
+			                                            1, 0,   0,   0,  0,   0,  -1, 0,   0,   0,  0,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  12,   0, -6,   0,   0, 0, -12,   0, -6,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  -6,   0,  4,   0,   0, 0,   6,   0,  2,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            
+			                                           -1, 0,   0,   0,  0,   0,   1, 0,   0,   0,  0,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0, -12,   0,  6,   0,   0, 0,  12,   0,  6,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
+			                                            0, 0,  -6,   0,  2,   0,   0, 0,   6,   0,    4,   0,
+			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0);
 		}
 		
 		[Test]
