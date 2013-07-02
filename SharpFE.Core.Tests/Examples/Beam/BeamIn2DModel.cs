@@ -34,7 +34,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0); // Create a force of 10 KiloNewtons in the z direction
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
             
-            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
             FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
             
             ReactionVector reaction = results.GetReaction(node1); //get the reaction at the first node
@@ -42,6 +42,36 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-30000, reaction.YY, 0.001); // Check that we have calculated a reaction of -30 KiloNewtonMetres around the YY axis.
             
             DisplacementVector displacement = results.GetDisplacement(node2);  // get the displacement at the second node
+            Assert.AreEqual(-0.00214, displacement.Z, 0.0005);
+            Assert.AreEqual(0.00107, displacement.YY, 0.0001);
+        }
+        
+        [Test]
+        public void ReversedCantilever()
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Beam1D);
+            FiniteElementNode node1 = model.NodeFactory.Create(0);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+
+            FiniteElementNode node2 = model.NodeFactory.Create(3.0);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
+            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
+            
+            model.ElementFactory.CreateLinear1DBeam(node2, node1, material, section);  //connecting the nodes in reverse order to the Cantilever() example
+            
+            ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0);
+            model.ApplyForceToNode(force, node2);
+            
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
+            FiniteElementResults results = solver.Solve();
+            
+            ReactionVector reaction = results.GetReaction(node1);
+            Assert.AreEqual(10000, reaction.Z, 0.001);
+            Assert.AreEqual(-30000, reaction.YY, 0.001);
+            
+            DisplacementVector displacement = results.GetDisplacement(node2);
             Assert.AreEqual(-0.00214, displacement.Z, 0.0005);
             Assert.AreEqual(0.00107, displacement.YY, 0.0001);
         }
@@ -66,7 +96,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force = model.ForceFactory.CreateFor1DBeam(-10000, 0);
             model.ApplyForceToNode(force, node3);
             
-            IFiniteElementSolver solver = new LinearSolver(model); 
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
             ReactionVector reaction = results.GetReaction(node1);
@@ -88,7 +118,7 @@ namespace SharpFE.Examples.Beam
         /// We apply a moment at node 1 and check that the same moment is transferred along the beam to node 2
         /// </summary>
         [Test]
-        public void MomentThroughSimplySupportedBeam()
+        public void SimplySupportedBeam()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Beam1D); // we will create and analyze a 1D beam system
             FiniteElementNode node1 = model.NodeFactory.Create(0); // create a node at the origin
@@ -105,7 +135,7 @@ namespace SharpFE.Examples.Beam
             ForceVector moment = model.ForceFactory.CreateFor1DBeam(0, 10000); // Create a clockwise(?) moment of 10 KiloNewtonmetres around the yy axis
             model.ApplyForceToNode(moment, node1); // Apply that moment to the first node
             
-            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
             FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
             
             // check the results
@@ -126,51 +156,11 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(0, reactionAtNode2.YY, 0.001);
         }
         
-        [Test]
-        public void MomentThroughVerticallyOrientedSimplySupportedBeam()
-        {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D); // we will create and analyze a 1D beam system
-            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0, 0); // create a node at the origin
-            model.ConstrainNode(node1, DegreeOfFreedom.X);
-            model.ConstrainNode(node1, DegreeOfFreedom.Z);
-
-            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0, 1.0); // create a second node at a distance 1 metre along the X axis
-            model.ConstrainNode(node2, DegreeOfFreedom.X);
-            
-            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
-            ICrossSection section = new SolidRectangle(0.1, 0.1);
-            
-            model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
-            
-            ForceVector moment = model.ForceFactory.CreateFor1DBeam(0, 10000); // Create a clockwise(?) moment of 10 KiloNewtonmetres around the yy axis
-            model.ApplyForceToNode(moment, node1); // Apply that moment to the first node
-            
-            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
-            FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
-            
-            // check the results
-            DisplacementVector displacementAtNode1 = results.GetDisplacement(node1);
-            Assert.AreEqual(0, displacementAtNode1.Z, 0.001);
-            Assert.AreEqual(0.00192, displacementAtNode1.YY, 0.0001);
-            
-            DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);
-            Assert.AreEqual(0, displacementAtNode2.Z, 0.001);
-            Assert.AreEqual(-0.000928, displacementAtNode2.YY, 0.0005);
-            
-            ReactionVector reactionAtNode1 = results.GetReaction(node1);
-            Assert.AreEqual(10000, reactionAtNode1.X, 0.001);
-            Assert.AreEqual(0, reactionAtNode1.YY, 0.001);
-            
-            ReactionVector reactionAtNode2 = results.GetReaction(node2);
-            Assert.AreEqual(-10000, reactionAtNode2.X, 0.001);
-            Assert.AreEqual(0, reactionAtNode2.YY, 0.001);
-        }
-        
         /// <summary>
         /// (1)----(2)----(3)
         /// </summary>
         [Test]
-        public void ThreeNodeBeam()
+        public void ThreeNodeSimplySupportedBeam()
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
             FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0,0);
@@ -191,7 +181,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
             model.ApplyForceToNode(force, node2);
             
-            IFiniteElementSolver solver = new LinearSolver(model);
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
             
             Stiffness.GlobalModelStiffnessMatrixBuilder gmsmb = new SharpFE.Stiffness.GlobalModelStiffnessMatrixBuilder(model);
             Console.WriteLine(gmsmb.BuildKnownForcesUnknownDisplacementStiffnessMatrix());
@@ -373,13 +363,13 @@ namespace SharpFE.Examples.Beam
         
         ///<summary>
         /// Example problem and results are derived from:
-		/// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
-		/// Section 5.3, page 73
-		/// </summary>
-		[Test]
-		public void Calculate2DFrameOf3BeamsAnd12Dof()
-		{
-		    FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
+        /// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
+        /// Section 5.3, page 73
+        /// </summary>
+        [Test]
+        public void Calculate2DFrameOf3BeamsAnd12Dof()
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
             FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0,3);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
@@ -387,9 +377,9 @@ namespace SharpFE.Examples.Beam
 
             FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(3,3);
             
-            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(0,6);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(6,0);
             
-            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(0,9);
+            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(9,0);
             model.ConstrainNode(node4, DegreeOfFreedom.X);
             model.ConstrainNode(node4, DegreeOfFreedom.Z);
             model.ConstrainNode(node4, DegreeOfFreedom.YY);
@@ -401,9 +391,12 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
             model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
             
-            ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
-            model.ApplyForceToNode(force, node2);
-            model.ApplyForceToNode(force, node3);
+            ForceVector force2 = model.ForceFactory.Create(0, 0, -10000, 0, 5000, 0);
+            model.ApplyForceToNode(force2, node2);
+            
+            
+            ForceVector force3 = model.ForceFactory.Create(0, 0, -10000, 0, -5000, 0);
+            model.ApplyForceToNode(force3, node3);
             
             IFiniteElementSolver solver = new LinearSolverSVD(model);
             FiniteElementResults results = solver.Solve();
@@ -414,23 +407,103 @@ namespace SharpFE.Examples.Beam
             ReactionVector node4Reaction = results.GetReaction(node4);
             
             
-            Assert.AreEqual(0, node2Displacement.X, 0.001);
-            Assert.AreEqual(-1.3496, node2Displacement.Z, 0.001);
-            Assert.AreEqual(-0.0005, node2Displacement.YY, 0.0001);
-           
-            Assert.AreEqual(0, node3Displacement.X, 0.001);
-            Assert.AreEqual(-1.3496, node3Displacement.Z, 0.001);
-            Assert.AreEqual(0.0005, node3Displacement.YY, 0.0001);
+            Assert.AreEqual(0, node2Displacement.X, 0.0001);
+            Assert.AreEqual(-0.0013496, node2Displacement.Z, 0.0001); ///NOTE this value of -0.0013496 matches the example, but -0.0314233 was calculated using a commercial finite element software
+            Assert.AreEqual(0.00059173, node2Displacement.YY, 0.0001); ///NOTE this value of 0.00059173 does not match the example, but was verified using a commercial finite element software
+            
+            Assert.AreEqual(0, node3Displacement.X, 0.0001);
+            Assert.AreEqual(-0.0013496, node3Displacement.Z, 0.0001); ///NOTE this value matches the example, but was verified using a commercial finite element software
+            Assert.AreEqual(-0.00059173, node3Displacement.YY, 0.0001); ///NOTE this value of -0.00059173 does not match the example, but was verified using a commercial finite element software
             
             Assert.AreEqual(0, node1Reaction.X, 1);
             Assert.AreEqual(10000, node1Reaction.Z, 1);
-            Assert.AreEqual(22596000, node1Reaction.YY, 0);
+            Assert.AreEqual(-23284, node1Reaction.YY, 1); ///NOTE this value of -23284 does not match the example, but was verified using a commercial finite element software
             
             Console.WriteLine(node4Reaction);
-            Assert.AreEqual(0, node4Reaction.Z, 1);
-            Assert.AreEqual(10000, node4Reaction.X, 1);
-            Assert.AreEqual(-22596000, node4Reaction.YY, 0);
+            Assert.AreEqual(0, node4Reaction.X, 1);
+            Assert.AreEqual(10000, node4Reaction.Z, 1);
+            Assert.AreEqual(23284, node4Reaction.YY, 1); ///NOTE this value of 23284 does not match the example, but was verified using a commercial finite element software
             
-		}
+        }
+        
+        /// <summary>
+        ///       (2)--------------(3)
+        ///        |                |
+        ///        |                |
+        ///        |                |
+        ///        |                |
+        ///       (1)              (4)
+        /// </summary>
+        [Test]
+        public void FlatRoofedPortalFrame() //TODO we can remove this example once ReverseCantilever is working!
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0, 0);
+            model.ConstrainNode(node1, DegreeOfFreedom.X);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(0, 5);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(20, 5);
+            
+            FiniteElementNode node4 = model.NodeFactory.CreateFor2DTruss(20, 0);
+            model.ConstrainNode(node4, DegreeOfFreedom.X);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
+            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
+            
+            model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
+            
+            ForceVector force2 = model.ForceFactory.Create(0, 0, 0, 0,  10000, 0);
+            model.ApplyForceToNode(force2, node2);
+            ForceVector force3 = model.ForceFactory.Create(0, 0, 0, 0, -10000, 0);
+            model.ApplyForceToNode(force3, node3);
+            
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
+            FiniteElementResults results = solver.Solve();
+            
+            DisplacementVector node1Displacement = results.GetDisplacement(node1);
+            DisplacementVector node2Displacement = results.GetDisplacement(node2);
+            DisplacementVector node3Displacement = results.GetDisplacement(node3);
+            DisplacementVector node4Displacement = results.GetDisplacement(node4);
+            ReactionVector node1Reaction = results.GetReaction(node1);
+            ReactionVector node4Reaction = results.GetReaction(node4);
+            
+            Console.WriteLine("\nnode1 displacements : \n" + node1Displacement);
+            Console.WriteLine("\nnode2 displacements : \n" + node2Displacement);
+            Console.WriteLine("\nnode3 displacements : \n" + node3Displacement);
+            Console.WriteLine("\nnode4 displacements : \n" + node4Displacement);
+            Console.WriteLine("\nnode1 reactions : \n" + node1Reaction);
+            Console.WriteLine("\nnode4 reactions : \n" + node4Reaction);
+            
+            Assert.AreEqual(0, node1Displacement.X, 0.001);
+            Assert.AreEqual(0, node1Displacement.Z, 0.001);
+            Assert.AreEqual(-0.000367, node1Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(-0.004, node2Displacement.X, 0.001);
+            Assert.AreEqual(0.00238, node2Displacement.Z, 0.001);
+            Assert.AreEqual(-0.00996, node2Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(-0.004, node3Displacement.X);
+            Assert.AreEqual(0.00238, node3Displacement.Z, 0.001);
+            Assert.AreEqual(0.00996, node3Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(0, node4Displacement.X, 0.001);
+            Assert.AreEqual(0, node4Displacement.Z, 0.001);
+            Assert.AreEqual(0.00109, node4Displacement.YY, 0.0001);
+            
+            Console.WriteLine(node1Reaction);
+            Assert.AreEqual(-5000, node1Reaction.Z, 1);
+            Assert.AreEqual(-1759, node1Reaction.X, 1);
+            Assert.AreEqual(0, node1Reaction.YY, 1);
+            
+            Console.WriteLine(node4Reaction);
+            Assert.AreEqual(-5000, node4Reaction.Z, 1);
+            Assert.AreEqual(1759, node4Reaction.X, 1);
+            Assert.AreEqual(0, node4Reaction.YY, 1);
+            
+        }
     }
 }
