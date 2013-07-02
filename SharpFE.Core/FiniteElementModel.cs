@@ -321,6 +321,7 @@ namespace SharpFE
         public KeyedVector<NodalDegreeOfFreedom> KnownForceVector()
         {
             IList<NodalDegreeOfFreedom> knownForces = this.UnconstrainedNodalDegreeOfFreedoms;
+            //TODO purge unconnected nodes
             
             KeyedVector<NodalDegreeOfFreedom> result = new KeyedVector<NodalDegreeOfFreedom>(knownForces);
             ForceVector nodalForce;
@@ -342,6 +343,8 @@ namespace SharpFE
         public KeyedVector<NodalDegreeOfFreedom> KnownDisplacementVector()
         {
             IList<NodalDegreeOfFreedom> knownDisplacements = this.nodes.ConstrainedNodalDegreeOfFreedoms;
+            //TODO purge unconnected nodes
+            
             return new KeyedVector<NodalDegreeOfFreedom>(knownDisplacements, 0.0); // TODO allow for non-zero initial displacements
         }
         
