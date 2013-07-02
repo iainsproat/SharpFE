@@ -193,12 +193,13 @@ namespace SharpFE
         {
             Guard.AgainstNullArgument(other, "other");
             Guard.AgainstBadArgument(
+                "other",
                 () => { return other.Count != 3; },
-                "Cross product can only be carried out with a 3 dimensional vector",
-                "other");
+                "Cross product can only be carried out with a 3 dimensional vector");
             Guard.AgainstInvalidState(
                 () => { return this.Count != 3; },
-                "Cross product can only be carried out with a 3 dimensional vector");
+                "Cross product can only be carried out with a 3 dimensional vector. Number of dimensions of this vectors are {0}",
+                this.Count);
             
             KeyCompatibilityValidator<TKey, TKey> kcv = new KeyCompatibilityValidator<TKey, TKey>(this.Keys, other.Keys);
             kcv.ThrowIfInvalid();
@@ -413,9 +414,9 @@ namespace SharpFE
             Guard.AgainstNullArgument(values, "values");
             
             Guard.AgainstBadArgument(
+                "keysForVector",
                 () => { return values.Length != keysForVector.Count; },
-                "The number of items in the keys list should match the number of value items",
-                "keysForVector");
+                "The number of items in the keys list should match the number of value items");
             
             this.store.Clear();
             

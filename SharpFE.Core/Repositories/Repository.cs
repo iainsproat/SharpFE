@@ -16,8 +16,8 @@ namespace SharpFE
     /// <typeparam name="T">The type of instances to be stored in the repository</typeparam>
     internal abstract class Repository<T> : ICollection<T>, IEquatable<Repository<T>>
     {
-    	private bool allowDuplicates;
-    	
+        private bool allowDuplicates;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}" /> class.
         /// </summary>
@@ -50,10 +50,10 @@ namespace SharpFE
         
         public bool DuplicatesAreAllowed
         {
-        	get
-        	{
-        		return this.allowDuplicates;
-        	}
+            get
+            {
+                return this.allowDuplicates;
+            }
         }
         
         /// <summary>
@@ -184,9 +184,9 @@ namespace SharpFE
         public void Add(T item)
         {
             Guard.AgainstBadArgument(
+                "item",
                 () => { return this.Contains(item); },
-                "This repository already contains the item. Duplicate items cannot be added to a repository",
-                "item");
+                "This repository already contains the item. Duplicate items cannot be added to a repository");
             
             this.InternalStore.Add(item);
             this.AddToRepository(item);

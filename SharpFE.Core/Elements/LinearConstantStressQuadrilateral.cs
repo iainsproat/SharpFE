@@ -32,9 +32,9 @@ namespace SharpFE
             
             Guard.AgainstNullArgument(mat, "mat");
             Guard.AgainstBadArgument(
+                "t",
                 () => { return elementThickness <= 0; },
-                "thickness has to be greater than zero",
-                "t");
+                "thickness has to be greater than zero");
             this.Material = mat;
             this.Thickness = elementThickness;
         }

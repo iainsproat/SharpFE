@@ -30,15 +30,24 @@ namespace SharpFE.Geometry
         public GeometricVector(KeyedVector<DegreeOfFreedom> vectorToClone)
             : base(vectorToClone)
         {
-            Guard.AgainstBadArgument(() => {
-                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.X);
-                                     }, "DegreeOfFreedom.X was expected as a key", "vectorToClone");
-            Guard.AgainstBadArgument(() => {
-                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.Y);
-                                     }, "DegreeOfFreedom.Y was expected as a key", "vectorToClone");
-            Guard.AgainstBadArgument(() => {
-                                         return !vectorToClone.Keys.Contains(DegreeOfFreedom.Z);
-                                     }, "DegreeOfFreedom.Z was expected as a key", "vectorToClone");
+            Guard.AgainstBadArgument(
+                "vectorToClone",
+                () => {
+                    return !vectorToClone.Keys.Contains(DegreeOfFreedom.X);
+                },
+                "DegreeOfFreedom.X was expected as a key");
+            Guard.AgainstBadArgument(
+                "vectorToClone",
+                () => {
+                    return !vectorToClone.Keys.Contains(DegreeOfFreedom.Y);
+                },
+                "DegreeOfFreedom.Y was expected as a key");
+            Guard.AgainstBadArgument(
+                "vectorToClone",
+                () => {
+                    return !vectorToClone.Keys.Contains(DegreeOfFreedom.Z);
+                },
+                "DegreeOfFreedom.Z was expected as a key");
         }
         #endregion
         

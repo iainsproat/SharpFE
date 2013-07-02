@@ -207,13 +207,13 @@ namespace SharpFE.Stiffness
             int numCols = columnKeys.Count;
             
             Guard.AgainstBadArgument(
+                "rowKeys",
                 () => { return numRows == 0; },
-                "There must be at least one row",
-                "rowKeys");
+                "There must be at least one row");
             Guard.AgainstBadArgument(
+                "columnKeys",
                 () => { return numCols == 0; },
-                "There must be at least one column",
-                "columnKeys");
+                "There must be at least one column");
             
             StiffnessMatrix result = new StiffnessMatrix(rowKeys, columnKeys);
             

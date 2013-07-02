@@ -366,38 +366,38 @@ namespace SharpFE
         {
             ////TODO this should be devolved to the KeyedMatrix class
             Guard.AgainstBadArgument(
+                "axis1",
                 () => { return axis1.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis1");
+                "All axes should be 3D, i.e. have 3 items");
             Guard.AgainstBadArgument(
+                "axis2",
                 () => { return axis2.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis2");
+                "All axes should be 3D, i.e. have 3 items");
             Guard.AgainstBadArgument(
+                "axis3",
                 () => { return axis3.Count != 3; },
-                "All axes should be 3D, i.e. have 3 items",
-                "axis3");
+                "All axes should be 3D, i.e. have 3 items");
             Guard.AgainstBadArgument(
-                () => { return axis1.SumMagnitudes() == 0; },
+                "axis1",
+                () => { return axis1.SumMagnitudes() < double.Epsilon; },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",
-                    axis1),
-                "axis1");
+                    axis1));
             Guard.AgainstBadArgument(
-                () => { return axis2.SumMagnitudes() == 0; },
+                "axis2",
+                () => { return axis2.SumMagnitudes() < double.Epsilon; },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",
-                    axis2),
-                "axis2");
+                    axis2));
             Guard.AgainstBadArgument(
-                () => { return axis3.SumMagnitudes() == 0; },
+                "axis3",
+                () => { return axis3.SumMagnitudes() < double.Epsilon; },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",
-                    axis3),
-                "axis3");
+                    axis3));
             
             KeyedVector<DegreeOfFreedom> axis1Norm = axis1.Normalize(2);
             KeyedVector<DegreeOfFreedom> axis2Norm = axis2.Normalize(2);

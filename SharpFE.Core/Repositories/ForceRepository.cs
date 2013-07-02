@@ -35,9 +35,9 @@ namespace SharpFE
         public void ApplyForceToNode(ForceVector forceToApply, FiniteElementNode nodeToApplyTo)
         {
             Guard.AgainstBadArgument(
+                "forceToApply",
                 () => { return !this.Contains(forceToApply); },
-                    "The force has not previously been registered with this repository.  The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter",
-                    "forceToApply");
+                    "The force has not previously been registered with this repository.  The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter");
             
             this.nodalForces.Add(nodeToApplyTo, forceToApply);
         }

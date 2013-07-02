@@ -30,9 +30,9 @@ namespace SharpFE
             
             Guard.AgainstNullArgument(elementMaterial, "elementMaterial");
             Guard.AgainstBadArgument(
+                "elementThickness",
                 () => { return elementThickness <= 0; },
-                "thickness has to be greater than zero",
-                "elementThickness");
+                "thickness has to be greater than zero");
             this.Material = elementMaterial;
             this.Thickness = elementThickness;
         }

@@ -37,14 +37,10 @@ namespace SharpFE.Stiffness
             where T : IFiniteElement
         {
             Guard.AgainstNullArgument(element, "element");
-            
-            if (!this.lookup.ContainsKey(element.GetType()))
-            {
-                throw new ArgumentException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "ElementStiffnessMatrixBuilderFactory has not registered a builder for the element type {0}",
-                    element.GetType().FullName));
-            }
+            Guard.AgainstBadArgument("element",
+                                     () => { return !this.lookup.ContainsKey(element.GetType()); },
+                                     "ElementStiffnessMatrixBuilderFactory has not registered a builder for the element type {0}",
+                                     element.GetType().FullName);
             
             Type builderType = this.lookup[element.GetType()];
             object[] parameters = new object[]
@@ -52,23 +48,16 @@ namespace SharpFE.Stiffness
                 element
             };
             object builder = Activator.CreateInstance(builderType, parameters);
-            if (builder == null)
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Failed to create an instance of type {0}. Most likely as the type does not implement a constructor expecting a single parameter of type FiniteElement",
-                    builderType.FullName));
-            }
+            Guard.AgainstInvalidState(() => { return builder == null; },
+                                      "Failed to create an instance of type {0}. Most likely as the type does not implement a constructor expecting a single parameter of type FiniteElement",
+                                      builderType.FullName);
             
             IElementStiffnessCalculator castBuilder = builder as IElementStiffnessCalculator;
-            if (castBuilder == null)
-            {
-                throw new InvalidOperationException(string.Format(
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    "Tried to cast to IStiffnessMatrixBuilder but it is null.  Most likely because the registered builder, {0}, for element type {1} does not inherit from IStiffnessMatrixBuilder",
-                    builderType.FullName,
-                    element.GetType().FullName));
-            }
+            Guard.AgainstInvalidState(() => { return castBuilder == null; },
+                                      "Tried to cast to IStiffnessMatrixBuilder but it is null.  Most likely because the registered builder, {0}, for element type {1} does not inherit from IStiffnessMatrixBuilder",
+                                      builderType.FullName,
+                                      element.GetType().FullName);
+            
             
             return castBuilder;
         }

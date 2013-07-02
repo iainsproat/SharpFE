@@ -17,37 +17,55 @@ namespace SharpFE
         /// <param name="height"></param>
         /// <param name="width"></param>
         public GenericCrossSection(double sectionArea)
-            : this(sectionArea, 0, 0, true)
+            : this(sectionArea, 0, 0, 0, true)
         {
-            Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
-                                     "sectionArea has to be a positive, non-zero number", 
-                                     "sectionArea");
+            Guard.AgainstBadArgument("sectionArea",
+                                     () => {return sectionArea <= 0;},
+                                     "sectionArea has to be a positive, non-zero number");
         }
         
         public GenericCrossSection(double sectionArea, double sectionSecondMomentOfAreaAroundYY)
-            : this(sectionArea, sectionSecondMomentOfAreaAroundYY, 0, true)
+            : this(sectionArea, sectionSecondMomentOfAreaAroundYY, 0, 0, true)
         {
-            Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
-                                     "sectionArea has to be a positive, non-zero number", 
-                                     "sectionArea");
-            Guard.AgainstBadArgument(() => {return sectionSecondMomentOfAreaAroundYY <= 0;},
-                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number", 
-                                     "sectionSecondMomentOfAreaAroundYY");
+            Guard.AgainstBadArgument("sectionArea",
+                                     () => {return sectionArea <= 0;},
+                                     "sectionArea has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionSecondMomentOfAreaAroundYY",
+                                     () => {return sectionSecondMomentOfAreaAroundYY <= 0;},
+                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number");
             
         }
         
         public GenericCrossSection(double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ)
-            :this(sectionArea, sectionSecondMomentOfAreaAroundYY, sectionSecondMomentOfAreaAroundZZ, true)
+            :this(sectionArea, sectionSecondMomentOfAreaAroundYY, sectionSecondMomentOfAreaAroundZZ, 0, true)
         {
-            Guard.AgainstBadArgument(() => {return sectionArea <= 0;},
-                                     "sectionArea has to be a positive, non-zero number", 
-                                     "sectionArea");
-            Guard.AgainstBadArgument(() => {return sectionSecondMomentOfAreaAroundYY <= 0;},
-                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number", 
-                                     "sectionSecondMomentOfAreaAroundYY");
-            Guard.AgainstBadArgument(() => {return sectionSecondMomentOfAreaAroundZZ <= 0;},
-                                     "sectionSecondMomentOfAreaAroundZZ has to be a positive, non-zero number", 
-                                     "sectionSecondMomentOfAreaAroundZZ");
+            Guard.AgainstBadArgument("sectionArea",
+                                     () => {return sectionArea <= 0;},
+                                     "sectionArea has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionSecondMomentOfAreaAroundYY",
+                                     () => {return sectionSecondMomentOfAreaAroundYY <= 0;},
+                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionSecondMomentOfAreaAroundZZ",
+                                     () => {return sectionSecondMomentOfAreaAroundZZ <= 0;},
+                                     "sectionSecondMomentOfAreaAroundZZ has to be a positive, non-zero number");
+        }
+        
+        
+        public GenericCrossSection(double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ, double sectionMomentOfInertiaInTorsion)
+            :this(sectionArea, sectionSecondMomentOfAreaAroundYY, sectionSecondMomentOfAreaAroundZZ, sectionMomentOfInertiaInTorsion, true)
+        {
+            Guard.AgainstBadArgument("sectionArea",
+                                     () => {return sectionArea <= 0;},
+                                     "sectionArea has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionSecondMomentOfAreaAroundYY",
+                                     () => {return sectionSecondMomentOfAreaAroundYY <= 0;},
+                                     "sectionSecondMomentOfAreaAroundYY has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionSecondMomentOfAreaAroundZZ",
+                                     () => {return sectionSecondMomentOfAreaAroundZZ <= 0;},
+                                     "sectionSecondMomentOfAreaAroundZZ has to be a positive, non-zero number");
+            Guard.AgainstBadArgument("sectionMomentOfInertiaInTorsion",
+                                     () => {return sectionMomentOfInertiaInTorsion <= 0;},
+                                     "sectionMomentOfInertiaInTorsion has to be a positive, non-zero number");
         }
         
         /// <summary>
@@ -57,11 +75,12 @@ namespace SharpFE
         /// <param name="sectionSecondMomentOfAreaAroundYY"></param>
         /// <param name="sectionSecondMomentOfAreaAroundZZ"></param>
         /// <param name="flag">Not used. The flag is only here to make this constructor signature unique and prevent compilation errors.</param>
-        protected GenericCrossSection (double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ, bool flag)
+        protected GenericCrossSection (double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ, double sectionMomentOfInertiaInTorsion, bool flag)
         {
             this.Area = sectionArea;
             this.SecondMomentOfAreaAroundYY = sectionSecondMomentOfAreaAroundYY;
             this.SecondMomentOfAreaAroundZZ = sectionSecondMomentOfAreaAroundZZ;
+            this.MomentOfInertiaInTorsion = sectionMomentOfInertiaInTorsion;
         }
         
         /// <summary>
@@ -129,10 +148,8 @@ namespace SharpFE
         /// </summary>
         public double MomentOfInertiaInTorsion
         {
-            get
-            {
-                throw new NotImplementedException("GenericCrossSection.MomentOfInertiaInTorsion");
-            }
+            get;
+            private set;
         }
         
         /// <summary>

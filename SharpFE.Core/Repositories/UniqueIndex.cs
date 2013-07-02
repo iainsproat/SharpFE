@@ -71,9 +71,9 @@ namespace SharpFE
         public Key KeyOfValue(Value item)
         {
             Guard.AgainstBadArgument(
+                "item",
                 () => { return !this.reverseIndex.ContainsKey(item); },
-                "The item is not contained by any key in this UniqueIndex",
-                "item");
+                "The item is not contained by any key in this UniqueIndex");
             
             return this.reverseIndex[item];
         }
