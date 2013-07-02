@@ -198,7 +198,7 @@ namespace SharpFE
             int i = 0;
             unchecked
             {
-                foreach (FiniteElementNode node in this.nodeStore)
+                foreach (IFiniteElementNode node in this.nodeStore)
                 {
                     hashCode += (1000000000 + i++) * node.GetHashCode();
                 }
@@ -298,7 +298,7 @@ namespace SharpFE
         /// Removes a node from the element.
         /// </summary>
         /// <param name="nodeToRemove">The node to remove from the element</param>
-        internal void RemoveNode(FiniteElementNode nodeToRemove)
+        internal void RemoveNode(IFiniteElementNode nodeToRemove)
         {
             this.nodeStore.Remove(nodeToRemove);
         }
@@ -342,7 +342,7 @@ namespace SharpFE
         protected IList<NodalDegreeOfFreedom> BuildSupportedGlobalNodalDegreeOfFreedoms() ////TODO make abstract and require derived classes to implement for their specific requirements
         {
             IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
-            foreach (FiniteElementNode node in this.nodeStore)
+            foreach (IFiniteElementNode node in this.nodeStore)
             {
                 nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X));
                 nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y));

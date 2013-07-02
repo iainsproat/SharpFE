@@ -19,7 +19,7 @@ namespace SharpFE.Core.Tests.Solvers
         LinearConstantSpring spring1;
         ForceVector force1;
         
-        LinearSolver SUT;
+        IFiniteElementSolver SUT;
         
         [SetUp]
         public void SetUp()
@@ -64,7 +64,7 @@ namespace SharpFE.Core.Tests.Solvers
         {
             model = new FiniteElementModel(ModelType.Truss1D);
             node1 = model.NodeFactory.Create(0);
-            SUT = new LinearSolver(model);
+            SUT = new MatrixInversionLinearSolver(model);
             SUT.Solve();
         }
         
@@ -75,7 +75,7 @@ namespace SharpFE.Core.Tests.Solvers
             model = new FiniteElementModel(ModelType.Truss1D);
             node1 = model.NodeFactory.Create(0);
             node2 = model.NodeFactory.Create(1);
-            SUT = new LinearSolver(model);
+            SUT = new MatrixInversionLinearSolver(model);
             SUT.Solve();
         }
         

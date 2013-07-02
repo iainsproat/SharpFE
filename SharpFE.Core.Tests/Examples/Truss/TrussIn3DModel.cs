@@ -52,7 +52,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.Create(0, 0, -1000, 0, 0, 0);
 			model.ApplyForceToNode(externalForce, node1);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			ReactionVector reactionAtNode1 = results.GetReaction(node1);
@@ -124,7 +124,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.Create(0, -10000, 0, 0, 0, 0);
 			model.ApplyForceToNode(externalForce, node1);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			ReactionVector reactionAtNode2 = results.GetReaction(node2);

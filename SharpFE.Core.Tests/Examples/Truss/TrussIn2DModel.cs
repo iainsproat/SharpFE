@@ -31,7 +31,7 @@ namespace SharpFE.Examples
             ForceVector force = model.ForceFactory.CreateForTruss(10, 0); // Create a force of 10 Newtons along the x-axis.
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
             
-            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
             FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
             
             DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);  // get the displacement at the second node
@@ -58,7 +58,7 @@ namespace SharpFE.Examples
             ForceVector force = model.ForceFactory.CreateForTruss(0, 10); // Create a force of with components of 10 Newtons along the y-axis.
             model.ApplyForceToNode(force, node2); // Apply that force to the second node
             
-            IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
             FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
             
             DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);  // get the displacement at the second node
@@ -104,7 +104,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.CreateForTruss(0, -10000);
 			model.ApplyForceToNode(externalForce, node1);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			ReactionVector reactionAtNode2 = results.GetReaction(node2);
@@ -177,7 +177,7 @@ namespace SharpFE.Examples
             model.ApplyForceToNode(force100Z, node4);
             
             //solve model
-            IFiniteElementSolver solver = new LinearSolver(model);
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			//assert results

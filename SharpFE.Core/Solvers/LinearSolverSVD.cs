@@ -7,6 +7,8 @@
 namespace SharpFE
 {
     using System;
+    
+    using SharpFE.Solvers;
     using SharpFE.Stiffness;
     using SharpFE.Maths.MatrixSolvers;
 

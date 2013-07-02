@@ -110,6 +110,7 @@
     <Compile Include="Repositories\UniqueIndex.cs" />
     <Compile Include="Solvers\LinearSolver.cs" />
     <Compile Include="Solvers\LinearSolverSVD.cs" />
+    <Compile Include="Solvers\MatrixInversionLinearSolver.cs" />
     <Compile Include="Stiffness\IElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\StiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />

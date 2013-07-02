@@ -19,7 +19,7 @@ namespace SharpFE.Core.Tests.Solvers
 		LinearConstantSpring spring1;
 		ForceVector force1;
 		
-		LinearSolver SUT;
+		IFiniteElementSolver SUT;
 		
 		// Along X Axis will result in an indeterminate matrix - see LinearSolverTest instead
 		

@@ -48,7 +48,7 @@ namespace SharpFE.Examples.Membrane
 			model.ApplyForceToNode(force, node4);
 			
 			Assert.Inconclusive("2D elements have not yet been fully implemented");
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			ReactionVector reaction = results.GetReaction(node1); //get the reaction at the first node

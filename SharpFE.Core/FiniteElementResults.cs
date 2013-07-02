@@ -94,7 +94,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="displacedNode">The node for which a displacement is to be found.</param>
         /// <returns>The vector of displacements at this node</returns>
-        public DisplacementVector GetDisplacement(FiniteElementNode displacedNode)
+        public DisplacementVector GetDisplacement(IFiniteElementNode displacedNode)
         {
             return this.displacements[displacedNode];
         }
@@ -119,7 +119,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="supportNode">The node to search for a reaction</param>
         /// <returns>A vector representing the reaction at the support</returns>
-        public ReactionVector GetReaction(FiniteElementNode supportNode)
+        public ReactionVector GetReaction(IFiniteElementNode supportNode)
         {
         	if (!this.reactions.ContainsKey(supportNode))
         	{

@@ -41,7 +41,7 @@ namespace SharpFE.Examples.Beam
 			ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
 			model.ApplyForceToNode(force, node2);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			
 			Stiffness.GlobalModelStiffnessMatrixBuilder gmsmb = new SharpFE.Stiffness.GlobalModelStiffnessMatrixBuilder(model);
 			Console.WriteLine(gmsmb.BuildKnownForcesUnknownDisplacementStiffnessMatrix());
@@ -106,7 +106,7 @@ namespace SharpFE.Examples.Beam
 			ForceVector force = model.ForceFactory.Create(10, 0, 0,0,0,0);
 			model.ApplyForceToNode(force, node2);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			DisplacementVector displacement = results.GetDisplacement(node2);
@@ -162,7 +162,7 @@ namespace SharpFE.Examples.Beam
 			ForceVector force = model.ForceFactory.Create(10, 0, 0,0,0,0);
 			model.ApplyForceToNode(force, node3);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			DisplacementVector displacement = results.GetDisplacement(node4);

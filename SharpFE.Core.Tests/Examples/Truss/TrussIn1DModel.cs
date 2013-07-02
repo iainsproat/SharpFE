@@ -37,7 +37,7 @@ namespace SharpFE.Examples
 			ForceVector force = model.ForceFactory.Create(10.0); // Create a force of 10 Newtons in the x direction
 			model.ApplyForceToNode(force, node2); // Apply that force to the second node
 			
-			IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
 			FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
 			
 			DisplacementVector displacement = results.GetDisplacement(node2);  // get the displacement at the second node
@@ -66,7 +66,7 @@ namespace SharpFE.Examples
 			ForceVector force2 = model.ForceFactory.Create(3.0); // Create a force of 3 Newtons in the y direction
 			model.ApplyForceToNode(force2, node3); // Apply that force to the third node
 			
-			IFiniteElementSolver solver = new LinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model); // Create a new instance of the solver class and pass it the model to solve
 			FiniteElementResults results = solver.Solve(); // ask the solver to solve the model and return results
 			
 			DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);  // get the displacement at the second node
@@ -106,7 +106,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.Create(10);
 			model.ApplyForceToNode(externalForce, node2);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);
@@ -152,7 +152,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.Create(3000);
 			model.ApplyForceToNode(externalForce, node2);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);
@@ -198,7 +198,7 @@ namespace SharpFE.Examples
 			ForceVector externalForce = model.ForceFactory.Create(8000);
 			model.ApplyForceToNode(externalForce, node2);
 			
-			IFiniteElementSolver solver = new LinearSolver(model);
+			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
 			DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);

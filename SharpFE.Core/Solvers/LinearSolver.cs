@@ -4,16 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace SharpFE
+namespace SharpFE.Solvers
 {
     using System;
-    using System.Collections.Generic;
     using SharpFE.Stiffness;
 
     /// <summary>
     /// Carries out a simple, linear analysis to solve a static, implicit finite element problem.
     /// </summary>
-    public class LinearSolver : IFiniteElementSolver
+    public abstract class LinearSolver : IFiniteElementSolver
     {
         /// <summary>
         /// The model with the data to solve
@@ -73,12 +72,7 @@ namespace SharpFE
         /// <param name="stiffnessMatrix">The stiffness matrix</param>
         /// <param name="forceVector">The forces</param>
         /// <returns></returns>
-        protected virtual KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector)
-        {
-            KeyedSquareMatrix<NodalDegreeOfFreedom> inverse = stiffnessMatrix.Inverse();
-            KeyedVector<NodalDegreeOfFreedom> solution = inverse.Multiply(forceVector);
-            return solution;
-        }
+        protected abstract KeyedVector<NodalDegreeOfFreedom> Solve(StiffnessMatrix stiffnessMatrix, KeyedVector<NodalDegreeOfFreedom> forceVector);
         
         /// <summary>
         /// Checks as to whether the model is valid for solving.
