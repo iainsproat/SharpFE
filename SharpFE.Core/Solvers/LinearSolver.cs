@@ -18,12 +18,12 @@ namespace SharpFE
         /// <summary>
         /// The model with the data to solve
         /// </summary>
-        private FiniteElementModel model;
+        protected FiniteElementModel model;
         
         /// <summary>
         /// A helper class to build the stiffness matrices from the model
         /// </summary>
-        private GlobalModelStiffnessMatrixBuilder matrixBuilder;
+        protected GlobalModelStiffnessMatrixBuilder matrixBuilder;
         
         #region Constructors
         /// <summary>
@@ -84,7 +84,7 @@ namespace SharpFE
         /// Checks as to whether the model is valid for solving.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if the model is invalid for solving.</exception>
-        private void ThrowIfNotAValidModel()
+        protected void ThrowIfNotAValidModel()
         {
             if (this.model.NodeCount < 2)
             {
@@ -101,18 +101,11 @@ namespace SharpFE
         /// Calculates part of the problem for unknown displacements
         /// </summary>
         /// <returns>A vector of the displacements which were previously unknown, and have now been solved</returns>
-        private KeyedVector<NodalDegreeOfFreedom> CalculateUnknownDisplacements()
+        protected KeyedVector<NodalDegreeOfFreedom> CalculateUnknownDisplacements()
         {
             StiffnessMatrix knownForcesUnknownDisplacementStiffnesses = this.matrixBuilder.BuildKnownForcesUnknownDisplacementStiffnessMatrix(); // K11
-            KeyedVector<NodalDegreeOfFreedom> knownForces = this.model.KnownForceVector(); // Fk
-            StiffnessMatrix knownForcesKnownDisplacementsStiffnesses = this.matrixBuilder.BuildKnownForcesKnownDisplacementStiffnessMatrix(); // K12
-            KeyedVector<NodalDegreeOfFreedom> knownDisplacements = this.model.KnownDisplacementVector(); // Uk
             
-            // solve for unknown displacements
-            // Uu = K11^-1 * (Fk + (K12 * Uk))
-            KeyedVector<NodalDegreeOfFreedom> forcesDueToExternallyAppliedDisplacements = knownForcesKnownDisplacementsStiffnesses.Multiply(knownDisplacements); // K12 * Uk
-            KeyedVector<NodalDegreeOfFreedom> externallyAppliedForces = knownForces.Add(forcesDueToExternallyAppliedDisplacements); // Fk + (K12 * Uk)
-            
+            //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
             double det = knownForcesUnknownDisplacementStiffnesses.Determinant();
             if (det <= double.Epsilon)  //zero or near zero determinant
             {
@@ -122,6 +115,15 @@ namespace SharpFE
                         "We are unable to solve this model as it is able to move as a rigid body without deforming in any way.  Are you missing any constraints?\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
                         knownForcesUnknownDisplacementStiffnesses));
             }
+            
+            KeyedVector<NodalDegreeOfFreedom> knownForces = this.model.KnownForceVector(); // Fk
+            StiffnessMatrix knownForcesKnownDisplacementsStiffnesses = this.matrixBuilder.BuildKnownForcesKnownDisplacementStiffnessMatrix(); // K12
+            KeyedVector<NodalDegreeOfFreedom> knownDisplacements = this.model.KnownDisplacementVector(); // Uk
+            
+            // solve for unknown displacements
+            // Uu = K11^-1 * (Fk + (K12 * Uk))
+            KeyedVector<NodalDegreeOfFreedom> forcesDueToExternallyAppliedDisplacements = knownForcesKnownDisplacementsStiffnesses.Multiply(knownDisplacements); // K12 * Uk
+            KeyedVector<NodalDegreeOfFreedom> externallyAppliedForces = knownForces.Add(forcesDueToExternallyAppliedDisplacements); // Fk + (K12 * Uk)
             
             // K11^-1 * (Fk + (K12 * Uk))
             KeyedVector<NodalDegreeOfFreedom> unknownDisplacements = this.Solve(knownForcesUnknownDisplacementStiffnesses, externallyAppliedForces);
@@ -134,7 +136,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="unknownDisplacements">A vector of the displacements which were previously unknown</param>
         /// <returns>A vector of the reactions which were previously unknown, and have now been solved</returns>
-        private KeyedVector<NodalDegreeOfFreedom> CalculateUnknownReactions(KeyedVector<NodalDegreeOfFreedom> unknownDisplacements)
+        protected KeyedVector<NodalDegreeOfFreedom> CalculateUnknownReactions(KeyedVector<NodalDegreeOfFreedom> unknownDisplacements)
         {
             Guard.AgainstNullArgument(unknownDisplacements, "unknownDisplacements");
             
@@ -156,7 +158,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="reactions">The calculated values of the reactions</param>
         /// <returns>The calculated values of the reactions with additional external forces added where applicable.</returns>
-        private KeyedVector<NodalDegreeOfFreedom> CombineExternalForcesOnReactionNodesWithReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
+        protected KeyedVector<NodalDegreeOfFreedom> CombineExternalForcesOnReactionNodesWithReactions(KeyedVector<NodalDegreeOfFreedom> reactions)
         {
             KeyedVector<NodalDegreeOfFreedom> externalForcesOnReactionNodes = this.model.GetCombinedForcesFor(reactions.Keys);
             return reactions.Add(externalForcesOnReactionNodes);
@@ -168,7 +170,7 @@ namespace SharpFE
         /// <param name="displacements">The calculated displacements.  The index of the values in the vector matches the index of the displacement identifiers.</param>
         /// <param name="reactions">The calculated reactions.  The index of the values in the vector matches the index of the reaction identifiers.</param>
         /// <returns>The results in a presentable data structure</returns>
-        private FiniteElementResults CreateResults(KeyedVector<NodalDegreeOfFreedom> displacements, KeyedVector<NodalDegreeOfFreedom> reactions)
+        protected FiniteElementResults CreateResults(KeyedVector<NodalDegreeOfFreedom> displacements, KeyedVector<NodalDegreeOfFreedom> reactions)
         {
             Guard.AgainstNullArgument(displacements, "displacements");
             Guard.AgainstNullArgument(reactions, "reactions");
