@@ -17,7 +17,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <param name="finiteElement"></param>
-        public Linear3DBeamStiffnessMatrixBuilder(Linear3DBeam finiteElement)
+        public Linear3DBernoulliBeamStiffnessMatrixBuilder(Linear3DBeam finiteElement)
             : base(finiteElement)
         {
             // empty

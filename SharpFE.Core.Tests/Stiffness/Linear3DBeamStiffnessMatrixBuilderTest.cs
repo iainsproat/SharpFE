@@ -26,7 +26,7 @@
 			material = new GenericElasticMaterial(0, 1, 0, 1);
 			section = new GenericCrossSection(1, 1, 1, 1);
             beam = elementFactory.CreateLinear3DBeam(start, end, material, section);
-            SUT = new Linear3DBeamStiffnessMatrixBuilder(beam);
+            SUT = new Linear3DBernoulliBeamStiffnessMatrixBuilder(beam);
         }
         
 		[Test]

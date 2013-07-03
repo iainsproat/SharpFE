@@ -120,8 +120,8 @@
     <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\Linear3DBeamStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\Linear1DBeamStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear3DBernoulliBeamStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\Linear1DBernoulliBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilder.cs" />
     <Compile Include="Strain.cs" />
   </ItemGroup>

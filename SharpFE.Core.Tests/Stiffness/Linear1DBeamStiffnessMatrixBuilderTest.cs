@@ -31,7 +31,7 @@ namespace SharpFE.Core.Tests.Stiffness
 			material = new GenericElasticMaterial(0, 1, 0, 0);
 			section = new GenericCrossSection(1, 1);
 			beam = elementFactory.CreateLinear1DBeam(start, end, material, section);
-			SUT = new Linear1DBeamStiffnessMatrixBuilder(beam);
+			SUT = new Linear1DBernoulliBeamStiffnessMatrixBuilder(beam);
 		}
 		
 		[Test]
@@ -58,7 +58,7 @@ namespace SharpFE.Core.Tests.Stiffness
 		{
 		    elementFactory = new ElementFactory(ModelType.Beam1D);
 		    beam = elementFactory.CreateLinear1DBeam(end, start, material, section);
-			SUT = new Linear1DBeamStiffnessMatrixBuilder(beam);
+			SUT = new Linear1DBernoulliBeamStiffnessMatrixBuilder(beam);
 			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,
 			                                            1, 0,   0,   0,  0,   0,  -1, 0,   0,   0,  0,   0,
 			                                            0, 0,   0,   0,  0,   0,   0, 0,   0,   0,  0,   0,
