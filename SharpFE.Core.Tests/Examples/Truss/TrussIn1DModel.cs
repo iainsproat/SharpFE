@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace SharpFE.Examples
+namespace SharpFE.Examples.Truss
 {
 	using System;
 	using NUnit.Framework; // used for checking the results, not required for example.

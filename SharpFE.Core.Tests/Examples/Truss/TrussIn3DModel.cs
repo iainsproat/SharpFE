@@ -7,7 +7,7 @@
 using System;
 using NUnit.Framework;
 
-namespace SharpFE.Examples
+namespace SharpFE.Examples.Truss
 {
 	[TestFixture]
 	public class TrussIn3DModel

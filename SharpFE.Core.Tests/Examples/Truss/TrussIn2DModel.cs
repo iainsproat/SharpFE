@@ -7,7 +7,7 @@ using System;
 using SharpFE;
 using NUnit.Framework;
 
-namespace SharpFE.Examples
+namespace SharpFE.Examples.Truss
 {
     /// <summary>
     /// Description of Spring1DIn2DModel.
