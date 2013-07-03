@@ -379,21 +379,21 @@ namespace SharpFE
                 "All axes should be 3D, i.e. have 3 items");
             Guard.AgainstBadArgument(
                 "axis1",
-                () => { return axis1.SumMagnitudes() < double.Epsilon; },
+                () => { return axis1.SumMagnitudes().IsApproximatelyEqualTo(0.0); },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",
                     axis1));
             Guard.AgainstBadArgument(
                 "axis2",
-                () => { return axis2.SumMagnitudes() < double.Epsilon; },
+                () => { return axis2.SumMagnitudes().IsApproximatelyEqualTo(0.0); },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",
                     axis2));
             Guard.AgainstBadArgument(
                 "axis3",
-                () => { return axis3.SumMagnitudes() < double.Epsilon; },
+                () => { return axis3.SumMagnitudes().IsApproximatelyEqualTo(0.0); },
                 string.Format(
                     System.Globalization.CultureInfo.InvariantCulture,
                     "Axis should not be zero: {0}",

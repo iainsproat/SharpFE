@@ -277,7 +277,7 @@ namespace SharpFE
             
             double norm = Norm(p);
             KeyedVector<TKey> clone = Clone();
-            if (norm == 0.0)
+            if (norm.IsApproximatelyEqualTo(0.0))
             {
                 return clone;
             }

@@ -77,6 +77,7 @@
     <Compile Include="Geometry\PointTest.cs" />
     <Compile Include="Geometry\UnboundedLineTest.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Maths\DoubleExtensionTest.cs" />
     <Compile Include="Maths\KeyCompatibilityValidatorTest.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrixTest.cs" />
     <Compile Include="Maths\KeyedVectorTest.cs" />

@@ -97,7 +97,7 @@ namespace SharpFE.Solvers
             
             //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
             double det = knownForcesUnknownDisplacementStiffnesses.Determinant();
-            Guard.AgainstInvalidState(() => { return det <= double.Epsilon; },
+            Guard.AgainstInvalidState(() => { return det.IsApproximatelyEqualTo(0.0); },
                                       "We are unable to solve this model as it is able to move as a rigid body without deforming in any way.  Are you missing any constraints?\r\nMatrix of stiffnesses for known forces and unknown displacements:\r\n {0}",
                                       knownForcesUnknownDisplacementStiffnesses);
             

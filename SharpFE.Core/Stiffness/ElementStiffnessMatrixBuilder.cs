@@ -107,7 +107,7 @@ namespace SharpFE.Stiffness
         protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
             StiffnessMatrix k = this.LocalStiffnessMatrix();
-            Guard.AgainstInvalidState(() => { return k.Determinant() > double.Epsilon; }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
+            Guard.AgainstInvalidState(() => { return !k.Determinant().IsApproximatelyEqualTo(0.0); }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
                                       "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
                                       this.Element,
                                       this.Element.GetType());
@@ -120,7 +120,7 @@ namespace SharpFE.Stiffness
             KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
             StiffnessMatrix globStiffMat = new StiffnessMatrix(ttransposedkt);
             
-            Guard.AgainstInvalidState(() => { return globStiffMat.Determinant() > double.Epsilon; }, //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
+            Guard.AgainstInvalidState(() => { return !globStiffMat.Determinant().IsApproximatelyEqualTo(0.0); }, //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
                                       "The global stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
                                       this.Element,
                                       this.Element.GetType());
