@@ -325,7 +325,7 @@ namespace SharpFE
             
             foreach (KeyValuePair<TKey, double> kvp in this)
             {
-                if (other[kvp.Key] != kvp.Value)
+                if (!other[kvp.Key].IsApproximatelyEqualTo(kvp.Value))
                 {
                     return false;
                 }
@@ -333,6 +333,7 @@ namespace SharpFE
             
             return true;
         }
+        
         
         public override int GetHashCode()
         {
