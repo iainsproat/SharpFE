@@ -101,17 +101,17 @@ namespace SharpFE.Stiffness
             matrix.At(this.Element.EndNode,   DegreeOfFreedom.XX, this.Element.StartNode, DegreeOfFreedom.XX, -torsionalStiffness);
             matrix.At(this.Element.EndNode,   DegreeOfFreedom.XX, this.Element.EndNode,   DegreeOfFreedom.XX,  torsionalStiffness);
             
-            double bendingStiffnessAboutYY = 4.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundYY / length;
-            matrix.At(this.Element.StartNode, DegreeOfFreedom.YY, this.Element.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY);
-            matrix.At(this.Element.StartNode, DegreeOfFreedom.YY, this.Element.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY / 2.0);
-            matrix.At(this.Element.EndNode,   DegreeOfFreedom.YY, this.Element.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY / 2.0);
-            matrix.At(this.Element.EndNode,   DegreeOfFreedom.YY, this.Element.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY);
+            double bendingStiffnessAboutYY = 2.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundYY / length;
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.YY, this.Element.StartNode, DegreeOfFreedom.YY, 2.0 *bendingStiffnessAboutYY);
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.YY, this.Element.EndNode,   DegreeOfFreedom.YY, bendingStiffnessAboutYY);
+            matrix.At(this.Element.EndNode,   DegreeOfFreedom.YY, this.Element.StartNode, DegreeOfFreedom.YY, bendingStiffnessAboutYY);
+            matrix.At(this.Element.EndNode,   DegreeOfFreedom.YY, this.Element.EndNode,   DegreeOfFreedom.YY, 2.0 * bendingStiffnessAboutYY);
             
-            double bendingStiffnessAboutZZ = 4.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundZZ / length;
-            matrix.At(this.Element.StartNode, DegreeOfFreedom.ZZ, this.Element.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
-            matrix.At(this.Element.StartNode, DegreeOfFreedom.ZZ, this.Element.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ / 2.0);
-            matrix.At(this.Element.EndNode,   DegreeOfFreedom.ZZ, this.Element.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ / 2.0);
-            matrix.At(this.Element.EndNode,   DegreeOfFreedom.ZZ, this.Element.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
+            double bendingStiffnessAboutZZ = 2.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundZZ / length;
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.ZZ, this.Element.StartNode, DegreeOfFreedom.ZZ, 2.0 * bendingStiffnessAboutZZ);
+            matrix.At(this.Element.StartNode, DegreeOfFreedom.ZZ, this.Element.EndNode,   DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
+            matrix.At(this.Element.EndNode,   DegreeOfFreedom.ZZ, this.Element.StartNode, DegreeOfFreedom.ZZ, bendingStiffnessAboutZZ);
+            matrix.At(this.Element.EndNode,   DegreeOfFreedom.ZZ, this.Element.EndNode,   DegreeOfFreedom.ZZ, 2.0 * bendingStiffnessAboutZZ);
             
             double bendingAboutZZshearInY = 6.0 * this.Element.Material.YoungsModulus * this.Element.CrossSection.SecondMomentOfAreaAroundZZ / (length * length);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.Y,  this.Element.StartNode, DegreeOfFreedom.ZZ,  bendingAboutZZshearInY);
