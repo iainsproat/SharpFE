@@ -62,8 +62,9 @@
     <Compile Include="Elements\LinearConstantStressQuadrilateralTest.cs" />
     <Compile Include="Elements\LinearTrussElementTest.cs" />
     <Compile Include="Elements\LinearConstantSpringTest.cs" />
-    <Compile Include="Examples\Beam\BeamIn2DModel.cs" />
-    <Compile Include="Examples\Beam\BeamIn3DModel.cs" />
+    <Compile Include="Examples\Beam\Beam1DIn2DModel.cs" />
+    <Compile Include="Examples\Beam\Beam3DIn2DModel.cs" />
+    <Compile Include="Examples\Beam\Beam3DInFull3DModel.cs" />
     <Compile Include="Examples\Membrane\Triangle.cs" />
     <Compile Include="Examples\Truss\TrussIn1DModel.cs" />
     <Compile Include="Examples\Truss\TrussIn2DModel.cs" />

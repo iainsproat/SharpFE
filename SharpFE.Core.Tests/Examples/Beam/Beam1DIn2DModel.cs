@@ -118,7 +118,7 @@ namespace SharpFE.Examples.Beam
         /// We apply a moment at node 1 and check that the same moment is transferred along the beam to node 2
         /// </summary>
         [Test]
-        public void SimplySupportedBeam()
+        public void SimplySupportedBeam() //TODO verify using independent check
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Beam1D); // we will create and analyze a 1D beam system
             FiniteElementNode node1 = model.NodeFactory.Create(0); // create a node at the origin
@@ -127,8 +127,8 @@ namespace SharpFE.Examples.Beam
             FiniteElementNode node2 = model.NodeFactory.Create(1.0); // create a second node at a distance 1 metre along the X axis
             model.ConstrainNode(node2, DegreeOfFreedom.Z); // constrain the node from moving in the Z-axis
             
-            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 80769200000);
-            ICrossSection section = new SolidRectangle(0.1, 0.1);
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0);
+            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
             
             model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section); // create a spring between the two nodes of a stiffness of 2000 Newtons per metre
             
@@ -141,11 +141,11 @@ namespace SharpFE.Examples.Beam
             // check the results
             DisplacementVector displacementAtNode1 = results.GetDisplacement(node1);
             Assert.AreEqual(0, displacementAtNode1.Z, 0.001);
-            Assert.AreEqual(0.00192, displacementAtNode1.YY, 0.0001);
+            Assert.AreEqual(0.00007936, displacementAtNode1.YY, 0.00000001);
             
             DisplacementVector displacementAtNode2 = results.GetDisplacement(node2);
             Assert.AreEqual(0, displacementAtNode2.Z, 0.001);
-            Assert.AreEqual(-0.000928, displacementAtNode2.YY, 0.0005);
+            Assert.AreEqual(-0.00003968, displacementAtNode2.YY, 0.00000001);
             
             ReactionVector reactionAtNode1 = results.GetReaction(node1);
             Assert.AreEqual(-10000, reactionAtNode1.Z, 0.001);
@@ -160,20 +160,20 @@ namespace SharpFE.Examples.Beam
         /// (1)----(2)----(3)
         /// </summary>
         [Test]
-        public void ThreeNodeSimplySupportedBeam()
+        public void ThreeNodeSimplySupportedBeam() //TODO verify results using independent check
         {
             FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0,0);
+            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(0, 0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
 
-            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(1,0);
+            FiniteElementNode node2 = model.NodeFactory.CreateFor2DTruss(1, 0);
             
-            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(2,0);
+            FiniteElementNode node3 = model.NodeFactory.CreateFor2DTruss(2, 0);
             model.ConstrainNode(node3, DegreeOfFreedom.Z);
             
-            IMaterial material = new GenericElasticMaterial(0, 10000000000, 0.3, 1000000000);
-            ICrossSection section = new SolidRectangle(1, 1);
+            IMaterial material = new GenericElasticMaterial(0, 10000000000, 0, 0);
+            ICrossSection section = new GenericCrossSection(0.0001, 0.0002);
             
             model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
             model.ElementFactory.CreateLinear1DBeam(node2,node3,material,section);
@@ -203,13 +203,12 @@ namespace SharpFE.Examples.Beam
             ReactionVector node3Reaction = results.GetReaction(node3);
             Console.WriteLine("node5Reaction : " + node3Reaction);
             
-            Assert.AreEqual(0, node2Displacement.XX, 0.001);
-            Assert.AreEqual(-0.000002, node2Displacement.Z, 0.0000001);
+            Assert.AreEqual(-0.000833333, node2Displacement.Z, 0.0000001);
             Assert.AreEqual(5000, node1Reaction.Z, 0.001);
             Assert.AreEqual(5000, node3Reaction.Z, 0.001);
             Assert.AreEqual(0, node2Displacement.YY, 0.0001);
-            Assert.AreEqual( 0.000003, node1Displacement.YY, 0.0000001);
-            Assert.AreEqual(-0.000003, node3Displacement.YY, 0.0000001);
+            Assert.AreEqual( 0.00125, node1Displacement.YY, 0.0000001);
+            Assert.AreEqual(-0.00125, node3Displacement.YY, 0.0000001);
         }
         
         /// <summary>
