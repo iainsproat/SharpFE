@@ -30,7 +30,7 @@ namespace SharpFE.Core.Tests.Stiffness
             node1 = nodeFactory.Create(1, 0);
             node2 = nodeFactory.Create(1, 1);
             node3 = nodeFactory.Create(0, 1);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Slab2D);
 			material = new GenericElasticMaterial(0, 1, 0.1, 0);
             quad = elementFactory.CreateLinearConstantStressQuadrilateral(node0, node1, node2, node3, material, 0.1);
             SUT = new LinearConstantStressQuadrilateralStiffnessMatrixBuilder(quad);

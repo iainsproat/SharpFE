@@ -22,7 +22,7 @@
         	nodeFactory = new NodeFactory(ModelType.Frame2D);
             start = nodeFactory.CreateFor2DTruss(0, 0);
             end = nodeFactory.CreateFor2DTruss(1, 0);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Frame2D);
 			material = new GenericElasticMaterial(0, 1, 0, 1);
 			section = new GenericCrossSection(1, 1, 1, 1);
             beam = elementFactory.CreateLinear3DBeam(start, end, material, section);

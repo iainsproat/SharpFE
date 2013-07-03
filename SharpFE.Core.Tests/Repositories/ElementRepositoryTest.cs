@@ -31,7 +31,7 @@ namespace SharpFE.Core.Tests.Repositories
             node2 = nodeFactory.CreateFor2DTruss(0, 1);
             node3 = nodeFactory.CreateFor2DTruss(0, 2);
             SUT = new ElementRepository();
-            elementFactory = new ElementFactory(SUT);
+            elementFactory = new ElementFactory(ModelType.Truss2D, SUT);
             spring1 = elementFactory.CreateLinearConstantSpring(node1, node2, 1);
             spring2 = elementFactory.CreateLinearConstantSpring(node2, node3, 2);
         }

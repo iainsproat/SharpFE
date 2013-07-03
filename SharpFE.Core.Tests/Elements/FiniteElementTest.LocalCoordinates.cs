@@ -146,7 +146,7 @@ namespace SharpFE.Core.Tests.Elements
             this.start = nodeFactory.CreateFor2DTruss(startX, startZ);
             this.end = nodeFactory.CreateFor2DTruss(endX, endZ);
             
-            this.elementFactory = new ElementFactory();
+            this.elementFactory = new ElementFactory(ModelType.Truss2D);
             this.SUT = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);
         }
         

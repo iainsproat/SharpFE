@@ -22,7 +22,7 @@ namespace SharpFE.Core.Tests.Factory
             nodeFactory = new NodeFactory(ModelType.Truss2D);
             node1 = nodeFactory.CreateFor2DTruss(0, 0);
             node2 = nodeFactory.CreateFor2DTruss(0, 1);
-            SUT = new ElementFactory();
+            SUT = new ElementFactory(ModelType.Truss2D);
         }
         
         [Test]
@@ -38,7 +38,7 @@ namespace SharpFE.Core.Tests.Factory
         public void ElementsCanBeCreatedAndAddedToTheRepository()
         {
             ElementRepository repository = new ElementRepository();
-            SUT = new ElementFactory(repository);
+            SUT = new ElementFactory(ModelType.Full3D, repository);
             Assert.AreEqual(0, repository.Count);
             
             SUT.CreateLinearConstantSpring(node1, node2, 2);

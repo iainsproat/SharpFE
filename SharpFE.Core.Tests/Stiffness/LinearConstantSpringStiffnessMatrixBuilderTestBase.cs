@@ -24,7 +24,7 @@ namespace SharpFE.Core.Tests.Stiffness
             this.nodeFactory = new NodeFactory(ModelType.Truss1D);
             this.start = nodeFactory.Create(0);
             this.end = nodeFactory.Create(1);
-            this.elementFactory = new ElementFactory();
+            this.elementFactory = new ElementFactory(ModelType.Truss1D);
             this.spring = elementFactory.CreateLinearConstantSpring(start, end, 2);
             this.SUT = new LinearTrussStiffnessMatrixBuilder(spring);
         }
@@ -35,7 +35,7 @@ namespace SharpFE.Core.Tests.Stiffness
             this.start = nodeFactory.CreateFor2DTruss(0, 0);
             this.end = nodeFactory.CreateFor2DTruss(x, z);
             
-            this.elementFactory = new ElementFactory();
+            this.elementFactory = new ElementFactory(ModelType.Truss2D);
             this.spring = elementFactory.CreateLinearConstantSpring(this.start, this.end, 1);
             this.SUT = new LinearTrussStiffnessMatrixBuilder(this.spring);
         }
@@ -46,7 +46,7 @@ namespace SharpFE.Core.Tests.Stiffness
             start = nodeFactory.Create(0, 0, 0);
             end = nodeFactory.Create(x, y, z);
             
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Truss3D);
             this.spring = elementFactory.CreateLinearConstantSpring(start, end, 1);
             this.SUT = new LinearTrussStiffnessMatrixBuilder(this.spring);
         }

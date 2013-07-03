@@ -141,5 +141,26 @@ namespace SharpFE
                     return false;
             }
         }
+        
+        public static bool IsASupportedModelType(ModelType modelType)
+        {
+            switch(modelType)
+            {
+               case ModelType.Truss1D:
+                case ModelType.Beam1D:
+                case ModelType.Truss2D:
+                case ModelType.Frame2D:
+                case ModelType.Slab2D:
+                case ModelType.Truss3D:
+                case ModelType.MultiStorey2DSlab:
+                case ModelType.Full3D:
+                    return true;
+                default:
+                    throw new NotImplementedException(string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "LinearTruss.IsSupportedModelType(ModelType) has not been defined for a model type of {0}",
+                        modelType));
+            }
+        }
     }
 }

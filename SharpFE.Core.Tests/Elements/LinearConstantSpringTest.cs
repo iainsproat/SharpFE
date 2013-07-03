@@ -26,7 +26,7 @@ namespace SharpFE.Core.Tests.Elements
             nodeFactory = new NodeFactory(ModelType.Truss1D);
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Truss1D);
             SUT = elementFactory.CreateLinearConstantSpring(start, end, 2);
         }
         

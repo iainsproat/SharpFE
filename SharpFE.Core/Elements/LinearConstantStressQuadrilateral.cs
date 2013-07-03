@@ -128,5 +128,33 @@ namespace SharpFE
                 throw new ArgumentException("Cannot add more than 3 nodes");
             }
         }
+        
+        public static bool IsASupportedModelType(ModelType modelType)
+        {
+            switch(modelType)
+            {
+               case ModelType.Truss1D:
+                    return false;
+                case ModelType.Beam1D:
+                    return false;
+                case ModelType.Truss2D:
+                    return false;
+                case ModelType.Frame2D:
+                    return false;
+                case ModelType.Slab2D:
+                    return true;
+                case ModelType.Truss3D:
+                    return false;
+                case ModelType.MultiStorey2DSlab:
+                    return true;
+                case ModelType.Full3D:
+                    return true;
+                default:
+                    throw new NotImplementedException(string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "LinearConstantStressQuadrilateral.IsSupportedModelType(ModelType) has not been defined for a model type of {0}",
+                        modelType));
+            }
+        }
     }
 }

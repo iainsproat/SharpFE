@@ -29,7 +29,7 @@ namespace SharpFE.Core.Tests.Stiffness
             node0 = nodeFactory.Create(0, 0);
             node1 = nodeFactory.Create(2, 0);
             node2 = nodeFactory.Create(1, 1);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Slab2D);
 			material = new GenericElasticMaterial(0, 1, 0.1, 0);
             triangle = elementFactory.CreateLinearConstantStrainTriangle(node0, node1, node2, material, 0.1);
             SUT = new LinearConstantStrainTriangleStiffnessMatrixBuilder(triangle);

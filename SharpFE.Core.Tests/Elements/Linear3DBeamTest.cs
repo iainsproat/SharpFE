@@ -20,7 +20,7 @@
         	nodeFactory = new NodeFactory(ModelType.Truss1D);
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Truss1D);
 			material = new GenericElasticMaterial(0, 0.1, 0, 0);
 			section = new SolidRectangle(0.1, 1);
             SUT = elementFactory.CreateLinear3DBeam(start, end, material, section);

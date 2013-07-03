@@ -21,8 +21,8 @@ namespace SharpFE
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementFactory" /> class.
         /// </summary>
-        internal ElementFactory()
-            : this(null)
+        internal ElementFactory(ModelType typeOfModel)
+            : this(typeOfModel, null)
         {
             // empty
         }
@@ -31,9 +31,16 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="ElementFactory" /> class.
         /// </summary>
         /// <param name="elementRepository">The repository into which to add the new elements which are created by this factory.</param>
-        internal ElementFactory(ElementRepository elementRepository)
+        internal ElementFactory(ModelType typeOfModel, ElementRepository elementRepository)
         {
+            this.ModelType = typeOfModel;
             this.repository = elementRepository;
+        }
+        
+        public ModelType ModelType
+        {
+            get;
+            private set;
         }
         
         /// <summary>
@@ -45,6 +52,10 @@ namespace SharpFE
         /// <returns>The newly created Spring element</returns>
         public LinearConstantSpring CreateLinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
         {
+            Guard.AgainstInvalidState(() => { return !LinearConstantSpring.IsASupportedModelType(this.ModelType); },
+                                      "LinearConstantSpring are not available in a model of type {0}",
+                                      this.ModelType);
+            
             LinearConstantSpring newSpring = new LinearConstantSpring(node1, node2, springConstant);
             if (this.repository != null)
             {
@@ -64,6 +75,10 @@ namespace SharpFE
         /// <returns></returns>
         public LinearTruss CreateLinearTruss(FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
         {
+            Guard.AgainstInvalidState(() => { return !LinearTruss.IsASupportedModelType(this.ModelType); },
+                                      "LinearTruss are not available in a model of type {0}",
+                                      this.ModelType);
+            
             LinearTruss newTruss = new LinearTruss(node1, node2, material, crossSection);
             if (this.repository != null)
             {
@@ -83,6 +98,10 @@ namespace SharpFE
         /// <returns></returns>
         public Linear1DBeam CreateLinear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
+            Guard.AgainstInvalidState(() => { return !Linear1DBeam.IsASupportedModelType(this.ModelType); },
+                                      "Linear1DBeams are not available in a model of type {0}",
+                                      this.ModelType);
+            
             Linear1DBeam newBeam = new Linear1DBeam(start, end, material, crossSection);
             if (this.repository != null)
             {
@@ -102,6 +121,10 @@ namespace SharpFE
         /// <returns></returns>
         public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
+            Guard.AgainstInvalidState(() => { return !Linear3DBeam.IsASupportedModelType(this.ModelType); },
+                                      "Linear3DBeams are not available in a model of type {0}",
+                                      this.ModelType);
+            
             Linear3DBeam newBeam = new Linear3DBeam(start, end, material, crossSection);
             if (this.repository != null)
             {
@@ -122,6 +145,10 @@ namespace SharpFE
         /// <returns></returns>
         public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
         {
+            Guard.AgainstInvalidState(() => { return !LinearConstantStrainTriangle.IsASupportedModelType(this.ModelType); },
+                                      "LinearConstantStrainTriangle are not available in a model of type {0}",
+                                      this.ModelType);
+            
             LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
             if (this.repository != null)
             {
@@ -143,6 +170,10 @@ namespace SharpFE
         /// <returns></returns>
         public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
         {
+            Guard.AgainstInvalidState(() => { return !LinearConstantStressQuadrilateral.IsASupportedModelType(this.ModelType); },
+                                      "LinearConstantStressQuadrilateral are not available in a model of type {0}",
+                                      this.ModelType);
+            
             LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
             if (this.repository != null)
             {

@@ -27,7 +27,7 @@ namespace SharpFE.Core.Tests.Stiffness
 			nodeFactory = new NodeFactory(ModelType.Frame2D);
 			start = nodeFactory.CreateFor2DTruss(0, 0);
 			end = nodeFactory.CreateFor2DTruss(1, 0);
-			elementFactory = new ElementFactory();
+			elementFactory = new ElementFactory(ModelType.Frame2D);
 			material = new GenericElasticMaterial(0, 1, 0, 0);
 			section = new GenericCrossSection(1, 1);
 			beam = elementFactory.CreateLinear1DBeam(start, end, material, section);
@@ -56,7 +56,7 @@ namespace SharpFE.Core.Tests.Stiffness
 		[Test]
 		public void CanCreateGlobalStiffnessMatrixForBeamAlignedToGlobalXAxisInReverseOrientation()
 		{
-		    elementFactory = new ElementFactory();
+		    elementFactory = new ElementFactory(ModelType.Beam1D);
 		    beam = elementFactory.CreateLinear1DBeam(end, start, material, section);
 			SUT = new Linear1DBeamStiffnessMatrixBuilder(beam);
 			StiffnessHelpers.Assert12x12StiffnessMatrix(SUT,

@@ -72,7 +72,7 @@ namespace SharpFE.Core.Tests.Elements
             nodeFactory = new NodeFactory(ModelType.Truss3D);
             start = nodeFactory.Create(startX, startY, startZ);
             end = nodeFactory.Create(endX, endY, endZ);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Truss3D);
             SUT = elementFactory.CreateLinearConstantSpring(start, end, 0);
         }
 	}

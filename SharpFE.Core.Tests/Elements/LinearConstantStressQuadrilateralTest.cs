@@ -32,7 +32,7 @@ namespace SharpFE.Core.Tests.Elements
             node2 = nodeFactory.Create(5, 4);
             node3 = nodeFactory.Create(2, 3);
 			material = new GenericElasticMaterial(0, 0.1, 0, 0);
-            elementFactory = new ElementFactory();
+            elementFactory = new ElementFactory(ModelType.Slab2D);
             SUT = elementFactory.CreateLinearConstantStressQuadrilateral(node0, node1, node2, node3, material, 0.1);
         }
         

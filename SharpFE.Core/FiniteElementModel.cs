@@ -43,7 +43,7 @@ namespace SharpFE
             this.forces = new ForceRepository();
             
             this.NodeFactory = new NodeFactory(this.ModelType, this.nodes);
-            this.ElementFactory = new ElementFactory(this.elements);
+            this.ElementFactory = new ElementFactory(this.ModelType, this.elements);
             this.ForceFactory = new ForceFactory(this.ModelType, this.forces);
         }
         
