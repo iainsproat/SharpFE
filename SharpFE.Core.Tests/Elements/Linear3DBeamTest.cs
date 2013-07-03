@@ -17,10 +17,11 @@
         [SetUp]
         public void SetUp()
         {
-        	nodeFactory = new NodeFactory(ModelType.Truss1D);
+            ModelType modelType = ModelType.Beam1D;
+        	nodeFactory = new NodeFactory(modelType);
             start = nodeFactory.Create(0);
             end = nodeFactory.Create(1);
-            elementFactory = new ElementFactory(ModelType.Truss1D);
+            elementFactory = new ElementFactory(modelType);
 			material = new GenericElasticMaterial(0, 0.1, 0, 0);
 			section = new SolidRectangle(0.1, 1);
             SUT = elementFactory.CreateLinear3DBeam(start, end, material, section);
