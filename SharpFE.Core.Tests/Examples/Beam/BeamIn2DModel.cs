@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace SharpFE.Examples.Beam
 {
     [TestFixture]
-    public class BeamIn2DModel
+    public class Beam1DIn2DModel
     {
         /// <summary>
         /// Creates a cantilevered beam between two nodes spaced 1 metre apart.
@@ -287,9 +287,9 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(0.002381, node4Displacement.Z, 0.0001);
             Assert.AreEqual(0.000996, node4Displacement.YY, 0.0001);
             
-            Assert.AreEqual(0, node1Displacement.X, 0.0001);
-            Assert.AreEqual(0, node1Displacement.Z, 0.0001);
-            Assert.AreEqual(0.0010985, node1Displacement.YY, 0.0001);
+            Assert.AreEqual(0, node5Displacement.X, 0.0001);
+            Assert.AreEqual(0, node5Displacement.Z, 0.0001);
+            Assert.AreEqual(-0.0010985, node5Displacement.YY, 0.0001);
             
             Console.WriteLine(node1Reaction);
             Assert.AreEqual(-5000, node1Reaction.Z, 1);
