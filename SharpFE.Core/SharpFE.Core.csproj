@@ -61,8 +61,6 @@
     <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Elements\Linear3DBeam.cs" />
     <Compile Include="Elements\Linear1DBeam.cs" />
-    <Compile Include="Elements\LinearConstantStrainTriangle.cs" />
-    <Compile Include="Elements\LinearConstantStressQuadrilateral.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
@@ -117,13 +115,10 @@
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\IElementStiffnessCalculator.cs" />
-    <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
-    <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\LinearTrussStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear3DBernoulliBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DBernoulliBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilder.cs" />
-    <Compile Include="Strain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />

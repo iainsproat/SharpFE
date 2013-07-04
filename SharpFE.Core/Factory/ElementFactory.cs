@@ -133,54 +133,5 @@ namespace SharpFE
             
             return newBeam;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="node0"></param>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
-        /// <param name="material"></param>
-        /// <param name="thickness"></param>
-        /// <returns></returns>
-        public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
-        {
-            Guard.AgainstInvalidState(() => { return !LinearConstantStrainTriangle.IsASupportedModelType(this.ModelType); },
-                                      "LinearConstantStrainTriangle are not available in a model of type {0}",
-                                      this.ModelType);
-            
-            LinearConstantStrainTriangle newTriangle = new LinearConstantStrainTriangle(node0, node1, node2, material, thickness);
-            if (this.repository != null)
-            {
-                this.repository.Add(newTriangle);
-            }
-            
-            return newTriangle;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="node0"></param>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
-        /// <param name="node3"></param>
-        /// <param name="material"></param>
-        /// <param name="thickness"></param>
-        /// <returns></returns>
-        public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
-        {
-            Guard.AgainstInvalidState(() => { return !LinearConstantStressQuadrilateral.IsASupportedModelType(this.ModelType); },
-                                      "LinearConstantStressQuadrilateral are not available in a model of type {0}",
-                                      this.ModelType);
-            
-            LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
-            if (this.repository != null)
-            {
-                this.repository.Add(newQuad);
-            }
-            
-            return newQuad;
-        }
     }
 }

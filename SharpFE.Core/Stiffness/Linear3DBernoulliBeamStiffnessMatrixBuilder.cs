@@ -26,51 +26,6 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
-        {
-            IFiniteElementNode start = this.Element.StartNode;
-            IFiniteElementNode end = this.Element.EndNode;
-            double locationAlongBeamAsProjectedInGlobalXAxis = location.X - start.X;
-            double locationAlongBeamAsProjectedInGlobalYAxis = location.Y - start.Y;
-            double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
-            
-            double beamLengthProjectedInGlobalXAxis = end.X - start.X;
-            double beamLengthProjectedInGlobalYAxis = end.Y - start.Y;
-            double beamLength = Math.Sqrt((beamLengthProjectedInGlobalXAxis * beamLengthProjectedInGlobalXAxis) + (beamLengthProjectedInGlobalYAxis * beamLengthProjectedInGlobalYAxis));
-            
-            ////TODO check that the location is on the line
-            
-            double N1 = 1 - ((3 * x * x) / (beamLength * beamLength)) + ((2 * x * x * x) / (beamLength * beamLength * beamLength));
-            double N2 = x - ((2 * x * x) / beamLength) + ((x * x * x) / (beamLength * beamLength)); ////FIXME the angle might be reversed (i.e. this is positive for anti-clockwise rotation, rather than for clockwise)
-            double N3 = ((3 * x * x) / (beamLength * beamLength)) - ((2 * x * x) / (beamLength * beamLength * beamLength));
-            double N4 = ((x * x * x) / (beamLength * beamLength)) - ((x * x) / beamLength); ////FIXME the angle might be reversed (i.e. this is positive for anti-clockwise rotation, rather than for clockwise)
-            
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
-            
-            shapeFunctions.At( DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.Z), N1);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.YY), N2);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.Z), N3);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.YY), N4);
-            
-            return shapeFunctions;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
-        {
-            throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {

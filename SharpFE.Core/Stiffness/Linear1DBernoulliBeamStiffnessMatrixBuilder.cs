@@ -27,47 +27,6 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInLocalCoordinates)
-        {
-            double eta = this.ConvertLocalCoordinatesToNaturalCoordinate(locationInLocalCoordinates);
-            
-            double N1 = 0.5 * (1 - eta);
-            double N2 = 0.5 * (1 + eta);
-            
-            IFiniteElementNode start = this.Element.StartNode;
-            IFiniteElementNode end = this.Element.EndNode;
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.X), N1);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.X), N2);
-            return shapeFunctions;
-        }
-        
-        private double ConvertLocalCoordinatesToNaturalCoordinate(FiniteElementNode locationInLocalCoordinates)
-        {
-            ////TODO check that the location lies on the beam
-            
-            double beamLength = this.Element.OriginalLength;
-            double x = locationInLocalCoordinates.X;
-            double eta = ((2 * x) / beamLength) - 1; // in natural coordinates
-            return eta;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
-        {
-            throw new NotImplementedException();
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
