@@ -348,6 +348,68 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(20000, node3Reaction.XX, 1);
             Assert.AreEqual(13890, node3Reaction.YY, 1);
         }
+        
+        ///<summary>
+        /// Example problem and results are derived from:
+        /// MATLAB Codes for Finite Element Analysis, Solid Mechanics and its applications Volume 157, A.J.M. Ferreira, Springer 2010
+        /// Section 9.3 page 119
+        /// </summary>
+        [Test]
+        public void CalculateGridOf3BeamsAnd24Dof()
+        {
+            FiniteElementModel model = new FiniteElementModel(ModelType.Slab2D);
+            
+            FiniteElementNode node1 = model.NodeFactory.Create(4, 4);
+            
+            FiniteElementNode node2 = model.NodeFactory.Create(4, 0);
+            model.ConstrainNode(node2, DegreeOfFreedom.Z);
+            model.ConstrainNode(node2, DegreeOfFreedom.XX);
+            model.ConstrainNode(node2, DegreeOfFreedom.YY);
+            
+            FiniteElementNode node3 = model.NodeFactory.Create(0, 0);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.XX);
+            model.ConstrainNode(node3, DegreeOfFreedom.YY);
+            
+            FiniteElementNode node4 = model.NodeFactory.Create(0, 4);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            model.ConstrainNode(node4, DegreeOfFreedom.XX);
+            model.ConstrainNode(node4, DegreeOfFreedom.YY);
+            
+            IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 84000000000);
+            ICrossSection section = new GenericCrossSection(0.02, 0.0002, 0.0002, 0.00005);
+            
+            model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section);
+            model.ElementFactory.CreateLinear3DBeam(node1, node3, material, section);
+            model.ElementFactory.CreateLinear3DBeam(node1, node4, material, section);
+            
+            ForceVector force = model.ForceFactory.Create(0, 0, -20000, 0, 0, 0);
+            model.ApplyForceToNode(force, node1);
+            
+            IFiniteElementSolver solver = new LinearSolverSVD(model);
+            FiniteElementResults results = solver.Solve();
+            
+            DisplacementVector node1Displacement = results.GetDisplacement(node1);
+            ReactionVector node2Reaction = results.GetReaction(node2);
+            ReactionVector node3Reaction = results.GetReaction(node3);
+            ReactionVector node4Reaction = results.GetReaction(node4);
+            
+            Assert.AreEqual(-0.0033, node1Displacement.Z, 0.0001);
+            Assert.AreEqual(-0.0010, node1Displacement.XX, 0.0001);
+            Assert.AreEqual( 0.0010, node1Displacement.YY, 0.0001);
+            
+            Assert.AreEqual(10794, node2Reaction.Z, 1);
+            Assert.AreEqual(31776, node2Reaction.XX, 1);
+            Assert.AreEqual(-1019, node2Reaction.YY, 1);
+            
+            Assert.AreEqual(-1587, node3Reaction.Z, 1);
+            Assert.AreEqual(4030, node3Reaction.XX, 1);
+            Assert.AreEqual(-4030, node3Reaction.YY, 1);
+            
+            Assert.AreEqual(10794, node4Reaction.Z, 1);
+            Assert.AreEqual(1019, node4Reaction.XX, 1);
+            Assert.AreEqual(-31776, node4Reaction.YY, 1);
+        }
     }
 }
 
