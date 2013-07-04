@@ -20,5 +20,5 @@ task Compile -depends CleanBuildDirectory {
     $v4_net_version = (ls "$env:windir\Microsoft.NET\Framework\v4.0*").Name
     
     Write-Host "Compiling with '$global:configuration' configuration" -ForegroundColor Yellow
-    exec { &"C:\Windows\Microsoft.NET\Framework\$v4_net_version\MSBuild.exe" "$sln_file" /p:OutDir="$buildartifacts_dir\" /p:Configuration=$global:configuration }
+    exec { &"$env:windir\Microsoft.NET\Framework\$v4_net_version\MSBuild.exe" "$sln_file" /p:OutDir="$buildartifacts_dir\" /p:Configuration=$global:configuration }
 }
