@@ -9,34 +9,18 @@ namespace SharpFE.Examples.Membrane
 		[Test]
 		public void TwoTriangleWall()
 		{
-			FiniteElementModel model = new FiniteElementModel(ModelType.Full3D); // we will create and analyze a 2D slab system
-			FiniteElementNode node1 = model.NodeFactory.Create(0.0, 0.0, 0.0); // create a node at the origin
+			FiniteElementModel model = new FiniteElementModel(ModelType.Membrane2D); // we will create and analyze a 2D slab system
+			FiniteElementNode node1 = model.NodeFactory.Create(0.0, 0.0); // create a node at the origin
 			model.ConstrainNode(node1, DegreeOfFreedom.X); // constrain the node from moving in the x-axis
 			model.ConstrainNode(node1, DegreeOfFreedom.Y); // constrain the node from moving in the y-axis
-			model.ConstrainNode(node1, DegreeOfFreedom.Z);
-			model.ConstrainNode(node1, DegreeOfFreedom.XX);
-			model.ConstrainNode(node1, DegreeOfFreedom.YY);
-			model.ConstrainNode(node1, DegreeOfFreedom.ZZ);
 
-			FiniteElementNode node2 = model.NodeFactory.Create(1.0, 0.0, 0.0); // create a second node at a distance 1 metre along the X axis
+			FiniteElementNode node2 = model.NodeFactory.Create(1.0, 0.0); // create a second node at a distance 1 metre along the X axis
 			model.ConstrainNode(node2, DegreeOfFreedom.X); // constrain the node from moving in the x-axis
 			model.ConstrainNode(node2, DegreeOfFreedom.Y); // constrain the node from moving in the y-axis
-			model.ConstrainNode(node2, DegreeOfFreedom.Z);
-			model.ConstrainNode(node2, DegreeOfFreedom.XX);
-			model.ConstrainNode(node2, DegreeOfFreedom.YY);
-			model.ConstrainNode(node2, DegreeOfFreedom.ZZ);
 			
-			FiniteElementNode node3 = model.NodeFactory.Create(0.0, 1.0, 0.0);
-			model.ConstrainNode(node3, DegreeOfFreedom.Z);
-			model.ConstrainNode(node3, DegreeOfFreedom.XX);
-			model.ConstrainNode(node3, DegreeOfFreedom.YY);
-			model.ConstrainNode(node3, DegreeOfFreedom.ZZ);
+			FiniteElementNode node3 = model.NodeFactory.Create(0.0, 1.0);
 			
-			FiniteElementNode node4 = model.NodeFactory.Create(1.0, 1.0, 0.0);
-			model.ConstrainNode(node4, DegreeOfFreedom.Z);
-			model.ConstrainNode(node4, DegreeOfFreedom.XX);
-			model.ConstrainNode(node4, DegreeOfFreedom.YY);
-			model.ConstrainNode(node4, DegreeOfFreedom.ZZ);
+			FiniteElementNode node4 = model.NodeFactory.Create(1.0, 1.0);
 			
 			IMaterial material = new GenericElasticMaterial(0, 200000, 0.2, 0.1);
 			
@@ -57,10 +41,15 @@ namespace SharpFE.Examples.Membrane
 			Console.WriteLine("\nReaction2 : \n" + reaction2);
 			Assert.AreEqual(20, reaction1.Y + reaction2.Y, 0.001);
 			
-			DisplacementVector displacement1 = results.GetDisplacement(node3);  // get the displacement at the second node
-			Console.WriteLine("\nDisplacement1 : \n" + displacement1);
-			Assert.AreNotEqual(0.0, displacement1.X); // TODO calculate the actual value, rather than just checking we have any value
-			Assert.AreNotEqual(0.0, displacement1.Y); // TODO calculate the actual value, rather than just checking we have any value
+			DisplacementVector displacement3 = results.GetDisplacement(node3);  // get the displacement at the second node
+			Console.WriteLine("\nDisplacement3 : \n" + displacement3);
+			Assert.AreNotEqual(0.0, displacement3.X); // TODO calculate the actual value, rather than just checking we have any value
+			Assert.AreNotEqual(0.0, displacement3.Y); // TODO calculate the actual value, rather than just checking we have any value
+			
+			DisplacementVector displacement4 = results.GetDisplacement(node4);  // get the displacement at the second node
+			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
+			Assert.AreNotEqual(0.0, displacement4.X); // TODO calculate the actual value, rather than just checking we have any value
+			Assert.AreNotEqual(0.0, displacement4.Y); // TODO calculate the actual value, rather than just checking we have any value
 		}
 	}
 }
