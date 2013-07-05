@@ -52,6 +52,12 @@ namespace SharpFE
                         DegreeOfFreedom.X,
                         DegreeOfFreedom.Y
                     };
+                case ModelType.Membrane2D:
+                    return new List<DegreeOfFreedom>(2)
+                    {
+                        DegreeOfFreedom.X,
+                        DegreeOfFreedom.Y
+                    };
                 case ModelType.Truss3D:
                     return new List<DegreeOfFreedom>(3)
                     {
@@ -108,6 +114,7 @@ namespace SharpFE
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:
                 case ModelType.Slab2D:
+                case ModelType.Membrane2D:
                     return GeometryDimensionality.TwoDimension;
                 case ModelType.Truss3D:
                 case ModelType.MultiStorey2DSlab:
@@ -155,11 +162,17 @@ namespace SharpFE
                         DegreeOfFreedom.YY
                     };
                 case ModelType.Slab2D:
-                    return new List<DegreeOfFreedom>(4)
+                    return new List<DegreeOfFreedom>(3)
                     {
                         DegreeOfFreedom.Z,
                         DegreeOfFreedom.XX,
                         DegreeOfFreedom.YY
+                    };
+                case ModelType.Membrane2D:
+                    return new List<DegreeOfFreedom>(3)
+                    {
+                        DegreeOfFreedom.X,
+                        DegreeOfFreedom.Y
                     };
                 case ModelType.Truss3D:
                     return new List<DegreeOfFreedom>(3)

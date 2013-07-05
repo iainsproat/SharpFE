@@ -151,6 +151,7 @@ namespace SharpFE
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:
                 case ModelType.Slab2D:
+                case ModelType.Membrane2D:
                 case ModelType.Truss3D:
                 case ModelType.MultiStorey2DSlab:
                 case ModelType.Full3D:
