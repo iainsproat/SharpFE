@@ -29,7 +29,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode locationInLocalCoordinates)
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode locationInLocalCoordinates)
         {
             double eta = this.ConvertLocalCoordinatesToNaturalCoordinate(locationInLocalCoordinates);
             
@@ -46,7 +46,7 @@ namespace SharpFE.Stiffness
             return shapeFunctions;
         }
         
-        private double ConvertLocalCoordinatesToNaturalCoordinate(FiniteElementNode locationInLocalCoordinates)
+        private double ConvertLocalCoordinatesToNaturalCoordinate(IFiniteElementNode locationInLocalCoordinates)
         {
             ////TODO check that the location lies on the beam
             
@@ -60,7 +60,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
         {
             throw new NotImplementedException();
         }

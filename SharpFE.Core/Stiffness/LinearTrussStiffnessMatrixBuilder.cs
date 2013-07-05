@@ -29,7 +29,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(FiniteElementNode location)
+        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode location)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +38,7 @@ namespace SharpFE.Stiffness
         /// Generates the transposed strain-displacement matrix for the given element
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
         {
             IList<Strain> supportedDegreesOfFreedom = new List<Strain>(1);
             supportedDegreesOfFreedom.Add(Strain.LinearStrainX);
