@@ -72,6 +72,7 @@ namespace SharpFE.Stiffness
             this.lookup.Add(typeof(Linear1DBeam), typeof(Linear1DBernoulliBeamStiffnessMatrixBuilder));
             this.lookup.Add(typeof(Linear3DBeam), typeof(Linear3DBernoulliBeamStiffnessMatrixBuilder));
             this.lookup.Add(typeof(LinearConstantStrainTriangle), typeof(LinearConstantStrainTriangleStiffnessMatrixBuilder));
+            this.lookup.Add(typeof(LinearConstantStressQuadrilateral), typeof(LinearConstantStressQuadrilateralStiffnessMatrixBuilder));
         }
     }
 }

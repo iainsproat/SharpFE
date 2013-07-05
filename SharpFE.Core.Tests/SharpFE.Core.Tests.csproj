@@ -65,6 +65,7 @@
     <Compile Include="Examples\Beam\Beam1DIn2DModel.cs" />
     <Compile Include="Examples\Beam\Beam3DIn2DModel.cs" />
     <Compile Include="Examples\Beam\Beam3DInFull3DModel.cs" />
+    <Compile Include="Examples\Membrane\Quad.cs" />
     <Compile Include="Examples\Membrane\Triangle.cs" />
     <Compile Include="Examples\Truss\TrussIn1DModel.cs" />
     <Compile Include="Examples\Truss\TrussIn2DModel.cs" />
