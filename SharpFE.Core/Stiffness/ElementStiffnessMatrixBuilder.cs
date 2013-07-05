@@ -63,7 +63,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode locationInLocalCoordinates);
+        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix();
         
         /// <summary>
         /// 

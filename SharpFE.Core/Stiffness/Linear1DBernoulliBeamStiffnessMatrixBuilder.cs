@@ -60,7 +60,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             throw new NotImplementedException();
         }

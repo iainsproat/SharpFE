@@ -88,6 +88,7 @@
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="Materials\MaterialMatrixBuilder.cs" />
     <Compile Include="Maths\KeyCompatibilityValidator.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrix.cs" />
     <Compile Include="Maths\KeyedVector.cs" />

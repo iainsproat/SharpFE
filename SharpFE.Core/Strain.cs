@@ -24,18 +24,23 @@ namespace SharpFE
         LinearStrainY,
         
         /// <summary>
+        /// Strain along the z axis
+        /// </summary>
+        LinearStrainZ,
+        
+        /// <summary>
         /// Shear strain through the x-y plane
         /// </summary>
         ShearStrainXY,
         
         /// <summary>
-        /// Shear strain through the x-z plane
-        /// </summary>
-        ShearStrainXZ,
-        
-        /// <summary>
         /// Shear strain through the y-z plane
         /// </summary>
-        ShearStrainYZ
+        ShearStrainYZ,
+        
+        /// <summary>
+        /// Shear strain through the x-z plane
+        /// </summary>
+        ShearStrainXZ
     }
 }

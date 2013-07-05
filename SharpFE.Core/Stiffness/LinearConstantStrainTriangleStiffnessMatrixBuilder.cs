@@ -9,6 +9,8 @@ namespace SharpFE.Stiffness
     using System;
     using System.Collections.Generic;
     
+    using SharpFE.Materials;
+    
     /// <summary>
     /// </summary>
     public class LinearConstantStrainTriangleStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<LinearConstantStrainTriangle>
@@ -20,13 +22,14 @@ namespace SharpFE.Stiffness
         public LinearConstantStrainTriangleStiffnessMatrixBuilder(LinearConstantStrainTriangle element)
             : base(element)
         {
-            // empty
+            MaterialMatrixBuilder materialMatrixBuilder = new MaterialMatrixBuilder(this.Element.Material); //TODO should have a cache so only one matrix builder is created for each material used in the model
+            this.MaterialMatrix = materialMatrixBuilder.PlaneStrainMatrix(LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains);
         }
         
         /// <summary>
         /// 
         /// </summary>
-        private static IList<Strain> SupportedStrains
+        protected static IList<Strain> SupportedStrains
         {
             get
             {
@@ -36,6 +39,12 @@ namespace SharpFE.Stiffness
                 strains.Add(Strain.ShearStrainXY);
                 return strains;
             }
+        }
+        
+        protected KeyedSquareMatrix<Strain> MaterialMatrix
+        {
+            get;
+            private set;
         }
         
         /// <summary>
@@ -87,7 +96,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             IList<Strain> supportedStrains = LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains;
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
@@ -124,8 +133,8 @@ namespace SharpFE.Stiffness
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double elementVolume = this.Element.Thickness * this.Element.Area;
-            KeyedSquareMatrix<Strain> materialMatrix = this.MaterialMatrix();
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = null; ////FIXME //this.StrainDisplacementMatrix();
+            KeyedSquareMatrix<Strain> materialMatrix = this.MaterialMatrix;
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = this.StrainDisplacementMatrix();
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> transposedStrainDisplacementMatrix = strainDisplacementMatrix.Transpose();
             
             KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> bte = transposedStrainDisplacementMatrix.Multiply<Strain, Strain>(materialMatrix);
@@ -134,27 +143,6 @@ namespace SharpFE.Stiffness
             
             StiffnessMatrix k = new StiffnessMatrix(bteb.Multiply(elementVolume));
             return k;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private KeyedSquareMatrix<Strain> MaterialMatrix()
-        {
-            IMaterial material = this.Element.Material;
-            double constant = material.YoungsModulus / ((1.0 + material.PoissonsRatio) * (1.0 - (2.0 * material.PoissonsRatio)));
-            
-            KeyedSquareMatrix<Strain> materialMatrix = new KeyedSquareMatrix<Strain>(LinearConstantStrainTriangleStiffnessMatrixBuilder.SupportedStrains);
-            materialMatrix.At(Strain.LinearStrainX, Strain.LinearStrainX, constant * (1.0 - material.PoissonsRatio));
-            materialMatrix.At(Strain.LinearStrainX, Strain.LinearStrainY, constant * material.PoissonsRatio);
-            
-            materialMatrix.At(Strain.LinearStrainY, Strain.LinearStrainX, constant * material.PoissonsRatio);
-            materialMatrix.At(Strain.LinearStrainY, Strain.LinearStrainY, constant * (1.0 - material.PoissonsRatio));
-            
-            materialMatrix.At(Strain.ShearStrainXY, Strain.ShearStrainXY, constant * ((1.0 - (2.0 * material.PoissonsRatio)) / 2.0));
-            
-            return materialMatrix;
         }
     }
 }

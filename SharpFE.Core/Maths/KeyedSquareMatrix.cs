@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="KeyedMatrix.cs" company="Iain Sproat">
 //     Copyright Iain Sproat, 2013.
 //
@@ -153,9 +153,19 @@ namespace SharpFE
         /// <param name="rowsToInclude">A list of the keys of rows to include in the new matrix</param>
         /// <param name="columnsToInclude">A list of the keys of columns to include in the new matrix</param>
         /// <returns>A KeyedMatrix which contains values from the requested sub-matrix</returns>
-        public new KeyedSquareMatrix<TKey> SubMatrix(IList<TKey> rowsToInclude, IList<TKey> columnsToInclude)
+        public KeyedSquareMatrix<TKey> SubMatrix(IList<TKey> keysToInclude)
         {
-            return (KeyedSquareMatrix<TKey>)base.SubMatrix(rowsToInclude, columnsToInclude);
+            KeyedSquareMatrix<TKey> subMatrix = new KeyedSquareMatrix<TKey>(keysToInclude);
+            
+            foreach (TKey rowKey in keysToInclude) //rows
+            {
+                foreach (TKey columnKey in keysToInclude) //columns
+                {
+                    subMatrix.At(rowKey, columnKey, this.At(rowKey, columnKey));
+                }
+            }
+            
+            return subMatrix;
         }
         
         public override string ToString()

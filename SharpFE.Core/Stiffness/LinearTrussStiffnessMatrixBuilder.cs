@@ -38,7 +38,7 @@ namespace SharpFE.Stiffness
         /// Generates the transposed strain-displacement matrix for the given element
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(FiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix()
         {
             IList<Strain> supportedDegreesOfFreedom = new List<Strain>(1);
             supportedDegreesOfFreedom.Add(Strain.LinearStrainX);
