@@ -14,7 +14,7 @@ namespace SharpFE
     /// A finite element model is composed of nodes connected by finite elements.
     /// These nodes can be constrained and can have forces applied to them.
     /// </summary>
-    public class FiniteElementModel : IModelConstraintProvider, ITopologyQueryable, IEquatable<FiniteElementModel>
+    public class FiniteElementModel : IModelConstraintProvider, ITopologyQueryable, IEnumerable<IFiniteElementNode>, IEquatable<FiniteElementModel>
     {
         /// <summary>
         /// The finite element nodes of this model
@@ -115,7 +115,7 @@ namespace SharpFE
             {
                 IList<DegreeOfFreedom> allowedBoundaryConditionDegreeOfFreedoms = this.ModelType.GetAllowedDegreesOfFreedomForBoundaryConditions();
                 IList<NodalDegreeOfFreedom> result = new List<NodalDegreeOfFreedom>(this.NodeCount * allowedBoundaryConditionDegreeOfFreedoms.Count);
-                foreach (FiniteElementNode node in this.nodes)
+                foreach (IFiniteElementNode node in this.nodes)
                 {
                     foreach (DegreeOfFreedom dof in allowedBoundaryConditionDegreeOfFreedoms)
                     {
@@ -288,6 +288,16 @@ namespace SharpFE
         public IFiniteElementNode FindNodeNearTo(double x, double y, double z, double tolerance)
         {
             return this.nodes.FindNearestTo(x, y, z, tolerance);
+        }
+        
+        public IEnumerator<IFiniteElementNode> GetEnumerator()
+        {
+            return this.nodes.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
         
         /// <summary>

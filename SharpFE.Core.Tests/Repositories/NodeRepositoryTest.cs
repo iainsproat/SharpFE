@@ -151,5 +151,13 @@ namespace SharpFE.Core.Tests.Repositories
             Assert.AreEqual(node3, result[1].Node);
             Assert.AreEqual(DegreeOfFreedom.X, result[1].DegreeOfFreedom);
         }
+        
+        [Test]
+        public void CanFindNodesCloseToAPosition()
+        {
+            Assert.AreEqual(node1, SUT.FindNearestTo(0, 0, 0));
+            Assert.AreEqual(node2, SUT.FindNearestTo(1, 0, 0));
+            Assert.AreEqual(node3, SUT.FindNearestTo(3, 0, 0, 1.5));
+        }
     }
 }
