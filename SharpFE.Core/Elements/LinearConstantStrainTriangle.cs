@@ -147,7 +147,7 @@ namespace SharpFE
                 case ModelType.Membrane2D:
                     return true;
                 case ModelType.Truss3D:
-                    return false;
+                    return true;
                 case ModelType.MultiStorey2DSlab:
                     return true;
                 case ModelType.Full3D:
