@@ -280,6 +280,16 @@ namespace SharpFE
             return this.nodes.IsConstrained(nodeToCheck, degreeOfFreedomToCheck);
         }
         
+        public IFiniteElementNode FindNodeNearTo(double x, double y, double z)
+        {
+            return this.nodes.FindNearestTo(x, y, z);
+        }
+                
+        public IFiniteElementNode FindNodeNearTo(double x, double y, double z, double tolerance)
+        {
+            return this.nodes.FindNearestTo(x, y, z, tolerance);
+        }
+        
         /// <summary>
         /// Determines which elements are connected to the provided node.
         /// </summary>
