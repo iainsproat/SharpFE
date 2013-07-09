@@ -98,6 +98,18 @@ namespace SharpFE
         Truss3D,
         
         /// <summary>
+        /// A three dimensional membrane.
+        /// : Positioning of nodes and elements:
+        ///     - 3D along the x-axis, y-axis and z-axis.
+        /// : Forces can be applied:
+        ///     - translational in the x-axis, y-axis and z-axis.
+        /// : Results will occur:
+        ///     - translation along the x-axis, y-axis and z-axis.
+        ///     - rotations within members are not allowed.
+        /// </summary>
+        Membrane3D,
+        
+        /// <summary>
         /// Multiple 2D slabs linked by 1D spring elements in the z-axis.
         /// : Positioning of nodes and elements:
         ///     - 3D along the x-axis, y-axis and z-axis.  Plate elements are restricted to being in a plane with normal parallel to the z-axis.
