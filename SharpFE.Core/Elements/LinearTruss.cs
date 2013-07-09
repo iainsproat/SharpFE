@@ -25,7 +25,7 @@ namespace SharpFE
         /// <param name="end"></param>
         /// <param name="material"></param>
         /// <param name="crossSection"></param>
-        public LinearTruss(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+        public LinearTruss(IFiniteElementNode start, IFiniteElementNode end, IMaterial material, ICrossSection crossSection)
             : base(start, end)
         {
             this.CrossSection = crossSection;

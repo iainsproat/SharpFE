@@ -50,7 +50,7 @@ namespace SharpFE
         /// <param name="node2">The node at the end of the spring</param>
         /// <param name="springConstant">The constant value of stiffness of the spring.</param>
         /// <returns>The newly created Spring element</returns>
-        public LinearConstantSpring CreateLinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+        public LinearConstantSpring CreateLinearConstantSpring(IFiniteElementNode node1, IFiniteElementNode node2, double springConstant)
         {
             Guard.AgainstInvalidState(() => { return !LinearConstantSpring.IsASupportedModelType(this.ModelType); },
                                       "LinearConstantSpring are not available in a model of type {0}",
@@ -73,7 +73,7 @@ namespace SharpFE
         /// <param name="material"></param>
         /// <param name="crossSection"></param>
         /// <returns></returns>
-        public LinearTruss CreateLinearTruss(FiniteElementNode node1, FiniteElementNode node2, IMaterial material, ICrossSection crossSection)
+        public LinearTruss CreateLinearTruss(IFiniteElementNode node1, IFiniteElementNode node2, IMaterial material, ICrossSection crossSection)
         {
             Guard.AgainstInvalidState(() => { return !LinearTruss.IsASupportedModelType(this.ModelType); },
                                       "LinearTruss are not available in a model of type {0}",
@@ -96,7 +96,7 @@ namespace SharpFE
         /// <param name="material"></param>
         /// <param name="crossSection"></param>
         /// <returns></returns>
-        public Linear1DBeam CreateLinear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+        public Linear1DBeam CreateLinear1DBeam(IFiniteElementNode start, IFiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
             Guard.AgainstInvalidState(() => { return !Linear1DBeam.IsASupportedModelType(this.ModelType); },
                                       "Linear1DBeams are not available in a model of type {0}",
@@ -119,7 +119,7 @@ namespace SharpFE
         /// <param name="material"></param>
         /// <param name="crossSection"></param>
         /// <returns></returns>
-        public Linear3DBeam CreateLinear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial material, ICrossSection crossSection)
+        public Linear3DBeam CreateLinear3DBeam(IFiniteElementNode start, IFiniteElementNode end, IMaterial material, ICrossSection crossSection)
         {
             Guard.AgainstInvalidState(() => { return !Linear3DBeam.IsASupportedModelType(this.ModelType); },
                                       "Linear3DBeams are not available in a model of type {0}",
@@ -143,7 +143,7 @@ namespace SharpFE
         /// <param name="material"></param>
         /// <param name="thickness"></param>
         /// <returns></returns>
-        public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial material, double thickness)
+        public LinearConstantStrainTriangle CreateLinearConstantStrainTriangle(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2, IMaterial material, double thickness)
         {
             Guard.AgainstInvalidState(() => { return !LinearConstantStrainTriangle.IsASupportedModelType(this.ModelType); },
                                       "LinearConstantStrainTriangle are not available in a model of type {0}",
@@ -168,7 +168,7 @@ namespace SharpFE
         /// <param name="material"></param>
         /// <param name="thickness"></param>
         /// <returns></returns>
-        public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial material, double thickness)
+        public LinearConstantStressQuadrilateral CreateLinearConstantStressQuadrilateral(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2, IFiniteElementNode node3, IMaterial material, double thickness)
         {
             Guard.AgainstInvalidState(() => { return !LinearConstantStressQuadrilateral.IsASupportedModelType(this.ModelType); },
                                       "LinearConstantStressQuadrilateral are not available in a model of type {0}",

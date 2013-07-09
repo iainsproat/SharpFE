@@ -22,7 +22,7 @@ namespace SharpFE
         /// <param name="node2"></param>
         /// <param name="elementMaterial"></param>
         /// <param name="elementThickness"></param>
-        public LinearConstantStrainTriangle(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, IMaterial elementMaterial, double elementThickness)
+        public LinearConstantStrainTriangle(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2, IMaterial elementMaterial, double elementThickness)
         {
             this.AddNode(node0);
             this.AddNode(node1);
@@ -122,7 +122,7 @@ namespace SharpFE
         /// 
         /// </summary>
         /// <param name="nodeToAdd"></param>
-        protected override void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd)
+        protected override void ThrowIfNodeCannotBeAdded(IFiniteElementNode nodeToAdd)
         {
             if (this.Nodes.Count > 2)
             {

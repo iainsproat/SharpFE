@@ -309,7 +309,7 @@ namespace SharpFE
         /// <param name="nodeToAdd">The node to add to the element</param>
         /// <exception cref="ArgumentNullException">Thrown if the node to add is null</exception>
         /// <exception cref="ArgumentException">Thrown if the node is already part of the finite element</exception>
-        protected void AddNode(FiniteElementNode nodeToAdd)
+        protected void AddNode(IFiniteElementNode nodeToAdd)
         {
             Guard.AgainstNullArgument(nodeToAdd, "nodeToAdd");
             
@@ -333,7 +333,7 @@ namespace SharpFE
         /// would be out of the plane of the other nodes if this element is planar,
         /// or would be out of an acceptable order (e.g. create a 'twist' in a quadrilateral)
         /// </exception>
-        protected abstract void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd);
+        protected abstract void ThrowIfNodeCannotBeAdded(IFiniteElementNode nodeToAdd);
         
         /// <summary>
         /// Builds the list of possible nodal degree of freedoms for this element which are expected by the model

@@ -22,7 +22,7 @@ namespace SharpFE
         /// <param name="node1">The node at the start of the spring.</param>
         /// <param name="node2">The node at the end of the spring.</param>
         /// <param name="springConstant">The value which defines the constant stiffness of the spring.</param>
-        internal LinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+        internal LinearConstantSpring(IFiniteElementNode node1, IFiniteElementNode node2, double springConstant)
             : base(node1, node2)
         {
             this.SpringConstant = springConstant;

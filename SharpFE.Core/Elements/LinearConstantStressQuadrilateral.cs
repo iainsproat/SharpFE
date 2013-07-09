@@ -23,7 +23,7 @@ namespace SharpFE
         /// <param name="node3"></param>
         /// <param name="mat"></param>
         /// <param name="elementThickness"></param>
-        public LinearConstantStressQuadrilateral(FiniteElementNode node0, FiniteElementNode node1, FiniteElementNode node2, FiniteElementNode node3, IMaterial mat, double elementThickness)
+        public LinearConstantStressQuadrilateral(IFiniteElementNode node0, IFiniteElementNode node1, IFiniteElementNode node2, IFiniteElementNode node3, IMaterial mat, double elementThickness)
         {
             this.AddNode(node0);
             this.AddNode(node1);
@@ -121,7 +121,7 @@ namespace SharpFE
         /// 
         /// </summary>
         /// <param name="nodeToAdd"></param>
-        protected override void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd)
+        protected override void ThrowIfNodeCannotBeAdded(IFiniteElementNode nodeToAdd)
         {
             if (this.Nodes.Count > 3)
             {

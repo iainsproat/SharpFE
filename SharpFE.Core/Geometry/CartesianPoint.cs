@@ -42,7 +42,7 @@ namespace SharpFE.Geometry
         /// <param name="point"></param>
         /// <returns></returns>
         /// <remarks>Inverse of point.Subtract(this)</remarks>
-        public GeometricVector VectorTo(CartesianPoint point)
+        public GeometricVector VectorTo(XYZ point)
         {
             double deltaX = point.X - this.X;
             double deltaY = point.Y - this.Y;
@@ -50,7 +50,7 @@ namespace SharpFE.Geometry
             return new GeometricVector(deltaX, deltaY, deltaZ);
         }
         
-        public GeometricVector Subtract(CartesianPoint point)
+        public GeometricVector Subtract(XYZ point)
         {
             double deltaX = this.X - point.X;
             double deltaY = this.Y - point.Y;

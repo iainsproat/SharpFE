@@ -8,11 +8,14 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    
+    using SharpFE.Geometry;
 
     /// <summary>
     /// Contains all nodes
     /// </summary>
-    internal class NodeRepository : Repository<FiniteElementNode>
+    internal class NodeRepository : Repository<IFiniteElementNode>
     {
         /// <summary>
         /// Stores the nodal degrees of freedom which are constrained, and those which are not.
@@ -66,7 +69,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node to constrain</param>
         /// <param name="degreeOfFreedomToConstrain">the degree of freedom in which to constrain the node.</param>
-        public void ConstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToConstrain)
+        public void ConstrainNode(IFiniteElementNode node, DegreeOfFreedom degreeOfFreedomToConstrain)
         {
             NodalDegreeOfFreedom nodalDegreeOfFreedomToConstrain = new NodalDegreeOfFreedom(node, degreeOfFreedomToConstrain);
             this.ConstrainNode(nodalDegreeOfFreedomToConstrain);
@@ -86,7 +89,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node to free</param>
         /// <param name="degreeOfFreedomToFree">the degree of freedom in which to free the node</param>
-        public void UnconstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
+        public void UnconstrainNode(IFiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
         {
             NodalDegreeOfFreedom nodalDegreeOfFreedomToFree = new NodalDegreeOfFreedom(node, degreeOfFreedomToFree);
             this.UnconstrainNode(nodalDegreeOfFreedomToFree);
@@ -107,7 +110,7 @@ namespace SharpFE
         /// <param name="nodeToCheck">the node to check whether it is constrain in a particular degree of freedom</param>
         /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constraint</param>
         /// <returns>True if this particular node and degree of freedom are constrained; otherwise, false.</returns>
-        public bool IsConstrained(FiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
+        public bool IsConstrained(IFiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
         {
             NodalDegreeOfFreedom nodeDof = new NodalDegreeOfFreedom(nodeToCheck, degreeOfFreedomToCheck);
             return this.IsConstrained(nodeDof);
@@ -124,10 +127,38 @@ namespace SharpFE
         }
         
         /// <summary>
+        /// Finds the first node which is near to the given coordinates 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">No element is near to the given coordinates for the given tolerance</exception>
+        public IFiniteElementNode FindNearestTo(double x, double y, double z)
+        {
+            return this.FindNearestTo(x, y, z, double.Epsilon);
+        }
+        
+        /// <summary>
+        /// Finds the first node which is near (within the tolerance) to the given coordinates 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">No element is near to the given coordinates for the given tolerance</exception>
+        public IFiniteElementNode FindNearestTo(double x, double y, double z, double tolerance)
+        {
+            CartesianPoint pnt = new CartesianPoint(x, y, z);
+            return this.First(node => node.Location.VectorTo(pnt).Norm(2) < tolerance);
+        }
+        
+        /// <summary>
         /// Register a new node with this repository
         /// </summary>
         /// <param name="item">The new item to register</param>
-        protected override void AddToRepository(FiniteElementNode item)
+        protected override void AddToRepository(IFiniteElementNode item)
         {
             Guard.AgainstNullArgument(item, "item");
             
@@ -151,7 +182,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="item">The item to remove from the indices of this repository</param>
         /// <returns>true if the item was successfully removed from at least one key in one indice; otherwise, false. false is also returned if the item was not present in any indices.</returns>
-        protected override bool RemoveItem(FiniteElementNode item)
+        protected override bool RemoveItem(IFiniteElementNode item)
         {
             bool success = false;
             IList<DegreeOfFreedom> supportedDegreesOfFreedom = this.ModelType.GetAllowedDegreesOfFreedomForBoundaryConditions();

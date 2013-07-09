@@ -23,7 +23,7 @@ namespace SharpFE
         /// <param name="end"></param>
         /// <param name="mat"></param>
         /// <param name="section"></param>
-        public Linear1DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
+        public Linear1DBeam(IFiniteElementNode start, IFiniteElementNode end, IMaterial mat, ICrossSection section)
             : base(start, end, mat, section)
         {
             // empty

@@ -21,7 +21,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node1"></param>
         /// <param name="node2"></param>
-        protected FiniteElement1D(FiniteElementNode node1, FiniteElementNode node2)
+        protected FiniteElement1D(IFiniteElementNode node1, IFiniteElementNode node2)
         {
             this.AddNode(node1);
             this.AddNode(node2);
@@ -169,7 +169,7 @@ namespace SharpFE
         /// would be out of the plane of the other nodes if this element is planar,
         /// or would be out of an acceptable order (e.g. create a 'twist' in a quadrilateral)
         /// </exception>
-        protected override void ThrowIfNodeCannotBeAdded(FiniteElementNode nodeToAdd)
+        protected override void ThrowIfNodeCannotBeAdded(IFiniteElementNode nodeToAdd)
         {
             if (this.Nodes.Count > 1)
             {
