@@ -98,6 +98,11 @@ namespace SharpFE
             }
         }
         
+        public abstract IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
+        {
+            get;
+        }
+        
         /// <summary>
         /// Gets the nodal degrees of freedom supported by this finite element
         /// </summary>
@@ -282,7 +287,10 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public abstract bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom);
+        public bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        {
+            return this.SupportedBoundaryConditionDegreeOfFreedom.Contains(degreeOfFreedom);
+        }
         
         /// <summary>
         /// 

@@ -55,10 +55,8 @@ namespace SharpFE.Stiffness
         public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode location)
         {
             ////TODO check that location is within or on the bounds of the finite element.
-            ////TODO should be able to get the below from the ModelType
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2){
-                DegreeOfFreedom.X,
-                DegreeOfFreedom.Y};
+            
+            IList<DegreeOfFreedom> supportedDegreesOfFreedom = this.Element.SupportedBoundaryConditionDegreeOfFreedom;
             
             IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);

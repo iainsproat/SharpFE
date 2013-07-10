@@ -7,9 +7,7 @@
 namespace SharpFE
 {
     using System;
-
-    using SharpFE.Elements;
-    using SharpFE.Stiffness;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Linear element which has constant cross section
@@ -91,7 +89,7 @@ namespace SharpFE
         public override bool Equals(object obj)
         {
             return this.Equals(obj as LinearTruss);
-            }
+        }
         
         public bool Equals(LinearTruss other)
         {
@@ -126,19 +124,14 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.X:
-                    return true;
-                case DegreeOfFreedom.Y:
-                case DegreeOfFreedom.Z:
-                case DegreeOfFreedom.XX:
-                case DegreeOfFreedom.YY:
-                case DegreeOfFreedom.ZZ:
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>
+                {
+                    DegreeOfFreedom.X
+                };
             }
         }
         
@@ -146,7 +139,7 @@ namespace SharpFE
         {
             switch(modelType)
             {
-               case ModelType.Truss1D:
+                case ModelType.Truss1D:
                 case ModelType.Beam1D:
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:

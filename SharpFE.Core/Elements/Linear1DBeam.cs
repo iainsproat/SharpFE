@@ -7,8 +7,8 @@
 namespace SharpFE
 {
     using System;
+    using System.Collections.Generic;
     using SharpFE.Elements;
-    using SharpFE.Stiffness;
 
     /// <summary>
     /// This is a linear 1D finite element.
@@ -70,7 +70,7 @@ namespace SharpFE
         {
             switch(modelType)
             {
-               case ModelType.Truss1D:
+                case ModelType.Truss1D:
                     return false;
                 case ModelType.Beam1D:
                     return true;
@@ -103,19 +103,15 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.Z: // major-axis shear
-                case DegreeOfFreedom.YY: // major-axis moment
-                    return true;
-                case DegreeOfFreedom.X:  // axial force
-                case DegreeOfFreedom.Y:  // minor-axis shear
-                case DegreeOfFreedom.XX: // torsion
-                case DegreeOfFreedom.ZZ: // minor-axis
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>
+                {
+                    DegreeOfFreedom.Z, // major-axis shear
+                    DegreeOfFreedom.YY // major-axis moment
+                };
             }
         }
     }

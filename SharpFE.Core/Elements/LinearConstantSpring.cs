@@ -77,7 +77,7 @@ namespace SharpFE
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as LinearConstantSpring);            
+            return this.Equals(obj as LinearConstantSpring);
         }
         
         public bool Equals(LinearConstantSpring other)
@@ -113,19 +113,14 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.X:
-                    return true;
-                case DegreeOfFreedom.Y:
-                case DegreeOfFreedom.Z:
-                case DegreeOfFreedom.XX:
-                case DegreeOfFreedom.YY:
-                case DegreeOfFreedom.ZZ:
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>
+                {
+                    DegreeOfFreedom.X
+                };
             }
         }
         
@@ -133,7 +128,7 @@ namespace SharpFE
         {
             switch(modelType)
             {
-               case ModelType.Truss1D:
+                case ModelType.Truss1D:
                 case ModelType.Beam1D:
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:

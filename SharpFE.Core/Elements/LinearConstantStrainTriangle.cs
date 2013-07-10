@@ -7,6 +7,7 @@
 namespace SharpFE
 {
     using System;
+    using System.Collections.Generic;
     using SharpFE.Geometry;
 
     /// <summary>
@@ -97,24 +98,14 @@ namespace SharpFE
             }
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="degreeOfFreedom"></param>
-        /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.X:
-                case DegreeOfFreedom.Y:
-                    return true;
-                case DegreeOfFreedom.Z:
-                case DegreeOfFreedom.XX:
-                case DegreeOfFreedom.YY:
-                case DegreeOfFreedom.ZZ:
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>{
+                    DegreeOfFreedom.X,
+                    DegreeOfFreedom.Y
+                };
             }
         }
         
