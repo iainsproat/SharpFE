@@ -13,7 +13,7 @@ namespace SharpFE.Examples.Membrane
     public class Quad
     {
         [Test]
-		public void TwoQuadWall()
+		public void OneQuadMembrane()
 		{
 			FiniteElementModel model = new FiniteElementModel(ModelType.Membrane2D); // we will create and analyze a 2D slab system
 			FiniteElementNode node1 = model.NodeFactory.Create(0.0, 0.0); // create a node at the origin
@@ -36,7 +36,6 @@ namespace SharpFE.Examples.Membrane
 			model.ApplyForceToNode(force, node3); // Apply that force to the third node
 			model.ApplyForceToNode(force, node4);
 			
-			Assert.Inconclusive("2D quad elements have not yet been fully implemented");
 			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
 			FiniteElementResults results = solver.Solve();
 			
@@ -46,10 +45,15 @@ namespace SharpFE.Examples.Membrane
 			Console.WriteLine("\nReaction2 : \n" + reaction2);
 			Assert.AreEqual(20, reaction1.Y + reaction2.Y, 0.001);
 			
-			DisplacementVector displacement1 = results.GetDisplacement(node3);  // get the displacement at the second node
-			Console.WriteLine("\nDisplacement1 : \n" + displacement1);
-			Assert.AreNotEqual(0.0, displacement1.X); // TODO calculate the actual value, rather than just checking we have any value
-			Assert.AreNotEqual(0.0, displacement1.Y); // TODO calculate the actual value, rather than just checking we have any value
+			DisplacementVector displacement3 = results.GetDisplacement(node3);  // get the displacement at the second node
+			Console.WriteLine("\nDisplacement3 : \n" + displacement3);
+			Assert.AreNotEqual(0.0, displacement3.X); // TODO calculate the actual value, rather than just checking we have any value
+			Assert.AreNotEqual(0.0, displacement3.Y); // TODO calculate the actual value, rather than just checking we have any value
+			
+			DisplacementVector displacement4 = results.GetDisplacement(node4);  // get the displacement at the second node
+			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
+			Assert.AreNotEqual(0.0, displacement4.X); // TODO calculate the actual value, rather than just checking we have any value
+			Assert.AreNotEqual(0.0, displacement4.Y); // TODO calculate the actual value, rather than just checking we have any value
 		}
     }
 }

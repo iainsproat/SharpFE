@@ -8,6 +8,7 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
+    using MathNet.Numerics.LinearAlgebra.Generic;
 
     /// <summary>
     /// ElementStiffnessMatrix is a KeyedMatrix which uses NodalDegreeOfFreedom structs as the keys.
@@ -44,6 +45,30 @@ namespace SharpFE.Stiffness
         /// <param name="initialValueOfAllElements">The value to which we assign to each element of the matrix</param>
         public StiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns, double initialValueOfAllElements)
             : base(keysForRows, keysForColumns, initialValueOfAllElements)
+        {
+            // empty
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class
+        /// </summary>
+        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
+        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
+        /// <param name="matrix">The value to which we assign to each element of the matrix</param>
+        public StiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns, StiffnessMatrix matrix)
+            : base(keysForRows, keysForColumns, matrix)
+        {
+            // empty
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElementStiffnessMatrix" /> class
+        /// </summary>
+        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
+        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
+        /// <param name="matrix">The value to which we assign to each element of the matrix</param>
+        public StiffnessMatrix(IList<NodalDegreeOfFreedom> keysForRows, IList<NodalDegreeOfFreedom> keysForColumns, Matrix<double> matrix)
+            : base(keysForRows, keysForColumns, matrix)
         {
             // empty
         }
@@ -124,6 +149,18 @@ namespace SharpFE.Stiffness
         public void At(IFiniteElementNode nodeComponentOfRowKey, DegreeOfFreedom degreeOfFreedomComponentOfRowKey, IFiniteElementNode nodeComponentOfColumnKey, DegreeOfFreedom degreeOfFreedomComponentOfColumnKey, double value)
         {
             this.At(new NodalDegreeOfFreedom(nodeComponentOfRowKey, degreeOfFreedomComponentOfRowKey), new NodalDegreeOfFreedom(nodeComponentOfColumnKey, degreeOfFreedomComponentOfColumnKey), value);
+        }
+        
+        public new StiffnessMatrix Multiply(double scalar)
+        {
+            KeyedSquareMatrix<NodalDegreeOfFreedom> result = base.Multiply(scalar);
+            return new StiffnessMatrix(result);
+        }
+        
+        public StiffnessMatrix Add(StiffnessMatrix other)
+        {
+            KeyedSquareMatrix<NodalDegreeOfFreedom> result = base.Add(other);
+            return new StiffnessMatrix(result);
         }
         
         /// <summary>

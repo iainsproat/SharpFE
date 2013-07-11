@@ -103,12 +103,13 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
+        public override IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
             get
             {
                 return new List<DegreeOfFreedom>
                 {
+                    DegreeOfFreedom.X,
                     DegreeOfFreedom.Z, // major-axis shear
                     DegreeOfFreedom.YY // major-axis moment
                 };

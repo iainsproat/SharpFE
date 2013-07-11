@@ -9,6 +9,8 @@ namespace SharpFE.Stiffness
     using System;
     using System.Collections.Generic;
     
+    using MathNet.Numerics.LinearAlgebra.Double;
+    
     /// <summary>
     /// </summary>
     public class Linear3DBernoulliBeamStiffnessMatrixBuilder : ElementStiffnessMatrixBuilder<Linear3DBeam>
@@ -28,12 +30,13 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode location)
+        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
         {
+            throw new NotImplementedException("Linear3DBernoulliBeamStiffnessMatrixBuilder.ShapeFunctions is partially implemented, but appears to use global (x) coordinates rather than natural (xi) coordinates");
             IFiniteElementNode start = this.Element.StartNode;
             IFiniteElementNode end = this.Element.EndNode;
-            double locationAlongBeamAsProjectedInGlobalXAxis = location.X - start.X;
-            double locationAlongBeamAsProjectedInGlobalYAxis = location.Y - start.Y;
+            double locationAlongBeamAsProjectedInGlobalXAxis = locationInLocalCoordinates.X - start.X;
+            double locationAlongBeamAsProjectedInGlobalYAxis = locationInLocalCoordinates.Y - start.Y;
             double x = Math.Sqrt((locationAlongBeamAsProjectedInGlobalXAxis * locationAlongBeamAsProjectedInGlobalXAxis) + (locationAlongBeamAsProjectedInGlobalYAxis * locationAlongBeamAsProjectedInGlobalYAxis));
             
             double beamLengthProjectedInGlobalXAxis = end.X - start.X;
@@ -47,23 +50,26 @@ namespace SharpFE.Stiffness
             double N3 = ((3 * x * x) / (beamLength * beamLength)) - ((2 * x * x) / (beamLength * beamLength * beamLength));
             double N4 = ((x * x * x) / (beamLength * beamLength)) - ((x * x) / beamLength); ////FIXME the angle might be reversed (i.e. this is positive for anti-clockwise rotation, rather than for clockwise)
             
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
+            DenseVector shapeFunctions = new DenseVector(4);
             
-            shapeFunctions.At( DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.Z), N1);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.YY), N2);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.Z), N3);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.YY), N4);
+            shapeFunctions[0] = N1;
+            shapeFunctions[1] = N2;
+            shapeFunctions[2] = N3;
+            shapeFunctions[3] = N4;
             
             return shapeFunctions;
+        }
+        
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("Linear3DBernoulliBeamStiffnessMatrixBuilder.ShapeFunctionFirstDerivatives");
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates)
         {
             throw new NotImplementedException("Linear3DBeamStiffnessMatrixBuilder.GetStrainDisplacementMatrix");
         }
@@ -75,7 +81,7 @@ namespace SharpFE.Stiffness
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
             double length = this.Element.OriginalLength;
-            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedLocalNodalDegreeOfFreedoms);
             
             double axialStiffness = this.Element.CrossSection.Area * this.Element.Material.YoungsModulus / length;
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X,  axialStiffness);

@@ -51,6 +51,11 @@ namespace SharpFE.Core.Tests.Stiffness
             this.SUT = new LinearTrussStiffnessMatrixBuilder(this.spring);
         }
         
+        protected void Assert6x6StiffnessMatrix(params double[] expectedValues)
+        {
+        	StiffnessHelpers.Assert6x6StiffnessMatrix(SUT, expectedValues);
+        }
+        
         protected void Assert12x12StiffnessMatrix(params double[] expectedValues)
         {
         	StiffnessHelpers.Assert12x12StiffnessMatrix(SUT, expectedValues);

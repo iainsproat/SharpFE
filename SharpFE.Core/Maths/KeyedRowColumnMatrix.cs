@@ -8,9 +8,12 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE.Maths;
+    using System.Linq;
+    
     using MathNet.Numerics.LinearAlgebra.Double;
     using MathNet.Numerics.LinearAlgebra.Generic;
+    
+    using SharpFE.Maths;
 
     /// <summary>
     /// </summary>
@@ -59,10 +62,54 @@ namespace SharpFE
         /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
         /// </summary>
         /// <param name="matrix">The matrix which holds the keys and data to copy into this new matrix</param>
+        protected KeyedRowColumnMatrix(IList<TRowKey> rowKeys, IList<TColumnKey> columnKeys, KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
+        {
+            IEnumerable<TRowKey> unionOfRowKeys = rowKeys.Union(matrix.RowKeys);
+            IEnumerable<TColumnKey> unionOfColumnKeys = columnKeys.Union(matrix.ColumnKeys);
+            this.CheckAndAddKeys(unionOfRowKeys, unionOfColumnKeys);
+            foreach (TRowKey rowKey in matrix.RowKeys)
+            {
+                foreach (TColumnKey columnKey in matrix.ColumnKeys)
+                {
+                    this.At(rowKey, columnKey, matrix.At(rowKey, columnKey));
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
+        /// </summary>
+        /// <param name="matrix">The matrix which holds the keys and data to copy into this new matrix</param>
         protected KeyedRowColumnMatrix(KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
             : this(matrix.keysForRows, matrix.keysForColumns, matrix.underlyingMatrix)
         {
             // empty
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
+        /// </summary>
+        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
+        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
+        /// <param name="initialValueOfAllElements">The value to which we assign to each element of the matrix</param>
+        public KeyedRowColumnMatrix(IList<TRowKey> keysForRows, IList<TColumnKey> keysForColumns, Matrix<double> dataToCopy)
+            : this(ListToDictionary(keysForRows), ListToDictionary(keysForColumns), dataToCopy)
+        {
+            // empty
+        }
+        
+        protected static IDictionary<TKey, int> ListToDictionary<TKey>(IList<TKey> listToConvert)
+        {
+            Guard.AgainstNullArgument(listToConvert, "listToConvert");
+            
+            int numItems = listToConvert.Count;
+            IDictionary<TKey, int> response = new Dictionary<TKey, int>(numItems);
+            for (int i = 0; i < numItems; i++)
+            {
+                response.Add(listToConvert[i], i);
+            }
+            
+            return response;
         }
         
         protected KeyedRowColumnMatrix(IDictionary<TRowKey, int> rows, IDictionary<TColumnKey, int> columns, Matrix<double> dataToCopy)
@@ -138,6 +185,11 @@ namespace SharpFE
         #endregion
         
         
+        public static explicit operator Matrix<double>(KeyedRowColumnMatrix<TRowKey, TColumnKey> matrix)
+        {
+            return matrix.underlyingMatrix;
+        }
+        
         /// <summary>
         /// Creates a matrix which contains values from the requested sub-matrix
         /// </summary>
@@ -171,6 +223,12 @@ namespace SharpFE
             }
         }
         
+        public KeyedRowColumnMatrix<TRowKey, TColumnKey> Add(KeyedRowColumnMatrix<TRowKey, TColumnKey> other)
+        {
+            Matrix<double> result = this.underlyingMatrix.Add(other.underlyingMatrix);
+            return new KeyedRowColumnMatrix<TRowKey, TColumnKey>(this.keysForRows, this.keysForColumns, result);
+        }
+        
         /// <summary>
         /// Retrieves the requested element.
         /// </summary>
@@ -182,8 +240,26 @@ namespace SharpFE
             Guard.AgainstNullArgument(rowKey, "rowKey");
             Guard.AgainstNullArgument(columnKey, "columnKey");
             
-            int rowIndex = this.keysForRows[rowKey];
-            int colIndex = this.keysForColumns[columnKey];
+            int rowIndex, colIndex;
+            
+            try
+            {
+                rowIndex = this.keysForRows[rowKey];
+            }
+            catch (KeyNotFoundException knfe)
+            {
+                throw new KeyNotFoundException(string.Format("Could not find a row with key of {0}", rowKey), knfe);
+            }
+            
+            try
+            {
+                colIndex = this.keysForColumns[columnKey];
+            }
+            catch (KeyNotFoundException knfe)
+            {
+                throw new KeyNotFoundException(string.Format("Could not find a column with key of {0}", columnKey), knfe);
+            }
+            
             return this.underlyingMatrix[rowIndex, colIndex];
         }
         
@@ -309,8 +385,14 @@ namespace SharpFE
             return this.underlyingMatrix.Clone();
         }
         
+        public KeyedRowColumnMatrix<TColumnKey, TOtherColumnKey> TransposeThisAndMultiply<TOtherColumnKey>(KeyedRowColumnMatrix<TRowKey, TOtherColumnKey> other)
+        {
+            Matrix<double> result = this.underlyingMatrix.TransposeThisAndMultiply(other.underlyingMatrix);
+            return new KeyedRowColumnMatrix<TColumnKey, TOtherColumnKey>(this.keysForColumns, other.keysForColumns, result);
+        }
+        
         #region Key and Data initialization
-        private void CheckAndAddKeys(IList<TRowKey> keysRows, IList<TColumnKey> keysColumns)
+        private void CheckAndAddKeys(IEnumerable<TRowKey> keysRows, IEnumerable<TColumnKey> keysColumns)
         {
             this.CheckAndAddKeys(keysRows, keysColumns, 0);
         }
@@ -321,42 +403,32 @@ namespace SharpFE
         /// </summary>
         /// <param name="keysRows">Keys to copy into the RowKeys property</param>
         /// <param name="keysColumns">Keys to copy into the RowColumns property</param>
-        private void CheckAndAddKeys(IList<TRowKey> rows, IList<TColumnKey> columns, double initialValueOfAllData)
+        private void CheckAndAddKeys(IEnumerable<TRowKey> rows, IEnumerable<TColumnKey> columns, double initialValueOfAllData)
         {
             Guard.AgainstNullArgument(rows, "rows");
             Guard.AgainstNullArgument(columns, "columns");
-            Guard.AgainstBadArgument(
-                "rows",
-                () => {
-                    return rows.IsEmpty();
-                },
-                "Cannot have zero rows");
-            Guard.AgainstBadArgument(
-                "columns",
-                () => {
-                    return columns.IsEmpty();
-                },
-                "Cannot have zero columns");
             
-            int numRowKeys = rows.Count;
-            int numColKeys = columns.Count;
+            this.keysForRows = new Dictionary<TRowKey, int>();
+            this.keysForColumns = new Dictionary<TColumnKey, int>();
             
-            this.keysForRows = new Dictionary<TRowKey, int>(numRowKeys);
-            this.keysForColumns = new Dictionary<TColumnKey, int>(numColKeys);
-            
-            for (int i = 0; i < numRowKeys; i++)
+            IEnumerator<TRowKey> rowEnumerator = rows.GetEnumerator();
+            int i = 0;
+            while (rowEnumerator.MoveNext())
             {
-                this.keysForRows.Add(rows[i], i);
+                this.keysForRows.Add(rowEnumerator.Current, i++);
             }
             
-            for (int j = 0; j < numColKeys; j++)
+            IEnumerator<TColumnKey> columnEnumator = columns.GetEnumerator();
+            int j = 0;
+            while (columnEnumator.MoveNext())
             {
-                this.keysForColumns.Add(columns[j], j);
+                this.keysForColumns.Add(columnEnumator.Current, j++);
             }
             
-            this.underlyingMatrix = new DenseMatrix(numRowKeys, numColKeys, initialValueOfAllData);
+            this.underlyingMatrix = new DenseMatrix(i, j, initialValueOfAllData);
         }
         #endregion
+        
         
         public override string ToString()
         {

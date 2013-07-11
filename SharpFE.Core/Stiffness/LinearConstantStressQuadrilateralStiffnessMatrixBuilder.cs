@@ -9,6 +9,10 @@ namespace SharpFE.Stiffness
     using System;
     using System.Collections.Generic;
     
+    using MathNet.Numerics.LinearAlgebra.Generic;
+    using MathNet.Numerics.LinearAlgebra.Double;
+    
+    using SharpFE.Geometry;
     using SharpFE.Materials;
 
     /// <summary>
@@ -52,82 +56,123 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode location)
+        public override DenseVector ShapeFunctions(XYZ locationInNaturalCoordinates)
         {
-            ////TODO should be able to get the below from the ModelType
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(2);
-            supportedDegreesOfFreedom.Add(DegreeOfFreedom.X);
-            supportedDegreesOfFreedom.Add(DegreeOfFreedom.Y);
+            Guard.AgainstNullArgument(locationInNaturalCoordinates, "locationInNaturalCoordinates");
             
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
+            double xi = locationInNaturalCoordinates.X;
+            double eta = locationInNaturalCoordinates.Y;
+            Guard.AgainstBadArgument("locationInNaturalCoordinates",
+                                     () => { return xi < -1 || xi > 1 || eta < -1 || eta > 1; },
+                                     "location in natural coordinates must be within the boundary -1 to +1. You provided {0}", locationInNaturalCoordinates);
+
+            DenseVector shapeFunctions = new DenseVector(4);
             
-            IFiniteElementNode node0 = this.Element.Nodes[0];
-            IFiniteElementNode node1 = this.Element.Nodes[1];
-            IFiniteElementNode node2 = this.Element.Nodes[2];
-                        
-            //            double constant = 1.0 / (2.0 * quad.Area);
-            //            double N1 = (node1.OriginalX * node2.OriginalY - node2.OriginalX * node1.OriginalY)
-            //                + (node1.OriginalY - node2.OriginalY) * location.OriginalX
-            //                + (node2.OriginalX - node1.OriginalX) * location.OriginalY;
-//
-            //            double N2 = (node2.OriginalX * node0.OriginalY - node0.OriginalX * node2.OriginalY)
-            //                + (node2.OriginalY - node1.OriginalY) * location.OriginalX
-            //                + (node0.OriginalX - node2.OriginalX) * location.OriginalY;
-//
-            //            double N3 = (node0.OriginalX * node1.OriginalY - node1.OriginalX * node0.OriginalY)
-            //                + (node0.OriginalY - node1.OriginalY) * location.OriginalX
-            //                + (node1.OriginalX - node0.OriginalX) * location.OriginalY;
-//
-            //            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * N1);
-            //            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * N1);
-//
-            //            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * N2);
-            //            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * N2);
-//
-            //            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * N3);
-            //            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * N3);
+            shapeFunctions[0] = 0.25 * (1 - xi) * (1 - eta);
+            shapeFunctions[1] = 0.25 * (1 + xi) * (1 - eta);
+            shapeFunctions[2] = 0.25 * (1 + xi) * (1 + eta);
+            shapeFunctions[3] = 0.25 * (1 - xi) * (1 + eta);
+
             return shapeFunctions;
         }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInNaturalCoordinates)
         {
+            Guard.AgainstNullArgument(locationInNaturalCoordinates, "locationInNaturalCoordinates");
+            double xi = locationInNaturalCoordinates.X;
+            double eta = locationInNaturalCoordinates.Y;
+            Guard.AgainstBadArgument("locationInNaturalCoordinates",
+                                     () => { return xi < -1 || xi > 1 || eta < -1 || eta > 1; },
+                                     "location in natural coordinates must be within the boundary -1 to +1. You provided {0}", locationInNaturalCoordinates);
+            
+
+            DenseMatrix shapeFunctionDerivatives = new DenseMatrix(4, 2);
+
+            shapeFunctionDerivatives.At(0, 0, -0.25 * (1 - eta));
+            shapeFunctionDerivatives.At(0, 1, -0.25 * (1 - xi));
+            shapeFunctionDerivatives.At(1, 0,  0.25 * (1 - eta));
+            shapeFunctionDerivatives.At(1, 1, -0.25 * (1 + xi));
+            shapeFunctionDerivatives.At(2, 0,  0.25 * (1 + eta));
+            shapeFunctionDerivatives.At(2, 1,  0.25 * (1 + xi));
+            shapeFunctionDerivatives.At(3, 0, -0.25 * (1 + eta));
+            shapeFunctionDerivatives.At(3, 1,  0.25 * (1 - xi));
+
+            return shapeFunctionDerivatives;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Location on the finite element in local coordinates (xi, mu).  The z-axis property of the location is ignored.</param>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInNaturalCoordinates)
+        {
+            DenseMatrix AG = A_Matrix(locationInNaturalCoordinates) * G_Matrix(locationInNaturalCoordinates);
+            
             IList<Strain> supportedStrains = this.SupportedStrains;
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom);
+            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedLocalNodalDegreeOfFreedoms;
             
-            IFiniteElementNode node0 = this.Element.Nodes[0];
-            IFiniteElementNode node1 = this.Element.Nodes[1];
-            IFiniteElementNode node2 = this.Element.Nodes[2];
-            IFiniteElementNode node3 = this.Element.Nodes[3];
             
-            double constant = 1.0 / this.Element.Area;
-  
-//TODO            
-//            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node1.Y - node2.Y));
-//            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node2.Y - node0.Y));
-//            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node0.Y - node1.Y));
-//            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node3, DegreeOfFreedom.X), constant * (node0.Y - node1.Y));
-//            
-//            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node2.X - node1.X));
-//            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node0.X - node2.X));
-//            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node1.X - node0.X));
-//            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node3, DegreeOfFreedom.Y), constant * (node1.X - node0.X));
-//            
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node2.X - node1.X));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node1.Y - node2.Y));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node0.X - node2.X));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node2.Y - node0.Y));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node1.X - node0.X));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node0.Y - node1.Y));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node3, DegreeOfFreedom.X), constant * (node1.X - node0.X));
-//            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node3, DegreeOfFreedom.Y), constant * (node0.Y - node1.Y));
+            return new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom, AG);
+        }
+        
+        protected DenseMatrix A_Matrix(XYZ locationInNaturalCoordinates) //TODO make the output a keyed matrix
+        {
+            DenseMatrix jacobian = this.Jacobian(locationInNaturalCoordinates);
+            double J11 = jacobian[0, 0];
+            double J12 = jacobian[0, 1];
+            double J21 = jacobian[1, 0];
+            double J22 = jacobian[1, 1];
+            double detJ = jacobian.Determinant();
+            DenseMatrix A = new DenseMatrix(3, 4);
             
-            return strainDisplacementMatrix;
+            //linear strain x
+            A[0, 0] =  J22;
+            A[0, 1] = -J12;
+            
+            //linear strain y
+            A[1, 2] = -J21;
+            A[1, 3] =  J11;
+            
+            //shear strain xy
+            A[2, 0] = -J21;
+            A[2, 1] =  J11;
+            A[2, 2] =  J22;
+            A[2, 3] = -J12;
+            
+            A = (DenseMatrix)A.Divide(detJ);
+            return A;
+        }
+        
+        protected DenseMatrix G_Matrix(XYZ locationInNaturalCoordinates) //TODO make the output a keyed matrix
+        {
+            int numNodes = this.Element.Nodes.Count;
+            DenseMatrix shapeFunctionDerivs = this.ShapeFunctionFirstDerivatives(locationInNaturalCoordinates);
+            
+            DenseMatrix G = new DenseMatrix(4, numNodes * 2);
+            
+            double xiDeriv, muDeriv;
+            int currentColumn;
+            for (int i = 0; i < numNodes; i++)
+            {
+                xiDeriv = shapeFunctionDerivs[i, 0];
+                muDeriv = shapeFunctionDerivs[i, 1];
+                
+                currentColumn = 2 * i;
+                G.At(0, currentColumn, xiDeriv);
+                G.At(1, currentColumn, muDeriv);
+                
+                currentColumn += 1;
+                G.At(2, currentColumn, xiDeriv);
+                G.At(3, currentColumn, muDeriv);
+            }
+            
+            return G;
         }
         
         /// <summary>
@@ -136,17 +181,27 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
-            double elementVolume = this.Element.Thickness * this.Element.Area;
             KeyedSquareMatrix<Strain> materialMatrix = this.MaterialMatrix;
-            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = this.StrainDisplacementMatrix(null);//FIXME
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> transposedStrainDisplacementMatrix = strainDisplacementMatrix.Transpose();
             
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> bte = transposedStrainDisplacementMatrix.Multiply<Strain, Strain>(materialMatrix);
+            SharpFE.Maths.Integration.Gauss.GaussianIntegration2D gaussianIntegrator = new SharpFE.Maths.Integration.Gauss.GaussianIntegration2D(2);
             
-            KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> bteb = bte.Multiply<Strain, NodalDegreeOfFreedom>(strainDisplacementMatrix);
+            Matrix<double> k = gaussianIntegrator.Integrate((gaussIntegrationPointi, gaussIntegrationPointj) => {
+                            CartesianPoint pnt = new CartesianPoint(gaussIntegrationPointi, gaussIntegrationPointj, 0);
+                            
+                            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = this.StrainDisplacementMatrix(pnt);
+                            KeyedRowColumnMatrix<NodalDegreeOfFreedom, Strain> bte = strainDisplacementMatrix.TransposeThisAndMultiply<Strain>(materialMatrix);
+                            KeyedRowColumnMatrix<NodalDegreeOfFreedom, NodalDegreeOfFreedom> bteb = bte.Multiply<Strain, NodalDegreeOfFreedom>(strainDisplacementMatrix);
+                            
+                            double jacobianDeterminant = this.Jacobian(pnt).Determinant();
+                            bteb = bteb.Multiply(jacobianDeterminant);
+                            return (Matrix<double>)bteb;
+                        });
             
-            StiffnessMatrix k = new StiffnessMatrix(bteb.Multiply(elementVolume));
-            return k;
+            double thickness = this.Element.Thickness; //TODO interpolate over element (i.e. allow varying thickness over element)
+            k = k.Multiply(thickness);
+            
+            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedLocalNodalDegreeOfFreedoms;
+            return new StiffnessMatrix(supportedNodalDegreesOfFreedom, supportedNodalDegreesOfFreedom, k);
         }
     }
 }

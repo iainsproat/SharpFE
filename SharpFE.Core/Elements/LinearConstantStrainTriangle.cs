@@ -98,7 +98,7 @@ namespace SharpFE
             }
         }
         
-        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
+        public override IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
             get
             {

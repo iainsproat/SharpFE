@@ -36,7 +36,7 @@ namespace SharpFE
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE.Maths;
+    using MathNet.Numerics.LinearAlgebra.Generic;
 
     /// <summary>
     /// A KeyedMatrix is a matrix whose elements can be accessed by Keys, rather than just index integers.
@@ -78,6 +78,30 @@ namespace SharpFE
             // empty
         }
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
+        /// </summary>
+        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
+        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
+        /// <param name="matrix">The value to which we assign to each element of the matrix</param>
+        public KeyedSquareMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns, KeyedSquareMatrix<TKey> matrix)
+            : base(keysForRows, keysForColumns, matrix)
+        {
+            // empty
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyedMatrix{TKey}" /> class.
+        /// </summary>
+        /// <param name="keysForRows">The keys which will be used to look up rows of this matrix. One unique key is expected per row.</param>
+        /// <param name="keysForColumns">The keys which will be used to look up columns of this matrix. One unique key is expected per column.</param>
+        /// <param name="matrix">The value to which we assign to each element of the matrix</param>
+        public KeyedSquareMatrix(IList<TKey> keysForRows, IList<TKey> keysForColumns, Matrix<double> matrix)
+            : base(keysForRows, keysForColumns, matrix)
+        {
+            // empty
+        }
+        
         public KeyedSquareMatrix(KeyedRowColumnMatrix<TKey, TKey> matrix)
             : base(matrix)
         {
@@ -103,6 +127,18 @@ namespace SharpFE
         public KeyedSquareMatrix<TKey> Multiply(KeyedRowColumnMatrix<TKey, TKey> other)
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.Multiply(other);
+            return new KeyedSquareMatrix<TKey>(result);
+        }
+        
+        public new KeyedSquareMatrix<TKey> Multiply(double scalar)
+        {
+            KeyedRowColumnMatrix<TKey, TKey> result = base.Multiply(scalar);
+            return new KeyedSquareMatrix<TKey>(result);
+        }
+        
+        public KeyedSquareMatrix<TKey> Add(KeyedSquareMatrix<TKey> other)
+        {
+            KeyedRowColumnMatrix<TKey, TKey> result = base.Add(other);
             return new KeyedSquareMatrix<TKey>(result);
         }
         
@@ -132,6 +168,12 @@ namespace SharpFE
         public new KeyedSquareMatrix<TKey> Transpose()
         {
             KeyedRowColumnMatrix<TKey, TKey> result = base.Transpose();
+            return new KeyedSquareMatrix<TKey>(result);
+        }
+        
+        public KeyedSquareMatrix<TKey> TransposeThisAndMultiply(KeyedSquareMatrix<TKey> other)
+        {
+            KeyedRowColumnMatrix<TKey, TKey> result = base.TransposeThisAndMultiply(other);
             return new KeyedSquareMatrix<TKey>(result);
         }
         

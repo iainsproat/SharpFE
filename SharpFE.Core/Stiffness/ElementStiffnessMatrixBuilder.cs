@@ -7,6 +7,9 @@
 namespace SharpFE.Stiffness
 {
     using System;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
+    
     using SharpFE;
     using SharpFE.Cache;
     
@@ -57,13 +60,48 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode locationInLocalCoordinates);
+        public abstract DenseVector ShapeFunctions(XYZ locationInLocalCoordinates);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="locationInLocalCoordinates"></param>
+        /// <returns></returns>
+        public abstract DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Location on the finite element in local coordinates (xi, mu).  The z-axis property of the location is ignored.</param>
+        /// <returns></returns>
+        protected DenseMatrix Jacobian(XYZ locationInLocalCoordinates)
+        {
+            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInLocalCoordinates); //FIXME assumes all coordinates are in x-y plane. i.e. are local coordinates!
+            DenseMatrix nodeCoords = this.NodeCoordinatesAsMatrix();
+            
+            return (DenseMatrix)firstDerivs.TransposeThisAndMultiply(nodeCoords);
+        }
+        
+        protected DenseMatrix NodeCoordinatesAsMatrix()
+        {
+            int numNodes = this.Element.Nodes.Count;
+            DenseMatrix nodeCoords = new DenseMatrix(numNodes, 2);
+            IFiniteElementNode currentNode;
+            for (int i = 0; i < numNodes; i++)
+            {
+                currentNode = this.Element.Nodes[i];
+                nodeCoords[i, 0] = currentNode.X;
+                nodeCoords[i, 1] = currentNode.Y;
+            }
+            
+            return nodeCoords;
+        }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location);
+        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates);
         
         /// <summary>
         /// 
@@ -94,9 +132,6 @@ namespace SharpFE.Stiffness
             
             return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
         }
-
-        
-
         
         /// <summary>
         /// Prepares and generates the stiffness matrix.
@@ -114,10 +149,11 @@ namespace SharpFE.Stiffness
             
             KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
             
+            k = new StiffnessMatrix(t.RowKeys, t.ColumnKeys, k); //pad out local stiffness matrix with zeros so that it is the same size as the rotational matrix
+            
             ////FIXME these multiplications assume the keys of both matrices are ordered and identical
             KeyedSquareMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
-            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposed = t.Transpose(); // T^
-            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
+            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = t.TransposeThisAndMultiply(kt); // (T^)*K*T
             StiffnessMatrix globStiffMat = new StiffnessMatrix(ttransposedkt);
             
             Guard.AgainstInvalidState(() => { return !globStiffMat.Determinant().IsApproximatelyEqualTo(0.0); }, //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
@@ -136,29 +172,51 @@ namespace SharpFE.Stiffness
         {
             KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = this.Element.CalculateElementRotationMatrix();
             
-            KeyedSquareMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedSquareMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
+            KeyedSquareMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedSquareMatrix<NodalDegreeOfFreedom>(this.Element.SupportedGlobalNodalDegreeOfFreedoms);
 
             foreach (IFiniteElementNode node in this.Element.Nodes)
             {
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
-                
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
+                foreach (DegreeOfFreedom dofi in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
+                {
+                    foreach (DegreeOfFreedom dofj in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
+                    {
+                        if (!((dofi.IsLinear() && dofj.IsLinear()) || (dofi.IsRotational() && dofj.IsRotational())))
+                        {
+                            continue;
+                        }
+                        
+                        DegreeOfFreedom i = dofi;
+                        if (i == DegreeOfFreedom.XX && dofj.IsRotational())
+                        {
+                            i = DegreeOfFreedom.X;
+                        }
+                        else if (i == DegreeOfFreedom.YY && dofj.IsRotational())
+                        {
+                            i = DegreeOfFreedom.Y;
+                        }
+                        else if (i == DegreeOfFreedom.ZZ && dofj.IsRotational())
+                        {
+                            i = DegreeOfFreedom.Z;
+                        }
+
+                        DegreeOfFreedom j = dofj;
+                        if (j == DegreeOfFreedom.XX && dofi.IsRotational())
+                        {
+                            j = DegreeOfFreedom.X;
+                        }
+                        else if (j == DegreeOfFreedom.YY && dofi.IsRotational())
+                        {
+                            j = DegreeOfFreedom.Y;
+                        }
+                        else if (j == DegreeOfFreedom.ZZ && dofi.IsRotational())
+                        {
+                            j = DegreeOfFreedom.Z;
+                        }
+                        
+                        double valueToBeCopied = rotationMatrix.At(i, j);
+                        elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, dofi), new NodalDegreeOfFreedom(node, dofj), valueToBeCopied);
+                    }
+                }
             }
             
             return elementRotationMatrixFromLocalToGlobalCoordinates;

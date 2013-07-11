@@ -8,6 +8,8 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// 
@@ -29,24 +31,29 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode locationInLocalCoordinates)
+        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
         {
-            double eta = this.ConvertLocalCoordinatesToNaturalCoordinate(locationInLocalCoordinates);
+            Guard.AgainstNullArgument(locationInLocalCoordinates, "locationInLocalCoordinates");
+            double xi = locationInLocalCoordinates.X;
+            Guard.AgainstBadArgument("locationInLocalCoordinates",
+                                     () => { return xi < -1 || xi > 1; },
+                                     "location in local coordinates must be within the boundary -1 to +1. You provided {0}", locationInLocalCoordinates);
             
-            double N1 = 0.5 * (1 - eta);
-            double N2 = 0.5 * (1 + eta);
+            double N1 = 0.5 * (1 - xi);
+            double N2 = 0.5 * (1 + xi);
             
-            IFiniteElementNode start = this.Element.StartNode;
-            IFiniteElementNode end = this.Element.EndNode;
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = new List<DegreeOfFreedom>(1){ DegreeOfFreedom.X };
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(start, DegreeOfFreedom.X), N1);
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(end, DegreeOfFreedom.X), N2);
+            DenseVector shapeFunctions = new DenseVector(2);
+            shapeFunctions[0] = N1;
+            shapeFunctions[1] = N2;
             return shapeFunctions;
         }
         
-        private double ConvertLocalCoordinatesToNaturalCoordinate(IFiniteElementNode locationInLocalCoordinates)
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("Linear1DBernoulliBeamStiffnessMatrixBuilder.ShapeFunctionDerivatives");
+        }
+        
+        private double ConvertLocalCoordinatesToNaturalCoordinate(XYZ locationInLocalCoordinates)
         {
             ////TODO check that the location lies on the beam
             
@@ -60,7 +67,7 @@ namespace SharpFE.Stiffness
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates)
         {
             throw new NotImplementedException();
         }
@@ -71,8 +78,8 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
-            double length = this.Element.OriginalLength;                    
-            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+            double length = this.Element.OriginalLength;
+            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedLocalNodalDegreeOfFreedoms);
             
             double axialStiffness = this.Element.StiffnessEA / length;
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, axialStiffness);

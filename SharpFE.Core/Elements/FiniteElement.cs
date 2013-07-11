@@ -30,12 +30,23 @@ namespace SharpFE
         /// The nodal degrees of freedom supported by this element.
         /// </summary>
         /// <param name="stiffness"></param>
-        private IList<NodalDegreeOfFreedom> supportedNodalDof;
+        private IList<NodalDegreeOfFreedom> supportedGlobalNodalDof;
+        
+        /// <summary>
+        /// The nodal degrees of freedom supported by this element.
+        /// </summary>
+        /// <param name="stiffness"></param>
+        private IList<NodalDegreeOfFreedom> supportedLocalNodalDof;
         
         /// <summary>
         /// 
         /// </summary>
-        private int hashAtWhichNodalDegreesOfFreedomWereLastBuilt;
+        private int hashAtWhichGlobalNodalDegreesOfFreedomWereLastBuilt;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private int hashAtWhichLocalNodalDegreesOfFreedomWereLastBuilt;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="FiniteElement" /> class.
@@ -98,30 +109,78 @@ namespace SharpFE
             }
         }
         
-        public abstract IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
+        public abstract IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
             get;
+        }
+        
+        public IList<DegreeOfFreedom> SupportedGlobalBoundaryConditionDegreeOfFreedom
+        {
+            get
+            {
+                IList<DegreeOfFreedom> globalBoundaryConditionDegreeOfFreedoms = new List<DegreeOfFreedom>(6);
+                bool linear = this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.X) || this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Y) || this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Z);
+                bool rotational = this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.XX) || this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.YY) || this.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.ZZ);
+                
+                if (linear)
+                {
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.X);
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.Y);
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.Z);
+                }
+                
+                if (rotational)
+                {
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.XX);
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.YY);
+                    globalBoundaryConditionDegreeOfFreedoms.Add(DegreeOfFreedom.ZZ);
+                }
+                
+                return globalBoundaryConditionDegreeOfFreedoms;
+            }
         }
         
         /// <summary>
         /// Gets the nodal degrees of freedom supported by this finite element
         /// </summary>
-        internal IList<NodalDegreeOfFreedom> SupportedNodalDegreeOfFreedoms
+        internal IList<NodalDegreeOfFreedom> SupportedGlobalNodalDegreeOfFreedoms
         {
             get
             {
-                if (this.IsDirty(this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt))
+                if (this.IsDirty(this.hashAtWhichGlobalNodalDegreesOfFreedomWereLastBuilt))
                 {
-                    this.SupportedNodalDegreeOfFreedoms = this.BuildSupportedGlobalNodalDegreeOfFreedoms();
-                    this.hashAtWhichNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
+                    this.SupportedGlobalNodalDegreeOfFreedoms = this.BuildSupportedGlobalNodalDegreeOfFreedoms();
+                    this.hashAtWhichGlobalNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
                 }
                 
-                return this.supportedNodalDof;
+                return this.supportedGlobalNodalDof;
             }
             
             private set
             {
-                this.supportedNodalDof = value;
+                this.supportedGlobalNodalDof = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets the nodal degrees of freedom supported by this finite element
+        /// </summary>
+        internal IList<NodalDegreeOfFreedom> SupportedLocalNodalDegreeOfFreedoms
+        {
+            get
+            {
+                if (this.IsDirty(this.hashAtWhichLocalNodalDegreesOfFreedomWereLastBuilt))
+                {
+                    this.SupportedLocalNodalDegreeOfFreedoms = this.BuildSupportedLocalNodalDegreeOfFreedoms();
+                    this.hashAtWhichLocalNodalDegreesOfFreedomWereLastBuilt = this.GetHashCode();
+                }
+                
+                return this.supportedLocalNodalDof;
+            }
+            
+            private set
+            {
+                this.supportedLocalNodalDof = value;
             }
         }
         
@@ -244,8 +303,8 @@ namespace SharpFE
         {
             const string delimiter = ", ";
             IEnumerable<string> nodes = this.nodeStore.Select(node => {
-                                                       return node.ToString();
-                                                   });
+                                                                  return node.ToString();
+                                                              });
             string nodesJoined = nodes.Aggregate((current, next) => current.ToString() + delimiter + next.ToString());
             return nodesJoined;
         }
@@ -289,7 +348,7 @@ namespace SharpFE
         /// <returns></returns>
         public bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
         {
-            return this.SupportedBoundaryConditionDegreeOfFreedom.Contains(degreeOfFreedom);
+            return this.SupportedLocalBoundaryConditionDegreeOfFreedom.Contains(degreeOfFreedom);
         }
         
         /// <summary>
@@ -347,17 +406,29 @@ namespace SharpFE
         /// Builds the list of possible nodal degree of freedoms for this element which are expected by the model
         /// </summary>
         /// <returns>A list of all the possible nodal degree of freedoms for this element</returns>
-        protected IList<NodalDegreeOfFreedom> BuildSupportedGlobalNodalDegreeOfFreedoms() ////TODO make abstract and require derived classes to implement for their specific requirements
+        protected IList<NodalDegreeOfFreedom> BuildSupportedGlobalNodalDegreeOfFreedoms()
         {
             IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
             foreach (IFiniteElementNode node in this.nodeStore)
             {
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X));
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y));
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z));
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX));
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY));
-                nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ));
+                foreach (DegreeOfFreedom dof in this.SupportedGlobalBoundaryConditionDegreeOfFreedom)
+                {
+                    nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, dof));
+                }
+            }
+            
+            return nodalDegreeOfFreedoms;
+        }
+        
+        protected IList<NodalDegreeOfFreedom> BuildSupportedLocalNodalDegreeOfFreedoms()
+        {
+            IList<NodalDegreeOfFreedom> nodalDegreeOfFreedoms = new List<NodalDegreeOfFreedom>();
+            foreach (IFiniteElementNode node in this.nodeStore)
+            {
+                foreach (DegreeOfFreedom dof in this.SupportedLocalBoundaryConditionDegreeOfFreedom)
+                {
+                    nodalDegreeOfFreedoms.Add(new NodalDegreeOfFreedom(node, dof));
+                }
             }
             
             return nodalDegreeOfFreedoms;

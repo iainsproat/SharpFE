@@ -47,7 +47,7 @@ namespace SharpFE.Core.Tests
                 {
                     Assert.AreEqual(expectedValues[currentArrayIndex], actual.At(rowKey, columnKey), 0.0005, String.Format("Row : {0}; Column : {1},\r\n" +
                                                                                                               "Actual : \r\n" +
-                                                                                                              "{2}", rowKey, columnKey, actual));
+                                                                                                              "{2}", rowKey, columnKey, PrettyPrintKeyedRowColumnMatrix(actual)));
                     currentArrayIndex++;
                 }
             }

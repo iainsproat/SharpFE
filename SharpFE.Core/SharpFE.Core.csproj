@@ -17,6 +17,7 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -35,7 +36,14 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' " />
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+    <Prefer32Bit>False</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics">
       <HintPath>lib\MathNet.Numerics.dll</HintPath>
@@ -59,6 +67,7 @@
     <Compile Include="CrossSections\IHasCrossSection.cs" />
     <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="DegreeOfFreedomExtensions.cs" />
     <Compile Include="Elements\IFiniteElement.cs" />
     <Compile Include="Elements\LinearBeam.cs" />
     <Compile Include="Elements\LinearConstantSpring.cs" />
@@ -94,6 +103,8 @@
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
     <Compile Include="Materials\MaterialMatrixBuilder.cs" />
+    <Compile Include="Maths\Integration\Gauss\GaussianIntegration1D.cs" />
+    <Compile Include="Maths\Integration\Gauss\GaussianIntegration2D.cs" />
     <Compile Include="Maths\KeyCompatibilityValidator.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrix.cs" />
     <Compile Include="Maths\KeyedVector.cs" />
@@ -133,7 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />
+    <Folder Include="Maths\Integration\Gauss" />
     <Folder Include="Maths\MatrixSolvers" />
+    <Folder Include="Maths\Integration" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
     <Folder Include="Maths" />

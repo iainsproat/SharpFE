@@ -102,7 +102,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override IList<DegreeOfFreedom> SupportedBoundaryConditionDegreeOfFreedom
+        public override IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
             get
             {

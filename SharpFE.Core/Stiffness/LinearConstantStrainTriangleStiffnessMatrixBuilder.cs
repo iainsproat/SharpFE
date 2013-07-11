@@ -9,6 +9,8 @@ namespace SharpFE.Stiffness
     using System;
     using System.Collections.Generic;
     
+    using MathNet.Numerics.LinearAlgebra.Double;
+    
     using SharpFE.Materials;
     
     /// <summary>
@@ -52,14 +54,18 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> ShapeFunctionVector(IFiniteElementNode location)
+        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
         {
-            ////TODO check that location is within or on the bounds of the finite element.
+            throw new NotImplementedException("LinearConstantStrainTriangleStiffnessMatrixBuilder.ShapeFunctions has been implemented, but uses global coordinates (x, y) rather than natural coordinates (xi, mu)");
+
+            Guard.AgainstNullArgument(locationInLocalCoordinates, "locationInLocalCoordinates");
+            double xi = locationInLocalCoordinates.X;
+            double eta = locationInLocalCoordinates.Y;
+            Guard.AgainstBadArgument("locationInLocalCoordinates",
+                                     () => { return xi < -1 || xi > 1 || eta < -1 || eta > 1; },
+                                     "location in local coordinates must be within the boundary -1 to +1. You provided {0}", locationInLocalCoordinates);
             
-            IList<DegreeOfFreedom> supportedDegreesOfFreedom = this.Element.SupportedBoundaryConditionDegreeOfFreedom;
-            
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
-            KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom> shapeFunctions = new KeyedRowColumnMatrix<DegreeOfFreedom, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreesOfFreedom);
+            DenseVector shapeFunctions = new DenseVector(3);
             
             IFiniteElementNode node0 = this.Element.Nodes[0];
             IFiniteElementNode node1 = this.Element.Nodes[1];
@@ -67,37 +73,40 @@ namespace SharpFE.Stiffness
             
             double constant = 1.0 / (2.0 * this.Element.Area);
             double n1 = ((node1.X * node2.Y) - (node2.X * node1.Y))
-                + ((node1.Y - node2.Y) * location.X)
-                + ((node2.X - node1.X) * location.Y);
+                + ((node1.Y - node2.Y) * locationInLocalCoordinates.X)
+                + ((node2.X - node1.X) * locationInLocalCoordinates.Y);
             
             double n2 = ((node2.X * node0.Y) - (node0.X * node2.Y))
-                + ((node2.Y - node1.Y) * location.X)
-                + ((node0.X - node2.X) * location.Y);
+                + ((node2.Y - node1.Y) * locationInLocalCoordinates.X)
+                + ((node0.X - node2.X) * locationInLocalCoordinates.Y);
             
             double n3 = ((node0.X * node1.Y) - (node1.X * node0.Y))
-                + ((node0.Y - node1.Y) * location.X)
-                + ((node1.X - node0.X) * location.Y);
+                + ((node0.Y - node1.Y) * locationInLocalCoordinates.X)
+                + ((node1.X - node0.X) * locationInLocalCoordinates.Y);
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * n1);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * n1);
+            shapeFunctions[0] = constant * n1;
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * n2);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * n2);
+            shapeFunctions[1] = constant * n2;
             
-            shapeFunctions.At(DegreeOfFreedom.X, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * n3);
-            shapeFunctions.At(DegreeOfFreedom.Y, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * n3);
+            shapeFunctions[2] = constant * n3;
 
             return shapeFunctions;
+        
+        }
+        
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("LinearconstantStrainTriangleStiffnessMatrix.ShapeFunctionFirstDerivatives");
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(IFiniteElementNode location)
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates)
         {
             IList<Strain> supportedStrains = this.SupportedStrains;
-            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedNodalDegreeOfFreedoms;
+            IList<NodalDegreeOfFreedom> supportedNodalDegreesOfFreedom = this.Element.SupportedLocalNodalDegreeOfFreedoms;
             KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedStrains, supportedNodalDegreesOfFreedom);
             
             IFiniteElementNode node0 = this.Element.Nodes[0];

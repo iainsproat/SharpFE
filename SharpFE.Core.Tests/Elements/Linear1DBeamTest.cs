@@ -42,7 +42,7 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void HasCorrectSupportedDOF()
         {
-        	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.X));
+        	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.X));
         	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Y));
         	Assert.IsTrue(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.Z));
         	Assert.IsFalse(SUT.IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom.XX));
