@@ -76,7 +76,7 @@ namespace SharpFE.Stiffness
         /// <returns></returns>
         protected DenseMatrix Jacobian(XYZ locationInLocalCoordinates)
         {
-            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInLocalCoordinates); //FIXME assumes all coordinates are in x-y plane. i.e. are local coordinates!
+            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInLocalCoordinates);
             DenseMatrix nodeCoords = this.NodeCoordinatesAsMatrix();
             
             return (DenseMatrix)firstDerivs.TransposeThisAndMultiply(nodeCoords);
@@ -120,15 +120,8 @@ namespace SharpFE.Stiffness
         /// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
         public double GetStiffnessInGlobalCoordinatesAt(IFiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, IFiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
         {
-            if (rowNode == null)
-            {
-                throw new ArgumentNullException("rowNode");
-            }
-            
-            if (columnNode == null)
-            {
-                throw new ArgumentNullException("columnNode");
-            }
+            Guard.AgainstNullArgument(rowNode, "rowNode");
+            Guard.AgainstNullArgument(columnNode, "columnNode");
             
             return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
         }
@@ -142,14 +135,15 @@ namespace SharpFE.Stiffness
         protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
             StiffnessMatrix k = this.LocalStiffnessMatrix();
-            Guard.AgainstInvalidState(() => { return !k.Determinant().IsApproximatelyEqualTo(0.0); }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
-                                      "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
-                                      this.Element,
-                                      this.Element.GetType());
+            
             
             KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
             
             k = new StiffnessMatrix(t.RowKeys, t.ColumnKeys, k); //pad out local stiffness matrix with zeros so that it is the same size as the rotational matrix
+            Guard.AgainstInvalidState(() => { return !k.Determinant().IsApproximatelyEqualTo(0.0); }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
+                                      "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
+                                      this.Element,
+                                      this.Element.GetType());
             
             ////FIXME these multiplications assume the keys of both matrices are ordered and identical
             KeyedSquareMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
@@ -180,6 +174,7 @@ namespace SharpFE.Stiffness
                 {
                     foreach (DegreeOfFreedom dofj in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
                     {
+                        //HACK this is a big pile of horribly un-clean code
                         if (!((dofi.IsLinear() && dofj.IsLinear()) || (dofi.IsRotational() && dofj.IsRotational())))
                         {
                             continue;

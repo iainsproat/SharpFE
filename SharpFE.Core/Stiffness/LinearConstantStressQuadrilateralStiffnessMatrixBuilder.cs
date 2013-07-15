@@ -156,20 +156,20 @@ namespace SharpFE.Stiffness
             
             DenseMatrix G = new DenseMatrix(4, numNodes * 2);
             
-            double xiDeriv, muDeriv;
+            double xiDeriv, etaDeriv;
             int currentColumn;
             for (int i = 0; i < numNodes; i++)
             {
                 xiDeriv = shapeFunctionDerivs[i, 0];
-                muDeriv = shapeFunctionDerivs[i, 1];
+                etaDeriv = shapeFunctionDerivs[i, 1];
                 
                 currentColumn = 2 * i;
                 G.At(0, currentColumn, xiDeriv);
-                G.At(1, currentColumn, muDeriv);
+                G.At(1, currentColumn, etaDeriv);
                 
                 currentColumn += 1;
                 G.At(2, currentColumn, xiDeriv);
-                G.At(3, currentColumn, muDeriv);
+                G.At(3, currentColumn, etaDeriv);
             }
             
             return G;
