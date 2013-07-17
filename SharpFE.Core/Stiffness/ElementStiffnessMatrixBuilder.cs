@@ -7,6 +7,7 @@
 namespace SharpFE.Stiffness
 {
     using System;
+    using System.Collections.Generic;
     
     using MathNet.Numerics.LinearAlgebra.Double;
     
@@ -74,9 +75,21 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location">Location on the finite element in local coordinates (xi, mu).  The z-axis property of the location is ignored.</param>
         /// <returns></returns>
-        protected DenseMatrix Jacobian(XYZ locationInLocalCoordinates)
+        protected DenseMatrix Jacobian(XYZ locationInNaturalCoordinates)
         {
-            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInLocalCoordinates);
+            Guard.AgainstNullArgument(locationInNaturalCoordinates, "locationInNaturalCoordinates");
+            Guard.AgainstBadArgument("locationInNaturalCoordinates", () => {
+                                         return (locationInNaturalCoordinates.X < -1 || locationInNaturalCoordinates.X > 1);
+                                     },
+                                     "X-coordinate of natural coordinates should be between -1 and 1, not {0}",
+                                    locationInNaturalCoordinates.X);
+            Guard.AgainstBadArgument("locationInNaturalCoordinates", () => {
+                                         return (locationInNaturalCoordinates.Y < -1 || locationInNaturalCoordinates.Y > 1);
+                                     },
+                                     "Y-coordinate of natural coordinates should be between -1 and 1, not {0}",
+                                    locationInNaturalCoordinates.Y);
+            
+            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInNaturalCoordinates);
             DenseMatrix nodeCoords = this.NodeCoordinatesAsMatrix();
             
             return (DenseMatrix)firstDerivs.TransposeThisAndMultiply(nodeCoords);
@@ -86,12 +99,14 @@ namespace SharpFE.Stiffness
         {
             int numNodes = this.Element.Nodes.Count;
             DenseMatrix nodeCoords = new DenseMatrix(numNodes, 2);
-            IFiniteElementNode currentNode;
-            for (int i = 0; i < numNodes; i++)
+            
+            IDictionary<IFiniteElementNode, XYZ> localCoords = this.Element.CalculateLocalPositionsOfNodes();
+            int i = 0;
+            foreach (KeyValuePair<IFiniteElementNode, XYZ> kvp in localCoords)
             {
-                currentNode = this.Element.Nodes[i];
-                nodeCoords[i, 0] = currentNode.X;
-                nodeCoords[i, 1] = currentNode.Y;
+                nodeCoords[i, 0] = kvp.Value.X;
+                nodeCoords[i, 1] = kvp.Value.Y;
+                i++;
             }
             
             return nodeCoords;
@@ -141,9 +156,7 @@ namespace SharpFE.Stiffness
         /// </summary>
         protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
-            StiffnessMatrix k = this.LocalStiffnessMatrix();
-            
-            
+            StiffnessMatrix k = this.LocalStiffnessMatrix();            
             KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
             
             k = new StiffnessMatrix(t.RowKeys, t.ColumnKeys, k); //pad out local stiffness matrix with zeros so that it is the same size as the rotational matrix
@@ -186,7 +199,9 @@ namespace SharpFE.Stiffness
                             continue;
                         }
                         
-                        //HACK this is a big pile of horribly un-clean code. it copies x into a larger matrix of [x 0, 0 x]
+                        //HACK it is used to copy the keyed matrix [x] into a larger keyed matrix of:
+                        //[x 0,
+                        // 0 x]
                         DegreeOfFreedom i = dofi;
                         DegreeOfFreedom j = dofj;
                         if (dofi.IsRotational() && dofj.IsRotational())
