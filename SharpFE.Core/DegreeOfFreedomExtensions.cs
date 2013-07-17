@@ -6,22 +6,7 @@
     {
         public static bool IsLinear(this DegreeOfFreedom dof)
         {
-            switch (dof)
-            {
-                case DegreeOfFreedom.X:
-                case DegreeOfFreedom.Y:
-                case DegreeOfFreedom.Z:
-                    return true;
-                case DegreeOfFreedom.XX:
-                case DegreeOfFreedom.YY:
-                case DegreeOfFreedom.ZZ:
-                    return false;
-                default:
-                    throw new NotImplementedException(
-                        string.Format(
-                            "DegreeOfFreedomExtensions.IsLinear(DegreeOfFreedom) is not implemented for a DegreeOfFreedom for {0}",
-                            dof));
-            }
+            return (int)dof < 3;
         }
         
         public static bool IsRotational(this DegreeOfFreedom dof)

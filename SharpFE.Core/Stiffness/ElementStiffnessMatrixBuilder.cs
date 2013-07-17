@@ -123,7 +123,14 @@ namespace SharpFE.Stiffness
             Guard.AgainstNullArgument(rowNode, "rowNode");
             Guard.AgainstNullArgument(columnNode, "columnNode");
             
-            return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+            try
+            {
+                return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+            }
+            catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                return 0.0;
+            }
         }
         
         /// <summary>
@@ -174,38 +181,19 @@ namespace SharpFE.Stiffness
                 {
                     foreach (DegreeOfFreedom dofj in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
                     {
-                        //HACK this is a big pile of horribly un-clean code
                         if (!((dofi.IsLinear() && dofj.IsLinear()) || (dofi.IsRotational() && dofj.IsRotational())))
                         {
                             continue;
                         }
                         
+                        //HACK this is a big pile of horribly un-clean code. it copies x into a larger matrix of [x 0, 0 x]
                         DegreeOfFreedom i = dofi;
-                        if (i == DegreeOfFreedom.XX && dofj.IsRotational())
-                        {
-                            i = DegreeOfFreedom.X;
-                        }
-                        else if (i == DegreeOfFreedom.YY && dofj.IsRotational())
-                        {
-                            i = DegreeOfFreedom.Y;
-                        }
-                        else if (i == DegreeOfFreedom.ZZ && dofj.IsRotational())
-                        {
-                            i = DegreeOfFreedom.Z;
-                        }
-
                         DegreeOfFreedom j = dofj;
-                        if (j == DegreeOfFreedom.XX && dofi.IsRotational())
+                        if (dofi.IsRotational() && dofj.IsRotational())
                         {
-                            j = DegreeOfFreedom.X;
-                        }
-                        else if (j == DegreeOfFreedom.YY && dofi.IsRotational())
-                        {
-                            j = DegreeOfFreedom.Y;
-                        }
-                        else if (j == DegreeOfFreedom.ZZ && dofi.IsRotational())
-                        {
-                            j = DegreeOfFreedom.Z;
+                            // shift from rotational to linear
+                            i = (DegreeOfFreedom)((int)dofi - 3);
+                            j = (DegreeOfFreedom)((int)dofj - 3);
                         }
                         
                         double valueToBeCopied = rotationMatrix.At(i, j);
