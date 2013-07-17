@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 5.0
+# SharpDevelop 4.3
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{6A7CF02D-7F68-49A0-8A3A-523BE88FD363}"
 	ProjectSection(SolutionItems) = preProject
 		Documentation\RoadMap.markdown = Documentation\RoadMap.markdown

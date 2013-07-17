@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ElementFactory.cs" company="SharpFE">
-//     Copyright Iain Sproat, 2012.
+//     Copyright Iain Sproat, 2012, 2013
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -173,7 +173,8 @@ namespace SharpFE
             Guard.AgainstInvalidState(() => { return !LinearConstantStressQuadrilateral.IsASupportedModelType(this.ModelType); },
                                       "LinearConstantStressQuadrilateral are not available in a model of type {0}",
                                       this.ModelType);
-            
+            //TODO error check for non-planar nodes.  i.e. one node out of plane of the other three
+            //TODO error check for out of sequence nodes.  Nodes should be sequenced in a clockwise or anti-clockwise manner.
             LinearConstantStressQuadrilateral newQuad = new LinearConstantStressQuadrilateral(node0, node1, node2, node3, material, thickness);
             if (this.repository != null)
             {
