@@ -65,9 +65,10 @@ namespace SharpFE
         {
             get
             {
-                double initialLengthOfSide1ProjectedInXAxis = this.Nodes[1].X - this.LocalOrigin.X;
-                double initialLengthOfSide1ProjectedInYAxis = this.Nodes[1].Y - this.LocalOrigin.Y;
-                double initialLengthOfSide1ProjectedInZAxis = this.Nodes[1].Z - this.LocalOrigin.Z;
+                IFiniteElementNode node1 = this.Nodes[1];
+                double initialLengthOfSide1ProjectedInXAxis = node1.X - this.LocalOrigin.X;
+                double initialLengthOfSide1ProjectedInYAxis = node1.Y - this.LocalOrigin.Y;
+                double initialLengthOfSide1ProjectedInZAxis = node1.Z - this.LocalOrigin.Z;
                 return new GeometricVector(initialLengthOfSide1ProjectedInXAxis, initialLengthOfSide1ProjectedInYAxis, initialLengthOfSide1ProjectedInZAxis);
             }
         }
