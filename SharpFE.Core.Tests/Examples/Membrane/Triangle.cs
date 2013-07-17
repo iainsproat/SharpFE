@@ -6,6 +6,15 @@ namespace SharpFE.Examples.Membrane
 	[TestFixture]
 	public class Triangle
 	{
+	    /// <summary>
+	    /// 3-----4
+	    /// |\    |
+	    /// | \   |
+	    /// |  \  |
+	    /// |   \ |
+	    /// |    \|
+	    /// 1-----2
+	    /// </summary>
 		[Test]
 		public void TwoTriangleWall()
 		{
