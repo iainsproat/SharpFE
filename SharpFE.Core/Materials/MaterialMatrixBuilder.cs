@@ -45,11 +45,11 @@ namespace SharpFE.Materials
         
         protected KeyedSquareMatrix<Strain> CreateMaterialMatrix(IList<Strain> supportedStrains, double lameConstantLambda, double lameConstantMu)
         {
-            KeyedSquareMatrix<Strain> matrix = CreateFullMaterialMatrix(supportedStrains, lameConstantLambda, lameConstantMu);
+            KeyedSquareMatrix<Strain> matrix = CreateMaterialMatrix(lameConstantLambda, lameConstantMu);
             return matrix.SubMatrix(supportedStrains);
         }
         
-        protected KeyedSquareMatrix<Strain> CreateFullMaterialMatrix(IList<Strain> supportedStrains, double lameConstantLambda, double lameConstantMu)
+        protected KeyedSquareMatrix<Strain> CreateMaterialMatrix(double lameConstantLambda, double lameConstantMu)
         {
             IList<Strain> keys = new List<Strain>
             {
