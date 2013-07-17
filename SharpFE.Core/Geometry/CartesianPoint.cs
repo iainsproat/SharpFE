@@ -26,6 +26,29 @@ namespace SharpFE.Geometry
             // empty
         }
         
+        
+        
+        #region Equals and GetHashCode implementation
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            
+            unchecked
+            {
+                hashCode += 1000000987 * base.GetHashCode();
+            }
+            
+            return hashCode;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            CartesianPoint other = obj as CartesianPoint;
+            if (other == null)
+                return false;
+            return this.Equals(other);
+        }
+        
         /// <summary>
         /// IEquatable implementation
         /// </summary>
@@ -35,6 +58,22 @@ namespace SharpFE.Geometry
         {
             return base.Equals(other);
         }
+        
+        public static bool operator ==(CartesianPoint lhs, CartesianPoint rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+                return true;
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+                return false;
+            return lhs.Equals(rhs);
+        }
+        
+        public static bool operator !=(CartesianPoint lhs, CartesianPoint rhs)
+        {
+            return !(lhs == rhs);
+        }
+        #endregion
+
         
         /// <summary>
         /// 
