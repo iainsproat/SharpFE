@@ -412,4 +412,3 @@ namespace SharpFE.Examples.Beam
         }
     }
 }
-

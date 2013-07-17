@@ -6,3 +6,8 @@ obj
 TestResults
 /build
 /packages
+/SharpFE.Core/StyleCop.Cache
+/SharpFE.Core/StyleCopViolations.xml
+/SharpFE.Core.Tests/StyleCop.Cache
+/SharpFE.Core.Tests/StyleCopViolations.xml
+/SharpFE.Core.Tests/OpenCover

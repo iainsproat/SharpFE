@@ -39,9 +39,9 @@ namespace SharpFE.Core.Tests.Elements
         [Test]
         public void Has_initialized_all_supported_degrees_of_freedom()
         {
-        	IList<NodalDegreeOfFreedom> result = SUT.SupportedNodalDegreeOfFreedoms;
+        	IList<NodalDegreeOfFreedom> result = SUT.SupportedGlobalNodalDegreeOfFreedoms;
         	Assert.IsNotNull(result);
-        	Assert.AreEqual(12, result.Count);
+        	Assert.AreEqual(6, result.Count);
         }
         
         [Test]

@@ -7,8 +7,8 @@
 namespace SharpFE
 {
     using System;
+    using System.Collections.Generic;
     using SharpFE.Elements;
-    using SharpFE.Stiffness;
     
     /// <summary>
     /// Beam which carries moment and shear force in both major and minor axes as well as axial force and torsion.
@@ -22,7 +22,7 @@ namespace SharpFE
         /// <param name="end"></param>
         /// <param name="mat"></param>
         /// <param name="section"></param>
-        public Linear3DBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
+        public Linear3DBeam(IFiniteElementNode start, IFiniteElementNode end, IMaterial mat, ICrossSection section)
             : base(start, end, mat, section)
         {
             // empty
@@ -33,19 +33,19 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.X:  // axial
-                case DegreeOfFreedom.Y:  // minor-axis shear
-                case DegreeOfFreedom.Z:  // major-axis shear
-                case DegreeOfFreedom.XX: // torsion
-                case DegreeOfFreedom.YY: // major-axis moment
-                case DegreeOfFreedom.ZZ: // minor-axis moment
-                    return true;
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>
+                {
+                    DegreeOfFreedom.X,  // axial
+                    DegreeOfFreedom.Y,  // minor-axis shear
+                    DegreeOfFreedom.Z,  // major-axis shear
+                    DegreeOfFreedom.XX, // torsion
+                    DegreeOfFreedom.YY, // major-axis moment
+                    DegreeOfFreedom.ZZ // minor-axis moment
+                };
             }
         }
         
@@ -53,7 +53,7 @@ namespace SharpFE
         {
             switch(modelType)
             {
-               case ModelType.Truss1D:
+                case ModelType.Truss1D:
                     return false;
                 case ModelType.Beam1D:
                     return true;
@@ -63,7 +63,11 @@ namespace SharpFE
                     return true;
                 case ModelType.Slab2D:
                     return true;
+                case ModelType.Membrane2D:
+                    return false;
                 case ModelType.Truss3D:
+                    return false;
+                case ModelType.Membrane3D:
                     return false;
                 case ModelType.MultiStorey2DSlab:
                     return true;

@@ -75,6 +75,17 @@ namespace SharpFE
         Slab2D,
         
         /// <summary>
+        /// A two dimensional membrane.
+        /// : Positioning of nodes and elements:
+        ///     - 2D along the x-axis and y-axis.
+        /// : Forces can be applied:
+        ///     - translational in the x-axis and y-axis.
+        /// : Results will occur:
+        ///     - translation along the x-axis and y-axis.
+        /// </summary>
+        Membrane2D,
+        
+        /// <summary>
         /// A three dimensional truss.
         /// : Positioning of nodes and elements:
         ///     - 3D along the x-axis, y-axis and z-axis.
@@ -85,6 +96,18 @@ namespace SharpFE
         ///     - rotations within members are not allowed.
         /// </summary>
         Truss3D,
+        
+        /// <summary>
+        /// A three dimensional membrane.
+        /// : Positioning of nodes and elements:
+        ///     - 3D along the x-axis, y-axis and z-axis.
+        /// : Forces can be applied:
+        ///     - translational in the x-axis, y-axis and z-axis.
+        /// : Results will occur:
+        ///     - translation along the x-axis, y-axis and z-axis.
+        ///     - rotations within members are not allowed.
+        /// </summary>
+        Membrane3D,
         
         /// <summary>
         /// Multiple 2D slabs linked by 1D spring elements in the z-axis.

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{17CB0AD8-2C64-4FB2-88DC-891043DC9C22}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpFE</RootNamespace>
     <AssemblyName>SharpFE.Core</AssemblyName>
@@ -11,9 +11,13 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <WarningLevel>4</WarningLevel>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -22,6 +26,7 @@
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -30,6 +35,14 @@
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics">
@@ -54,6 +67,7 @@
     <Compile Include="CrossSections\IHasCrossSection.cs" />
     <Compile Include="CrossSections\SolidRectangle.cs" />
     <Compile Include="DegreeOfFreedom.cs" />
+    <Compile Include="DegreeOfFreedomExtensions.cs" />
     <Compile Include="Elements\IFiniteElement.cs" />
     <Compile Include="Elements\LinearBeam.cs" />
     <Compile Include="Elements\LinearConstantSpring.cs" />
@@ -61,6 +75,8 @@
     <Compile Include="Elements\FiniteElement1D.cs" />
     <Compile Include="Elements\Linear3DBeam.cs" />
     <Compile Include="Elements\Linear1DBeam.cs" />
+    <Compile Include="Elements\LinearConstantStrainTriangle.cs" />
+    <Compile Include="Elements\LinearConstantStressQuadrilateral.cs" />
     <Compile Include="Elements\LinearTruss.cs" />
     <Compile Include="Factory\ElementFactory.cs" />
     <Compile Include="Factory\ForceFactory.cs" />
@@ -86,6 +102,9 @@
     <Compile Include="Materials\IHasMaterial.cs" />
     <Compile Include="Materials\ILinearElasticMaterial.cs" />
     <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="Materials\MaterialMatrixBuilder.cs" />
+    <Compile Include="Maths\Integration\Gauss\GaussianIntegration1D.cs" />
+    <Compile Include="Maths\Integration\Gauss\GaussianIntegration2D.cs" />
     <Compile Include="Maths\KeyCompatibilityValidator.cs" />
     <Compile Include="Maths\KeyedRowColumnMatrix.cs" />
     <Compile Include="Maths\KeyedVector.cs" />
@@ -111,6 +130,8 @@
     <Compile Include="Solvers\LinearSolverSVD.cs" />
     <Compile Include="Solvers\MatrixInversionLinearSolver.cs" />
     <Compile Include="Stiffness\IElementStiffnessMatrixBuilderFactory.cs" />
+    <Compile Include="Stiffness\LinearConstantStrainTriangleStiffnessMatrixBuilder.cs" />
+    <Compile Include="Stiffness\LinearConstantStressQuadrilateralStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\StiffnessMatrix.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilderFactory.cs" />
     <Compile Include="Stiffness\GlobalModelStiffnessMatrixBuilder.cs" />
@@ -119,10 +140,13 @@
     <Compile Include="Stiffness\Linear3DBernoulliBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\Linear1DBernoulliBeamStiffnessMatrixBuilder.cs" />
     <Compile Include="Stiffness\ElementStiffnessMatrixBuilder.cs" />
+    <Compile Include="Strain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elements" />
+    <Folder Include="Maths\Integration\Gauss" />
     <Folder Include="Maths\MatrixSolvers" />
+    <Folder Include="Maths\Integration" />
     <Folder Include="Measures" />
     <Folder Include="Factory" />
     <Folder Include="Maths" />

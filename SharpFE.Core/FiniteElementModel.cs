@@ -14,7 +14,7 @@ namespace SharpFE
     /// A finite element model is composed of nodes connected by finite elements.
     /// These nodes can be constrained and can have forces applied to them.
     /// </summary>
-    public class FiniteElementModel : IModelConstraintProvider, ITopologyQueryable, IEquatable<FiniteElementModel>
+    public class FiniteElementModel : IModelConstraintProvider, ITopologyQueryable, IEnumerable<IFiniteElementNode>, IEquatable<FiniteElementModel>
     {
         /// <summary>
         /// The finite element nodes of this model
@@ -115,7 +115,7 @@ namespace SharpFE
             {
                 IList<DegreeOfFreedom> allowedBoundaryConditionDegreeOfFreedoms = this.ModelType.GetAllowedDegreesOfFreedomForBoundaryConditions();
                 IList<NodalDegreeOfFreedom> result = new List<NodalDegreeOfFreedom>(this.NodeCount * allowedBoundaryConditionDegreeOfFreedoms.Count);
-                foreach (FiniteElementNode node in this.nodes)
+                foreach (IFiniteElementNode node in this.nodes)
                 {
                     foreach (DegreeOfFreedom dof in allowedBoundaryConditionDegreeOfFreedoms)
                     {
@@ -248,7 +248,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="node">The node to constrain</param>
         /// <param name="degreeOfFreedomToConstrain">the degree of freedom in which to constrain the node.</param>
-        public void ConstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToConstrain)
+        public void ConstrainNode(IFiniteElementNode node, DegreeOfFreedom degreeOfFreedomToConstrain)
         {
             if (!this.ModelType.IsAllowedDegreeOfFreedomForBoundaryConditions(degreeOfFreedomToConstrain))
             {
@@ -264,7 +264,7 @@ namespace SharpFE
         /// <param name="node">The node to free</param>
         /// <param name="degreeOfFreedomToFree">the degree of freedom in which to free the node</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Unconstrain", Justification = "Spelling is OK")]
-        public void UnconstrainNode(FiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
+        public void UnconstrainNode(IFiniteElementNode node, DegreeOfFreedom degreeOfFreedomToFree)
         {
             this.nodes.UnconstrainNode(node, degreeOfFreedomToFree);
         }
@@ -275,9 +275,29 @@ namespace SharpFE
         /// <param name="nodeToCheck">the node to check whether it is constrain in a particular degree of freedom</param>
         /// <param name="degreeOfFreedomToCheck">The particular degree of freedom of the node to check for constraint</param>
         /// <returns>True if this particular node and degree of freedom are constrained; otherwise, false.</returns>
-        public bool IsConstrained(FiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
+        public bool IsConstrained(IFiniteElementNode nodeToCheck, DegreeOfFreedom degreeOfFreedomToCheck)
         {
             return this.nodes.IsConstrained(nodeToCheck, degreeOfFreedomToCheck);
+        }
+        
+        public IFiniteElementNode FindNodeNearTo(double x, double y, double z)
+        {
+            return this.nodes.FindNearestTo(x, y, z);
+        }
+                
+        public IFiniteElementNode FindNodeNearTo(double x, double y, double z, double tolerance)
+        {
+            return this.nodes.FindNearestTo(x, y, z, tolerance);
+        }
+        
+        public IEnumerator<IFiniteElementNode> GetEnumerator()
+        {
+            return this.nodes.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
         
         /// <summary>
@@ -354,7 +374,7 @@ namespace SharpFE
         /// </summary>
         /// <param name="forceToApply">The force vector to apply to a node</param>
         /// <param name="nodeToApplyTo">The node which the force will be applied to.</param>
-        public void ApplyForceToNode(ForceVector forceToApply, FiniteElementNode nodeToApplyTo)
+        public void ApplyForceToNode(ForceVector forceToApply, IFiniteElementNode nodeToApplyTo)
         {
             this.forces.ApplyForceToNode(forceToApply, nodeToApplyTo);
         }

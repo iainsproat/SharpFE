@@ -5,6 +5,11 @@
 	
 	public class StiffnessHelpers
 	{
+	    public static void Assert6x6StiffnessMatrix(IElementStiffnessCalculator SUT, params double[] expectedValues)
+        {
+            Helpers.AssertMatrix(SUT.StiffnessMatrixInGlobalCoordinates, 6, 6, expectedValues);
+        }
+	    
 		public static void Assert12x12StiffnessMatrix(IElementStiffnessCalculator SUT, params double[] expectedValues)
         {
             Helpers.AssertMatrix(SUT.StiffnessMatrixInGlobalCoordinates, 12, 12, expectedValues);

@@ -19,7 +19,7 @@ namespace SharpFE.Elements
         /// <param name="end"></param>
         /// <param name="mat"></param>
         /// <param name="section"></param>
-        protected LinearBeam(FiniteElementNode start, FiniteElementNode end, IMaterial mat, ICrossSection section)
+        protected LinearBeam(IFiniteElementNode start, IFiniteElementNode end, IMaterial mat, ICrossSection section)
             : base(start, end)
         {
             Guard.AgainstNullArgument(mat, "mat");

@@ -8,7 +8,8 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
-    using SharpFE.Elements;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
     
     /// <summary>
     /// </summary>
@@ -23,6 +24,40 @@ namespace SharpFE.Stiffness
         {
             // empty
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("LinearTrussStiffnessMatrixBuilder.ShapeFunctions");
+        }
+        
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("LinearTrussStiffnessMatrixBuilder.ShapeFunctionFirstDerivatives");
+        }
+        
+        /// <summary>
+        /// Generates the transposed strain-displacement matrix for the given element
+        /// </summary>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates)
+        {
+            IList<Strain> supportedDegreesOfFreedom = new List<Strain>(1);
+            supportedDegreesOfFreedom.Add(Strain.LinearStrainX);
+            IList<NodalDegreeOfFreedom> supportedNodalDegreeOfFreedoms = this.Element.SupportedLocalNodalDegreeOfFreedoms;
+            KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> strainDisplacementMatrix = new KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom>(supportedDegreesOfFreedom, supportedNodalDegreeOfFreedoms);
+            
+            double originalLength = this.Element.OriginalLength;
+            
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.StartNode, DegreeOfFreedom.X), -1.0 / originalLength);
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(this.Element.EndNode, DegreeOfFreedom.X), 1.0 / originalLength);
+            
+            return strainDisplacementMatrix;
+        }
         
         /// <summary>
         /// 
@@ -32,7 +67,7 @@ namespace SharpFE.Stiffness
         {
             double stiffness = this.CalculateStiffnessConstant();
             
-            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedLocalNodalDegreeOfFreedoms);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, stiffness);
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.EndNode, DegreeOfFreedom.X, -stiffness);
             matrix.At(this.Element.EndNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, -stiffness);

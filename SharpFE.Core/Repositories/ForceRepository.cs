@@ -32,7 +32,7 @@ namespace SharpFE
         /// <param name="forceToApply">The force vector to apply to the node</param>
         /// <param name="nodeToApplyTo">The node to which the force will be applied.</param>
         /// <exception cref="ArgumentException">The force has not previous been registered with this repository.  The force needs to have been created via an instance of the ForceFactory class which was initialized with this repository as a parameter"</exception>
-        public void ApplyForceToNode(ForceVector forceToApply, FiniteElementNode nodeToApplyTo)
+        public void ApplyForceToNode(ForceVector forceToApply, IFiniteElementNode nodeToApplyTo)
         {
             Guard.AgainstBadArgument(
                 "forceToApply",

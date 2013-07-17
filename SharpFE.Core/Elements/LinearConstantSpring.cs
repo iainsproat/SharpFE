@@ -22,7 +22,7 @@ namespace SharpFE
         /// <param name="node1">The node at the start of the spring.</param>
         /// <param name="node2">The node at the end of the spring.</param>
         /// <param name="springConstant">The value which defines the constant stiffness of the spring.</param>
-        internal LinearConstantSpring(FiniteElementNode node1, FiniteElementNode node2, double springConstant)
+        internal LinearConstantSpring(IFiniteElementNode node1, IFiniteElementNode node2, double springConstant)
             : base(node1, node2)
         {
             this.SpringConstant = springConstant;
@@ -77,7 +77,7 @@ namespace SharpFE
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as LinearConstantSpring);            
+            return this.Equals(obj as LinearConstantSpring);
         }
         
         public bool Equals(LinearConstantSpring other)
@@ -113,19 +113,14 @@ namespace SharpFE
         /// </summary>
         /// <param name="degreeOfFreedom"></param>
         /// <returns></returns>
-        public override bool IsASupportedBoundaryConditionDegreeOfFreedom(DegreeOfFreedom degreeOfFreedom)
+        public override IList<DegreeOfFreedom> SupportedLocalBoundaryConditionDegreeOfFreedom
         {
-            switch (degreeOfFreedom)
+            get
             {
-                case DegreeOfFreedom.X:
-                    return true;
-                case DegreeOfFreedom.Y:
-                case DegreeOfFreedom.Z:
-                case DegreeOfFreedom.XX:
-                case DegreeOfFreedom.YY:
-                case DegreeOfFreedom.ZZ:
-                default:
-                    return false;
+                return new List<DegreeOfFreedom>
+                {
+                    DegreeOfFreedom.X
+                };
             }
         }
         
@@ -133,12 +128,14 @@ namespace SharpFE
         {
             switch(modelType)
             {
-               case ModelType.Truss1D:
+                case ModelType.Truss1D:
                 case ModelType.Beam1D:
                 case ModelType.Truss2D:
                 case ModelType.Frame2D:
                 case ModelType.Slab2D:
+                case ModelType.Membrane2D:
                 case ModelType.Truss3D:
+                case ModelType.Membrane3D:
                 case ModelType.MultiStorey2DSlab:
                 case ModelType.Full3D:
                     return true;

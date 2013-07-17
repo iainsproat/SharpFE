@@ -7,6 +7,10 @@
 namespace SharpFE.Stiffness
 {
     using System;
+    using System.Collections.Generic;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
+    
     using SharpFE;
     using SharpFE.Cache;
     
@@ -51,6 +55,69 @@ namespace SharpFE.Stiffness
             }
         }
         
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public abstract DenseVector ShapeFunctions(XYZ locationInLocalCoordinates);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="locationInLocalCoordinates"></param>
+        /// <returns></returns>
+        public abstract DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Location on the finite element in local coordinates (xi, mu).  The z-axis property of the location is ignored.</param>
+        /// <returns></returns>
+        protected DenseMatrix Jacobian(XYZ locationInNaturalCoordinates)
+        {
+            Guard.AgainstNullArgument(locationInNaturalCoordinates, "locationInNaturalCoordinates");
+            Guard.AgainstBadArgument("locationInNaturalCoordinates", () => {
+                                         return (locationInNaturalCoordinates.X < -1 || locationInNaturalCoordinates.X > 1);
+                                     },
+                                     "X-coordinate of natural coordinates should be between -1 and 1, not {0}",
+                                    locationInNaturalCoordinates.X);
+            Guard.AgainstBadArgument("locationInNaturalCoordinates", () => {
+                                         return (locationInNaturalCoordinates.Y < -1 || locationInNaturalCoordinates.Y > 1);
+                                     },
+                                     "Y-coordinate of natural coordinates should be between -1 and 1, not {0}",
+                                    locationInNaturalCoordinates.Y);
+            
+            DenseMatrix firstDerivs = this.ShapeFunctionFirstDerivatives(locationInNaturalCoordinates);
+            DenseMatrix nodeCoords = this.NodeCoordinatesAsMatrix();
+            
+            return (DenseMatrix)firstDerivs.TransposeThisAndMultiply(nodeCoords);
+        }
+        
+        protected DenseMatrix NodeCoordinatesAsMatrix()
+        {
+            int numNodes = this.Element.Nodes.Count;
+            DenseMatrix nodeCoords = new DenseMatrix(numNodes, 2);
+            
+            IDictionary<IFiniteElementNode, XYZ> localCoords = this.Element.CalculateLocalPositionsOfNodes();
+            int i = 0;
+            foreach (KeyValuePair<IFiniteElementNode, XYZ> kvp in localCoords)
+            {
+                nodeCoords[i, 0] = kvp.Value.X;
+                nodeCoords[i, 1] = kvp.Value.Y;
+                i++;
+            }
+            
+            return nodeCoords;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates);
+        
         /// <summary>
         /// 
         /// </summary>
@@ -68,21 +135,18 @@ namespace SharpFE.Stiffness
         /// <exception cref="ArgumentException">Thrown if either of the nodes is not part of this element, or either of the degrees of freedom are not supported by this element.</exception>
         public double GetStiffnessInGlobalCoordinatesAt(IFiniteElementNode rowNode, DegreeOfFreedom rowDegreeOfFreedom, IFiniteElementNode columnNode, DegreeOfFreedom columnDegreeOfFreedom)
         {
-            if (rowNode == null)
-            {
-                throw new ArgumentNullException("rowNode");
-            }
+            Guard.AgainstNullArgument(rowNode, "rowNode");
+            Guard.AgainstNullArgument(columnNode, "columnNode");
             
-            if (columnNode == null)
+            try
             {
-                throw new ArgumentNullException("columnNode");
+                return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
             }
-            
-            return this.StiffnessMatrixInGlobalCoordinates.At(rowNode, rowDegreeOfFreedom, columnNode, columnDegreeOfFreedom);
+            catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                return 0.0;
+            }
         }
-
-        
-
         
         /// <summary>
         /// Prepares and generates the stiffness matrix.
@@ -92,18 +156,18 @@ namespace SharpFE.Stiffness
         /// </summary>
         protected StiffnessMatrix BuildGlobalStiffnessMatrix()
         {
-            StiffnessMatrix k = this.LocalStiffnessMatrix();
+            StiffnessMatrix k = this.LocalStiffnessMatrix();            
+            KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
+            
+            k = new StiffnessMatrix(t.RowKeys, t.ColumnKeys, k); //pad out local stiffness matrix with zeros so that it is the same size as the rotational matrix
             Guard.AgainstInvalidState(() => { return !k.Determinant().IsApproximatelyEqualTo(0.0); }, ///TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
                                       "The stiffness matrix for an individual element should be singular and non-invertible. i.e. it should have a zero determinant.  This is not the case for element {0} of type {1}",
                                       this.Element,
                                       this.Element.GetType());
             
-            KeyedSquareMatrix<NodalDegreeOfFreedom> t = this.BuildStiffnessRotationMatrixFromLocalToGlobalCoordinates();
-            
             ////FIXME these multiplications assume the keys of both matrices are ordered and identical
             KeyedSquareMatrix<NodalDegreeOfFreedom> kt = k.Multiply(t); // K*T
-            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposed = t.Transpose(); // T^
-            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = ttransposed.Multiply(kt); // (T^)*K*T
+            KeyedSquareMatrix<NodalDegreeOfFreedom> ttransposedkt = t.TransposeThisAndMultiply(kt); // (T^)*K*T
             StiffnessMatrix globStiffMat = new StiffnessMatrix(ttransposedkt);
             
             Guard.AgainstInvalidState(() => { return !globStiffMat.Determinant().IsApproximatelyEqualTo(0.0); }, //TODO calculating the determinant is computationally intensive.  We should use another method of model verification to speed this up.
@@ -122,29 +186,35 @@ namespace SharpFE.Stiffness
         {
             KeyedSquareMatrix<DegreeOfFreedom> rotationMatrix = this.Element.CalculateElementRotationMatrix();
             
-            KeyedSquareMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedSquareMatrix<NodalDegreeOfFreedom>(this.Element.SupportedNodalDegreeOfFreedoms);
+            KeyedSquareMatrix<NodalDegreeOfFreedom> elementRotationMatrixFromLocalToGlobalCoordinates = new KeyedSquareMatrix<NodalDegreeOfFreedom>(this.Element.SupportedGlobalNodalDegreeOfFreedoms);
 
             foreach (IFiniteElementNode node in this.Element.Nodes)
             {
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.X), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Y), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), new NodalDegreeOfFreedom(node, DegreeOfFreedom.Z), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
-                
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.X, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Y, DegreeOfFreedom.Z));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.XX), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.X));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.YY), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Y));
-                elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), new NodalDegreeOfFreedom(node, DegreeOfFreedom.ZZ), rotationMatrix.At(DegreeOfFreedom.Z, DegreeOfFreedom.Z));
+                foreach (DegreeOfFreedom dofi in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
+                {
+                    foreach (DegreeOfFreedom dofj in this.Element.SupportedGlobalBoundaryConditionDegreeOfFreedom)
+                    {
+                        if (!((dofi.IsLinear() && dofj.IsLinear()) || (dofi.IsRotational() && dofj.IsRotational())))
+                        {
+                            continue;
+                        }
+                        
+                        //HACK it is used to copy the keyed matrix [x] into a larger keyed matrix of:
+                        //[x 0,
+                        // 0 x]
+                        DegreeOfFreedom i = dofi;
+                        DegreeOfFreedom j = dofj;
+                        if (dofi.IsRotational() && dofj.IsRotational())
+                        {
+                            // shift from rotational to linear
+                            i = (DegreeOfFreedom)((int)dofi - 3);
+                            j = (DegreeOfFreedom)((int)dofj - 3);
+                        }
+                        
+                        double valueToBeCopied = rotationMatrix.At(i, j);
+                        elementRotationMatrixFromLocalToGlobalCoordinates.At(new NodalDegreeOfFreedom(node, dofi), new NodalDegreeOfFreedom(node, dofj), valueToBeCopied);
+                    }
+                }
             }
             
             return elementRotationMatrixFromLocalToGlobalCoordinates;

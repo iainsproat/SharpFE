@@ -8,6 +8,8 @@ namespace SharpFE.Stiffness
 {
     using System;
     using System.Collections.Generic;
+    
+    using MathNet.Numerics.LinearAlgebra.Double;
 
     /// <summary>
     /// 
@@ -27,11 +29,57 @@ namespace SharpFE.Stiffness
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
+        {
+            Guard.AgainstNullArgument(locationInLocalCoordinates, "locationInLocalCoordinates");
+            double xi = locationInLocalCoordinates.X;
+            Guard.AgainstBadArgument("locationInLocalCoordinates",
+                                     () => { return xi < -1 || xi > 1; },
+                                     "location in local coordinates must be within the boundary -1 to +1. You provided {0}", locationInLocalCoordinates);
+            
+            double N1 = 0.5 * (1 - xi);
+            double N2 = 0.5 * (1 + xi);
+            
+            DenseVector shapeFunctions = new DenseVector(2);
+            shapeFunctions[0] = N1;
+            shapeFunctions[1] = N2;
+            return shapeFunctions;
+        }
+        
+        public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException("Linear1DBernoulliBeamStiffnessMatrixBuilder.ShapeFunctionDerivatives");
+        }
+        
+        private double ConvertLocalCoordinatesToNaturalCoordinate(XYZ locationInLocalCoordinates)
+        {
+            ////TODO check that the location lies on the beam
+            
+            double beamLength = this.Element.OriginalLength;
+            double x = locationInLocalCoordinates.X;
+            double eta = ((2 * x) / beamLength) - 1; // in natural coordinates
+            return eta;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override KeyedRowColumnMatrix<Strain, NodalDegreeOfFreedom> StrainDisplacementMatrix(XYZ locationInLocalCoordinates)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public override StiffnessMatrix LocalStiffnessMatrix()
         {
-            double length = this.Element.OriginalLength;                    
-            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedNodalDegreeOfFreedoms);
+            double length = this.Element.OriginalLength;
+            StiffnessMatrix matrix = new StiffnessMatrix(this.Element.SupportedLocalNodalDegreeOfFreedoms);
             
             double axialStiffness = this.Element.StiffnessEA / length;
             matrix.At(this.Element.StartNode, DegreeOfFreedom.X, this.Element.StartNode, DegreeOfFreedom.X, axialStiffness);
