@@ -54,16 +54,14 @@ namespace SharpFE.Stiffness
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override DenseVector ShapeFunctions(XYZ locationInLocalCoordinates)
+        public override DenseVector ShapeFunctions(XYZ locationInNaturalCoordinates)
         {
-            throw new NotImplementedException("LinearConstantStrainTriangleStiffnessMatrixBuilder.ShapeFunctions has been implemented, but uses global coordinates (x, y) rather than natural coordinates (xi, mu)");
-
-            Guard.AgainstNullArgument(locationInLocalCoordinates, "locationInLocalCoordinates");
-            double xi = locationInLocalCoordinates.X;
-            double eta = locationInLocalCoordinates.Y;
-            Guard.AgainstBadArgument("locationInLocalCoordinates",
+            Guard.AgainstNullArgument(locationInNaturalCoordinates, "locationInNaturalCoordinates");
+            double xi = locationInNaturalCoordinates.X;
+            double eta = locationInNaturalCoordinates.Y;
+            Guard.AgainstBadArgument("locationInNaturalCoordinates",
                                      () => { return xi < -1 || xi > 1 || eta < -1 || eta > 1; },
-                                     "location in local coordinates must be within the boundary -1 to +1. You provided {0}", locationInLocalCoordinates);
+                                     "location in local coordinates must be within the boundary -1 to +1. You provided {0}", locationInNaturalCoordinates);
             
             DenseVector shapeFunctions = new DenseVector(3);
             
@@ -71,27 +69,30 @@ namespace SharpFE.Stiffness
             IFiniteElementNode node1 = this.Element.Nodes[1];
             IFiniteElementNode node2 = this.Element.Nodes[2];
             
+            IDictionary<IFiniteElementNode, XYZ> localCoords = this.Element.CalculateLocalPositionsOfNodes();
+            XYZ node0Pos = localCoords[node0];
+            XYZ node1Pos = localCoords[node1];
+            XYZ node2Pos = localCoords[node2];
+            
+            //FIXME locationInNaturalCoordinates is used as if it is a local coordinate, not a natural coordinate
             double constant = 1.0 / (2.0 * this.Element.Area);
-            double n1 = ((node1.X * node2.Y) - (node2.X * node1.Y))
-                + ((node1.Y - node2.Y) * locationInLocalCoordinates.X)
-                + ((node2.X - node1.X) * locationInLocalCoordinates.Y);
+            double n1 = ((node1Pos.X * node2Pos.Y) - (node2Pos.X * node1Pos.Y))
+                + ((node1Pos.Y - node2Pos.Y) * locationInNaturalCoordinates.X)
+                + ((node2Pos.X - node1Pos.X) * locationInNaturalCoordinates.Y);
             
-            double n2 = ((node2.X * node0.Y) - (node0.X * node2.Y))
-                + ((node2.Y - node1.Y) * locationInLocalCoordinates.X)
-                + ((node0.X - node2.X) * locationInLocalCoordinates.Y);
+            double n2 = ((node2Pos.X * node0Pos.Y) - (node0Pos.X * node2Pos.Y))
+                + ((node2Pos.Y - node1Pos.Y) * locationInNaturalCoordinates.X)
+                + ((node0Pos.X - node2Pos.X) * locationInNaturalCoordinates.Y);
             
-            double n3 = ((node0.X * node1.Y) - (node1.X * node0.Y))
-                + ((node0.Y - node1.Y) * locationInLocalCoordinates.X)
-                + ((node1.X - node0.X) * locationInLocalCoordinates.Y);
+            double n3 = ((node0Pos.X * node1Pos.Y) - (node1Pos.X * node0Pos.Y))
+                + ((node0Pos.Y - node1Pos.Y) * locationInNaturalCoordinates.X)
+                + ((node1Pos.X - node0Pos.X) * locationInNaturalCoordinates.Y);
             
             shapeFunctions[0] = constant * n1;
-            
             shapeFunctions[1] = constant * n2;
-            
             shapeFunctions[2] = constant * n3;
 
             return shapeFunctions;
-        
         }
         
         public override DenseMatrix ShapeFunctionFirstDerivatives(XYZ locationInLocalCoordinates)
@@ -113,22 +114,27 @@ namespace SharpFE.Stiffness
             IFiniteElementNode node1 = this.Element.Nodes[1];
             IFiniteElementNode node2 = this.Element.Nodes[2];
             
+            IDictionary<IFiniteElementNode, XYZ> localCoords = this.Element.CalculateLocalPositionsOfNodes();
+            XYZ node0Pos = localCoords[node0];
+            XYZ node1Pos = localCoords[node1];
+            XYZ node2Pos = localCoords[node2];
+            
             double constant = 1.0 / (2.0 * this.Element.Area);
             
-            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node1.Y - node2.Y));
-            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node2.Y - node0.Y));
-            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node0.Y - node1.Y));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node1Pos.Y - node2Pos.Y));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node2Pos.Y - node0Pos.Y));
+            strainDisplacementMatrix.At(Strain.LinearStrainX, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node0Pos.Y - node1Pos.Y));
             
-            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node2.X - node1.X));
-            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node0.X - node2.X));
-            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node1.X - node0.X));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node2Pos.X - node1Pos.X));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node0Pos.X - node2Pos.X));
+            strainDisplacementMatrix.At(Strain.LinearStrainY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node1Pos.X - node0Pos.X));
             
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node2.X - node1.X));
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node1.Y - node2.Y));
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node0.X - node2.X));
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node2.Y - node0.Y));
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node1.X - node0.X));
-            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node0.Y - node1.Y));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.X), constant * (node2Pos.X - node1Pos.X));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node0, DegreeOfFreedom.Y), constant * (node1Pos.Y - node2Pos.Y));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.X), constant * (node0Pos.X - node2Pos.X));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node1, DegreeOfFreedom.Y), constant * (node2Pos.Y - node0Pos.Y));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.X), constant * (node1Pos.X - node0Pos.X));
+            strainDisplacementMatrix.At(Strain.ShearStrainXY, new NodalDegreeOfFreedom(node2, DegreeOfFreedom.Y), constant * (node0Pos.Y - node1Pos.Y));
             
             return strainDisplacementMatrix;
         }

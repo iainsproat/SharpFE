@@ -258,6 +258,7 @@ namespace SharpFE
         /// <returns></returns>
         public override int GetHashCode()
         {
+            //TODO hashcode should be calculated when the element is created (assuming the nodes
             int hashCode = 0;
             int i = 0;
             unchecked
@@ -328,6 +329,17 @@ namespace SharpFE
             
             GeometricVector globalCoord = globalCoordRelativeToLocalOrigin.Add(this.LocalOrigin);
             return new CartesianPoint(globalCoord);
+        }
+        
+        public IDictionary<IFiniteElementNode, XYZ> CalculateLocalPositionsOfNodes()
+        {
+            IDictionary<IFiniteElementNode, XYZ> localPositions = new Dictionary<IFiniteElementNode, XYZ>(this.Nodes.Count);
+            foreach (IFiniteElementNode node in this.Nodes)
+            {
+                localPositions.Add(node, this.ConvertGlobalCoordinatesToLocalCoordinates(node.Location));
+            }
+            
+            return localPositions;
         }
         
         /// <summary>
