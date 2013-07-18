@@ -34,7 +34,7 @@ namespace SharpFE.Examples.Membrane
 			
 			FiniteElementNode node4 = model.NodeFactory.Create(0.0, 1.0);
 			
-			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 84000000000);
+			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 0);
 			
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node1, node2, node3, node4, material, 0.1);
 			
@@ -83,7 +83,7 @@ namespace SharpFE.Examples.Membrane
 			
 			FiniteElementNode node4 = model.NodeFactory.Create(0.0, 1.0);
 			
-			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 84000000000);
+			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 0);
 			
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node1, node2, node3, node4, material, 0.1);
 			
@@ -104,8 +104,6 @@ namespace SharpFE.Examples.Membrane
 			DisplacementVector displacement4 = results.GetDisplacement(node4);
 			Console.WriteLine("\nDisplacement3 : \n" + displacement3);
 			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
-			
-			Assert.Inconclusive("Commercial FE software used to produce the below values uses a different formulae for calculation of shear strain, and therefore we would expect different values");
 			
 			Assert.AreEqual( 0.000002619047, displacement3.X, 0.0000000001);
 			Assert.AreEqual(-0.000001428571, displacement3.Y, 0.0000000001);
@@ -143,7 +141,7 @@ namespace SharpFE.Examples.Membrane
 			FiniteElementNode node4 = model.NodeFactory.Create(0.0, 0.0, 1.0);
 			model.ConstrainNode(node4, DegreeOfFreedom.Y);
 			
-			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 84000000000);
+			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 0);
 			
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node1, node2, node3, node4, material, 0.1);
 			
@@ -162,16 +160,15 @@ namespace SharpFE.Examples.Membrane
 			DisplacementVector displacement4 = results.GetDisplacement(node4);
 			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
 			
-			Assert.Inconclusive("Commercial FE software used to produce the below values uses a different formulae for calculation of shear strain, and therefore we would expect different values");
-			Assert.AreEqual( 2552, reaction1.X, 1);
-			Assert.AreEqual(-3122, reaction1.Z, 1);
-			Assert.AreEqual(-5675, reaction2.X, 1);
-			Assert.AreEqual( 1722, reaction2.Z, 1);
-			Assert.AreEqual(-6877, reaction3.X, 1);
-			Assert.AreEqual( 1400, reaction3.Z, 1);
+			Assert.AreEqual( 2621, reaction1.X, 1);
+			Assert.AreEqual(-3039, reaction1.Z, 1);
+			Assert.AreEqual(-5660, reaction2.X, 1);
+			Assert.AreEqual( 1706, reaction2.Z, 1);
+			Assert.AreEqual(-6961, reaction3.X, 1);
+			Assert.AreEqual( 1333, reaction3.Z, 1);
 			
-			Assert.AreEqual( 0.0000012355, displacement4.X, 0.0000000001);
-			Assert.AreEqual(-0.0000004920, displacement4.Z, 0.0000000001);
+			Assert.AreEqual( 0.0000012400, displacement4.X, 0.0000000001);
+			Assert.AreEqual( 0.0000004875, displacement4.Z, 0.0000000001);
 		}
 		
 		/// <summary>
@@ -210,7 +207,7 @@ namespace SharpFE.Examples.Membrane
 			model.ConstrainNode(node6, DegreeOfFreedom.Y);
 			model.ConstrainNode(node6, DegreeOfFreedom.Z);
 			
-			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 84000000000);
+			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 0);
 			
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node1, node2, node3, node4, material, 0.1);
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node5, node6, node4, node3, material, 0.1);
@@ -238,7 +235,7 @@ namespace SharpFE.Examples.Membrane
 			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
 			Assert.AreEqual( 0.0000002020, displacement3.X, 0.0000000001);
 			Assert.AreEqual( 0, displacement3.Y, 0.0000000001);
-			Assert.AreEqual(-0.0000013469, displacement3.Z, 0.0000000001); //FIXME incorrect by a multiple of 1.414 = sqrt(2). Suspect rotational matrix is not working correctly
+			Assert.AreEqual(-0.0000013469, displacement3.Z, 0.0000000001);
 			
 			Assert.AreEqual(0, displacement4.X, 0.0000000001);
 			Assert.AreEqual(0, displacement4.Y, 0.0000000001);
@@ -281,12 +278,13 @@ namespace SharpFE.Examples.Membrane
 			model.ConstrainNode(node6, DegreeOfFreedom.Y);
 			model.ConstrainNode(node6, DegreeOfFreedom.Z);
 			
-			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 84000000000);
+			IMaterial material = new GenericElasticMaterial(0, 210000000000, 0.3, 0);
 			
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node1, node2, node3, node4, material, 0.01);
 			model.ElementFactory.CreateLinearConstantStressQuadrilateral(node5, node6, node4, node3, material, 0.01);
 			
 			ForceVector force = model.ForceFactory.Create(10000, 0, 0, 0, 0, 0);
+			model.ApplyForceToNode(force, node3);
 			model.ApplyForceToNode(force, node4);
 			
 			IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
@@ -305,8 +303,6 @@ namespace SharpFE.Examples.Membrane
 			DisplacementVector displacement4 = results.GetDisplacement(node4);
 			Console.WriteLine("\nDisplacement3 : \n" + displacement3);
 			Console.WriteLine("\nDisplacement4 : \n" + displacement4);
-			
-			Assert.Inconclusive("Commercial FE software used to produce the below values uses a different formulae for calculation of shear strain, and therefore we would expect different values");
 			
 			Assert.AreEqual( 0.00003367, displacement3.X, 0.0000001);
 			Assert.AreEqual( 0, displacement3.Y, 0.0000000001);
