@@ -14,62 +14,74 @@ namespace SharpFE.Core.Tests.Maths
     {
         IList<string> rowKeys;
         IList<string> colKeys;
+		KeyedRowColumnMatrix<string, string> SUT;
         
         [SetUp]
         public void SetUp()
         {
             rowKeys = new List<string>{"a", "b", "c"};
             colKeys = new List<string>{"x", "y"};
+			SUT = new KeyedRowColumnMatrix<string, string>(rowKeys, colKeys);
+			InitialiseSUTValues();
         }
         
         [Test]
         public void Can_be_constructed_with_keys_alone()
         {
-            KeyedRowColumnMatrix<string, string> SUT = new KeyedRowColumnMatrix<string, string>(rowKeys, colKeys);
-            this.AssertProperties(SUT, 0, 0, 0, 0, 0, 0);
+			this.AssertProperties(SUT, 0, 1, 2, 3, 4, 5);
         }
         
         [Test]
-        public void Can_be_constructed_with_initial_value()
+		public void Can_be_constructed_with_initial_value()	
         {
-            KeyedRowColumnMatrix<string, string> SUT = new KeyedRowColumnMatrix<string, string>(rowKeys, colKeys, 33);
+            SUT = new KeyedRowColumnMatrix<string, string>(rowKeys, colKeys, 33);
             AssertProperties(SUT, 33, 33, 33, 33, 33, 33);
         }
         
         [Test]
         public void It_can_generate_a_sub_matrix()
         {
-            Assert.Ignore();
+			IList<string> rowsToInclude = new List<string>{ "a" };
+			IList<string> columnsToInclude = new List<string>{ "x", "y" };
+
+			KeyedRowColumnMatrix<string, string> result = SUT.SubMatrix(rowsToInclude, columnsToInclude);
+			Assert.AreEqual (1, result.RowCount);
+			Assert.AreEqual (2, result.ColumnCount);
         }
+
+		[Test]
+		public void It_can_get_data_At()
+		{
+			Assert.AreEqual(2, this.SUT.At("b", "x"));
+		}
+
+		[Test]
+		public void It_can_set_data_At()
+		{
+			double newValue = 43;
+			this.SUT.At("b", "x", newValue);
+			Assert.AreEqual(newValue, this.SUT.At("b", "x"));
+		}
         
         [Test]
         public void It_can_get_via_index()
         {
-            Assert.Ignore();
+			Assert.AreEqual(2, this.SUT["b", "x"]);
         }
         
         [Test]
         public void It_can_set_via_index()
         {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void It_can_get_data_At()
-        {
-            Assert.Ignore();
-        }
-        
-        [Test]
-        public void It_can_set_data_At()
-        {
-            Assert.Ignore();
+			double newValue = 43;
+			this.SUT["b", "x"] = newValue;
+			Assert.AreEqual(newValue, this.SUT.At("b", "x"));
         }
         
         [Test]
         public void It_can_be_cleared()
         {
-            Assert.Ignore();
+			this.SUT.Clear();
+			AssertProperties(SUT, 0, 0, 0, 0, 0, 0);
         }
         
         [Test]
@@ -125,6 +137,21 @@ namespace SharpFE.Core.Tests.Maths
         {
             Assert.Ignore();
         }
+
+		private void InitialiseSUTValues()
+		{
+			this.SetSUTValues(0, 1, 2, 3, 4, 5);
+		}
+
+		private void SetSUTValues(double ax, double ay, double bx, double by, double cx, double cy)
+		{
+			SUT.At("a", "x", ax);
+			SUT.At("a", "y", ay);
+			SUT.At("b", "x", bx);
+			SUT.At("b", "y", by);
+			SUT.At("c", "x", cx);
+			SUT.At("c", "y", cy);
+		}
         
         private void AssertProperties(KeyedRowColumnMatrix<string, string> SUT, double ax, double ay, double bx, double by, double cx, double cy)
         {
