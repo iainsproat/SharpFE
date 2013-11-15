@@ -130,7 +130,7 @@ namespace SharpFE.Stiffness
             double J22 = jacobian[1, 1];
             double detJ = jacobian.Determinant();
             Guard.AgainstInvalidState(() => {
-                                          return detJ == 0;
+                                          return detJ.IsApproximatelyEqualTo(0);
                                       }, "The determinant of the Jacobian is zero.  The Jacobian is {0}", jacobian);
             
             DenseMatrix A = new DenseMatrix(3, 4);
