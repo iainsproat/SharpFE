@@ -7,6 +7,7 @@
 namespace SharpFE
 {
     using System;
+	using System.Collections.Generic;
     
     /// <summary>
     /// Returns a boolean value based on internal statements to the delegate.
@@ -29,10 +30,7 @@ namespace SharpFE
         /// <exception cref="ArgumentNullException">Thrown if the parameter is null.</exception>
         public static void AgainstNullArgument(object parameter, string parameterName)
         {
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
+			Guard.AgainstNullArgument(parameter, parameterName, string.Empty);
         }
         
         /// <summary>
@@ -67,6 +65,20 @@ namespace SharpFE
                                             parameterName);
             }
         }
+
+		public static void AgainstNullOrEmptyListArgument<TKey>(IList<TKey> parameter, string parameterName)
+		{
+			Guard.AgainstNullOrEmptyListArgument(parameter, parameterName, string.Empty);
+		}
+
+		public static void AgainstNullOrEmptyListArgument<TKey>(IList<TKey> parameter, string parameterName, string customErrorMessage)
+		{
+			Guard.AgainstNullArgument(parameter, parameterName, customErrorMessage);
+			if(parameter.IsEmpty())
+			{
+				throw new ArgumentException(parameterName, customErrorMessage);
+			}
+		}
         
         /// <summary>
         /// Throws an InvalidOperationException if the testForFailure is true
