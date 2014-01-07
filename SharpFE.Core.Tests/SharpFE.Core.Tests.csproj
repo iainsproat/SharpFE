@@ -17,6 +17,8 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -110,19 +112,10 @@
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderGlobalStiffnessTest.cs" />
     <Compile Include="Stiffness\StiffnessHelpers.cs" />
     <Compile Include="Stiffness\LinearConstantSpringStiffnessMatrixBuilderTestBase.cs" />
+    <Compile Include="Maths\NodalDegreeOfFreedomKeyedVectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Examples" />
-    <Folder Include="Elements" />
-    <Folder Include="Examples\Beam" />
-    <Folder Include="Examples\Truss" />
-    <Folder Include="Measures" />
-    <Folder Include="Factory" />
-    <Folder Include="Maths" />
-    <Folder Include="Geometry" />
-    <Folder Include="Stiffness" />
-    <Folder Include="Solvers" />
-    <Folder Include="Repositories" />
+    <Folder Include="Examples\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpFE.Core\SharpFE.Core.csproj">

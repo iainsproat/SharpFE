@@ -1,0 +1,24 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SharpFE.Core\Maths\NodalDegreeOfFreedomMatrix.cs">
+    <Files>
+      <File FileName="SharpFE.Core\Maths\NodalDegreeOfFreedomMatrix.cs" Line="357" Column="36" />
+      <File FileName="SharpFE.Core\Maths\NodalDegreeOfFreedomKeyedVector.cs" Line="1" Column="1" />
+      <File FileName="SharpFE.Core.Tests\Maths\KeyedVectorTest.cs" Line="1" Column="1" />
+      <File FileName="SharpFE.Core.Tests\Maths\NodalDegreeOfFreedomKeyedVectorTests.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True">
+          <Node name="SharpFE.Core.Tests" expanded="True">
+            <Node name="SharpFE" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
