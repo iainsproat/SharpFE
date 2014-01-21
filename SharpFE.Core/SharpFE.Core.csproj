@@ -18,6 +18,8 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -50,11 +52,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -143,21 +145,8 @@
     <Compile Include="Strain.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Elements" />
-    <Folder Include="Maths\Integration\Gauss" />
-    <Folder Include="Maths\MatrixSolvers" />
-    <Folder Include="Maths\Integration" />
-    <Folder Include="Measures" />
-    <Folder Include="Factory" />
-    <Folder Include="Maths" />
-    <Folder Include="Helpers" />
-    <Folder Include="Materials" />
-    <Folder Include="CrossSections" />
-    <Folder Include="Cache" />
-    <Folder Include="Geometry" />
-    <Folder Include="Stiffness" />
-    <Folder Include="Repositories" />
-    <Folder Include="Solvers" />
+    <Folder Include="Maths\Integration\" />
+    <Folder Include="Maths\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
