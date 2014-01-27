@@ -87,6 +87,11 @@ namespace SharpFE
             return newNode;
         }
         
+        public FiniteElementNode CreateFor2DFrame(double coordinateAlongGlobalXAxis, double coordinateAlongGlobalZAxis)
+        {
+            return this.CreateFor2DTruss(coordinateAlongGlobalXAxis, coordinateAlongGlobalZAxis);
+        }
+        
         /// <summary>
         /// 
         /// </summary>

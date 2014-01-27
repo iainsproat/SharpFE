@@ -426,7 +426,7 @@ namespace SharpFE.Examples.Beam
         }
         
         [Test]
-        public void Example4_10_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        public void Example4_2_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
         {
             var model = new FiniteElementModel(ModelType.Beam1D);
             var node1 = model.NodeFactory.Create(-240); //-20 feet in inches
@@ -471,6 +471,58 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(      0,  reactionNode3.YY, 1);
             Assert.AreEqual(   5000,  reactionNode5.Z,  1);
             Assert.AreEqual( 300000,  reactionNode5.YY, 1); //NOTE the value in the book is  25000 lb-ft.  This is  300000 lb-in.
+        }
+        
+        [Test]
+        public void Example4_3_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Frame2D);
+            var node1 = model.NodeFactory.CreateFor2DFrame(-3,  0);
+            var node2 = model.NodeFactory.CreateFor2DFrame( 0,  0);
+            var node3 = model.NodeFactory.CreateFor2DFrame( 3,  0);
+            var node4 = model.NodeFactory.CreateFor2DFrame( 3, -1);
+            
+            model.ConstrainNode(node1, DegreeOfFreedom.X);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+            
+            model.ConstrainNode(node2, DegreeOfFreedom.X);
+            model.ConstrainNode(node2, DegreeOfFreedom.Z);
+            
+            model.ConstrainNode(node3, DegreeOfFreedom.X);
+            
+            model.ConstrainNode(node4, DegreeOfFreedom.X);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            model.ConstrainNode(node4, DegreeOfFreedom.YY);
+            
+            var material = new GenericElasticMaterial(0, 210000000000, 0, 0); //E = 210 GPa
+            var section = new GenericCrossSection(1, 0.0002); // I = 2E-4 m^4
+            
+            var beam1 = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            var beam2 = model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            var spring3 = model.ElementFactory.CreateLinearConstantSpring(node3, node4, 200000); //200 kN/m
+            
+            var force = model.ForceFactory.CreateFor1DBeam(-50000, 0); //50kN
+            model.ApplyForceToNode(force, node3);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacementNode2 = results.GetDisplacement(node2);
+            var displacementNode3 = results.GetDisplacement(node3);
+            
+            Assert.AreEqual( 0.00249, displacementNode2.YY, 0.000005); //FIXME wrong sign?!
+            Assert.AreEqual(-0.0174,  displacementNode3.Z,  0.00005);
+            Assert.AreEqual( 0.00747, displacementNode3.YY, 0.00001); //FIXME wrong sign?! //FIXME would prefer a tolerance of 0.000005
+            
+            var reactionNode1 = results.GetReaction(node1);
+            var reactionNode2 = results.GetReaction(node2);
+            var reactionNode4 = results.GetReaction(node4);
+            
+            Assert.AreEqual(-69600, reactionNode1.Z,  200); //FIXME this tolerance seems too high, should aim for 50.  Not sure if this is due to rounding in the book?
+            Assert.AreEqual( 69700, reactionNode1.YY, 100); //FIXME this tolerance seems too high, should aim for 50.  Not sure if this is due to rounding in the book?
+            Assert.AreEqual(116400, reactionNode2.Z,  200); //FIXME this tolerance seems too high, should aim for 50.  Not sure if this is due to rounding in the book?
+            Assert.AreEqual(  3500, reactionNode4.Z,   50);
         }
     }
 }

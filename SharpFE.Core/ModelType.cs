@@ -54,7 +54,7 @@ namespace SharpFE
         ///     - 2D along the x-axis and z-axis.
         /// : Forces can be applied:
         ///     - translational in the x-axis and z-axis.
-        ///     - rotation around the z-axis.
+        ///     - rotation around the y-axis.
         /// : Results will occur:
         ///     - translation along the x-axis and z-axis.
         ///     - rotational reactions around the y-y-axis.
