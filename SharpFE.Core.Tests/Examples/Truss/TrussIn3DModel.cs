@@ -152,5 +152,48 @@ namespace SharpFE.Examples.Truss
 			Assert.AreEqual(-0.0015177, displacementAtNode1.Y, 0.0001);
 			Assert.AreEqual(0.0002688, displacementAtNode1.Z, 0.0001);
 		}
+		
+		[Test]
+		public void Example3_8_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+		{
+		    var model = new FiniteElementModel(ModelType.Truss3D);
+		    
+		    var node1 = model.NodeFactory.Create(72,  0,  0);
+		    model.ConstrainNode(node1, DegreeOfFreedom.Y);
+		    
+		    var node2 = model.NodeFactory.Create( 0, 36,  0);
+		    model.ConstrainNode(node2, DegreeOfFreedom.X);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Z);
+		    
+		    var node3 = model.NodeFactory.Create( 0, 36, 72);
+		    model.ConstrainNode(node3, DegreeOfFreedom.X);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Z);
+		    
+		    var node4 = model.NodeFactory.Create( 0,  0,-48);
+		    model.ConstrainNode(node4, DegreeOfFreedom.X);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
+		    
+		    var material = new GenericElasticMaterial(0, 1200000, 0, 0); //E = 1.2E6 psi
+			var section1 = new GenericCrossSection(0.302); //square inches
+			var section2 = new GenericCrossSection(0.729); //square inches
+			var section3 = new GenericCrossSection(0.187); //square inches
+			
+			model.ElementFactory.CreateLinearTruss(node1, node2, material, section1);
+			model.ElementFactory.CreateLinearTruss(node1, node3, material, section2);
+			model.ElementFactory.CreateLinearTruss(node1, node4, material, section3);
+			
+			var externalForce = model.ForceFactory.Create(0, 0, -1000, 0, 0, 0); //1000 lbs vertically downwards in z axis
+			model.ApplyForceToNode(externalForce, node1);
+			
+			var solver = new MatrixInversionLinearSolver(model);
+			var results = solver.Solve();
+			
+			var displacementNode1 = results.GetDisplacement(node1);
+			Assert.AreEqual(-0.072, displacementNode1.X, 0.001);
+			Assert.AreEqual(-0.264, displacementNode1.Z, 0.003);
+		}
 	}
 }

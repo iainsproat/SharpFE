@@ -120,8 +120,8 @@ namespace SharpFE.Examples.Truss
 			Assert.AreEqual(0, reactionAtNode4.Z, 1);
 			
 			DisplacementVector displacementAtNode1 = results.GetDisplacement(node1);
-			Assert.AreEqual( 0.00035, displacementAtNode1.X, 0.00001);  ///NOTE this does not match the example in the book, but was instead verified by commercial FE software.  It appears as it may be an errata in the book.
-			Assert.AreEqual(-0.00132, displacementAtNode1.Z, 0.00001);  ///NOTE this does not match the example in the book, but was instead verified by commercial FE software.  It appears as it may be an errata in the book.
+			Assert.AreEqual( 0.00035, displacementAtNode1.X, 0.00001);  //NOTE this does not match the example in the book, but was instead verified by commercial FE software.  It appears as it may be an errata in the book.
+			Assert.AreEqual(-0.00132, displacementAtNode1.Z, 0.00001);  //NOTE this does not match the example in the book, but was instead verified by commercial FE software.  It appears as it may be an errata in the book.
 		}
 		
 		/// <summary>
@@ -231,7 +231,7 @@ namespace SharpFE.Examples.Truss
 		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
 		    
 		    IMaterial material = new GenericElasticMaterial(0, 30000000, 0, 0); //E = 30E6 psi
-            ICrossSection section = new GenericCrossSection(2, 2); //A = 2 in^2
+            ICrossSection section = new GenericCrossSection(2); //A = 2 in^2
             
             var truss1 = model.ElementFactory.CreateLinearTruss(node1, node2, material, section);
             var truss2 = model.ElementFactory.CreateLinearTruss(node1, node3, material, section);
@@ -268,7 +268,7 @@ namespace SharpFE.Examples.Truss
 		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
 		    
 		    IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0); //E = 210 GPa expressed as Pa == N/mm2
-            ICrossSection section = new GenericCrossSection(0.0005, 1); //A = 5E-4 m^2
+            ICrossSection section = new GenericCrossSection(0.0005); //A = 5E-4 m^2
             
             var truss1 = model.ElementFactory.CreateLinearTruss(node1, node2, material, section);
             var truss2 = model.ElementFactory.CreateLinearTruss(node1, node3, material, section);

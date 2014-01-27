@@ -74,7 +74,7 @@ namespace SharpFE
         /// <param name="sectionArea"></param>
         /// <param name="sectionSecondMomentOfAreaAroundYY"></param>
         /// <param name="sectionSecondMomentOfAreaAroundZZ"></param>
-        /// <param name="flag">Not used. The flag is only here to make this constructor signature unique and prevent compilation errors.</param>
+        /// <param name="flag">Value does not affect anything. The flag is only here to add an additional parameter, making this constructor signature unique and prevent compilation errors.</param>
         protected GenericCrossSection (double sectionArea, double sectionSecondMomentOfAreaAroundYY, double sectionSecondMomentOfAreaAroundZZ, double sectionMomentOfInertiaInTorsion, bool flag)
         {
             this.Area = sectionArea;
