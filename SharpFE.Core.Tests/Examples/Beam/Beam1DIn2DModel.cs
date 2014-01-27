@@ -374,8 +374,8 @@ namespace SharpFE.Examples.Beam
         [Test]
         public void Calculate2DPortalFrameOf3BeamsAnd12Dof()
         {
-            FiniteElementModel model = new FiniteElementModel(ModelType.Frame2D);
-            FiniteElementNode node1 = model.NodeFactory.CreateFor2DTruss(-3, 0);
+            var model = new FiniteElementModel(ModelType.Frame2D);
+            var node1 = model.NodeFactory.CreateFor2DTruss(-3, 0);
             model.ConstrainNode(node1, DegreeOfFreedom.X);
             model.ConstrainNode(node1, DegreeOfFreedom.Z);
             model.ConstrainNode(node1, DegreeOfFreedom.YY);
@@ -423,6 +423,43 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-6000, node4Reaction.X, 500);
             Assert.AreEqual(5000, node4Reaction.Z, 500);
             Assert.AreEqual(-22586, node4Reaction.YY, 500); 
+        }
+        
+        [Test]
+        public void Example4_10_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Beam1D);
+            var node1 = model.NodeFactory.Create(-240); //-20 feet in inches
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+            var node2 = model.NodeFactory.Create(-120); //-10 feet in inches
+            var node3 = model.NodeFactory.Create(  0);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            var node4 = model.NodeFactory.Create( 120); //10 feet in inches
+            var node5 = model.NodeFactory.Create( 240); //20 feet in inches
+            model.ConstrainNode(node5, DegreeOfFreedom.Z);
+            model.ConstrainNode(node5, DegreeOfFreedom.YY);
+                        
+            IMaterial material = new GenericElasticMaterial(0, 30000000, 0, 0); //E=30E6 psi
+            ICrossSection section = new GenericCrossSection(1, 500); //I = 500 in^4. (A is ignored)
+            
+            var beam1 = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            var beam2 = model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            var beam3 = model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
+            var beam4 = model.ElementFactory.CreateLinear1DBeam(node4, node5, material, section);
+            
+            var force = model.ForceFactory.CreateFor1DBeam(-10000, 0); //10,000 lb
+            model.ApplyForceToNode(force, node2);
+            model.ApplyForceToNode(force, node4);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacementNode2 = results.GetDisplacement(node2);
+            var displacementNode4 = results.GetDisplacement(node4);
+            
+            Assert.AreEqual(-0.048, displacementNode2.Z, 0.0005);
+            Assert.AreEqual(-0.048, displacementNode2.Z, 0.0005);
         }
     }
 }

@@ -28,11 +28,11 @@ namespace SharpFE
         /// : Positioning of nodes and elements:
         ///     - 1D along the x-axis only.
         /// : Forces can be applied:
-        ///     - translational in the y-axis.
-        ///     - rotational around the z-axis.
+        ///     - translational in the z-axis.
+        ///     - rotational around the y-axis.
         /// : Results will occur:
-        ///     - translation along the y-axis only
-        ///     - rotational reactions around the z-axis only.
+        ///     - translation along the z-axis only
+        ///     - rotational reactions around the yy-axis only.
         /// </summary>
         Beam1D,
         
