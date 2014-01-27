@@ -460,6 +460,17 @@ namespace SharpFE.Examples.Beam
             
             Assert.AreEqual(-0.048, displacementNode2.Z, 0.0005);
             Assert.AreEqual(-0.048, displacementNode2.Z, 0.0005);
+            
+            var reactionNode1 = results.GetReaction(node1);
+            var reactionNode3 = results.GetReaction(node3);
+            var reactionNode5 = results.GetReaction(node5);
+            
+            Assert.AreEqual(   5000,  reactionNode1.Z,  1);
+            Assert.AreEqual(-300000,  reactionNode1.YY, 1); //NOTE the value in the book is -25000 lb-ft.  This is -300000 lb-in.
+            Assert.AreEqual(  10000,  reactionNode3.Z,  1);
+            Assert.AreEqual(      0,  reactionNode3.YY, 1);
+            Assert.AreEqual(   5000,  reactionNode5.Z,  1);
+            Assert.AreEqual( 300000,  reactionNode5.YY, 1); //NOTE the value in the book is  25000 lb-ft.  This is  300000 lb-in.
         }
     }
 }
