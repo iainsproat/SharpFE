@@ -192,8 +192,49 @@ namespace SharpFE.Examples.Truss
 			var results = solver.Solve();
 			
 			var displacementNode1 = results.GetDisplacement(node1);
-			Assert.AreEqual(-0.072, displacementNode1.X, 0.001);
-			Assert.AreEqual(-0.264, displacementNode1.Z, 0.003);
+			Assert.AreEqual(-0.072, displacementNode1.X, 0.001); //FIXME is this tolerance too great? Would typically try to achieve 0.0005
+			Assert.AreEqual(-0.264, displacementNode1.Z, 0.003); //FIXME is this tolerance too great? Would typically try to achieve 0.0005
+		}
+		
+		[Test]
+		public void Example3_9_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+		{
+		    var model = new FiniteElementModel(ModelType.Truss3D);
+		    
+		    var node1 = model.NodeFactory.Create(12, -3, -4);  //metres
+		    
+		    var node2 = model.NodeFactory.Create( 0,  0,  0);
+		    model.ConstrainNode(node2, DegreeOfFreedom.X);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Z);
+		    
+		    var node3 = model.NodeFactory.Create(12, -3, -7);
+		    model.ConstrainNode(node3, DegreeOfFreedom.X);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Z);
+		    
+		    var node4 = model.NodeFactory.Create(14,  6,  0);
+		    model.ConstrainNode(node4, DegreeOfFreedom.X);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
+		    
+		    var material = new GenericElasticMaterial(0, 210000000000, 0, 0); //E = 210 GPa
+			var section = new GenericCrossSection(0.001); //A = 10E-4 square metres
+			
+			model.ElementFactory.CreateLinearTruss(node1, node2, material, section);
+			model.ElementFactory.CreateLinearTruss(node1, node3, material, section);
+			model.ElementFactory.CreateLinearTruss(node1, node4, material, section);
+			
+			var externalForce = model.ForceFactory.Create(20000, 0, 0, 0, 0, 0); //20kN in x-direction
+			model.ApplyForceToNode(externalForce, node1);
+			
+			var solver = new MatrixInversionLinearSolver(model);
+			var results = solver.Solve();
+			
+			var displacementNode1 = results.GetDisplacement(node1);
+			Assert.AreEqual( 0.001383,   displacementNode1.X, 0.000001); //FIXME is this tolerance too great? Would typically try to achieve 0.5 of given least significant digit
+			Assert.AreEqual(-0.00005119, displacementNode1.Y, 0.000001); //FIXME is this tolerance too great? Would typically try to achieve 0.5 of given least significant digit
+			Assert.AreEqual( 0.00006015, displacementNode1.Z, 0.000000005);
 		}
 	}
 }
