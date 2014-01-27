@@ -85,6 +85,10 @@ namespace SharpFE.Solvers
             
             Guard.AgainstInvalidState(() => { return this.model.ElementCount < 1; },
                                       "The model has no elements and so cannot be solved");
+            
+            
+            //TODO check all nodes have a path through finite elements to all other nodes (i.e. there are not multiple discrete models or orphan nodes)
+            //TODO check all forces are applied to at least one node
         }
         
         /// <summary>

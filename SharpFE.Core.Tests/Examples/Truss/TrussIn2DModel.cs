@@ -245,8 +245,45 @@ namespace SharpFE.Examples.Truss
 			var results = solver.Solve();
 			
 			var displacementAtNode1 = results.GetDisplacement(node1);
-			Assert.AreEqual(0.00414, displacementAtNode1.X, 0.00001);
-			Assert.AreEqual(-0.0159, displacementAtNode1.Z, 0.0001);
+			Assert.AreEqual(0.00414, displacementAtNode1.X, 0.000005);
+			Assert.AreEqual(-0.0159, displacementAtNode1.Z, 0.00005);
+		}
+		
+		[Test]
+		public void Example3_7_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+		{
+		    var model = new FiniteElementModel(ModelType.Truss2D);
+		    var node3 = model.NodeFactory.CreateFor2DTruss(  0,  0);
+		    model.ConstrainNode(node3, DegreeOfFreedom.X);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Z);
+		    
+		    var node1 = model.NodeFactory.CreateFor2DTruss( 10,  0);
+		    		    
+		    var node2 = model.NodeFactory.CreateFor2DTruss( 10.0 - 5.0 / Math.Sqrt(2), 5.0 / Math.Sqrt(2)); //5m long at 45 degree angle
+		    model.ConstrainNode(node2, DegreeOfFreedom.X);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Z);
+		    
+		    var node4 = model.NodeFactory.CreateFor2DTruss( 10, -1);
+		    model.ConstrainNode(node4, DegreeOfFreedom.X);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
+		    
+		    IMaterial material = new GenericElasticMaterial(0, 210000000000, 0, 0); //E = 210 GPa expressed as Pa == N/mm2
+            ICrossSection section = new GenericCrossSection(0.0005, 1); //A = 5E-4 m^2
+            
+            var truss1 = model.ElementFactory.CreateLinearTruss(node1, node2, material, section);
+            var truss2 = model.ElementFactory.CreateLinearTruss(node1, node3, material, section);
+            var spring3 = model.ElementFactory.CreateLinearConstantSpring(node1, node4, 2000000); //2000 kN/m expressed as N/mm
+            
+            var force = model.ForceFactory.CreateForTruss(0, -25000);
+            model.ApplyForceToNode(force, node1);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacementAtNode1 = results.GetDisplacement(node1);
+            Console.WriteLine(displacementAtNode1);
+            Assert.AreEqual(-0.001724, displacementAtNode1.X, 0.0000005);
+            Assert.AreEqual(-0.003448, displacementAtNode1.Z, 0.0000005);
 		}
     }
 }
