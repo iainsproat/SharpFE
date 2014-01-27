@@ -9,7 +9,8 @@ namespace SharpFE.Core.Benchmark
 	[TestFixture()]
 	public class TriangularElement
 	{
-		[Test()]
+	    [Explicit]
+		[Test]
 		public void TestCase()
 		{
 			int iterations = 10000;
