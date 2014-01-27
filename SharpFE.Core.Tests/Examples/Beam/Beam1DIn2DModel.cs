@@ -524,5 +524,43 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(116400, reactionNode2.Z,  200); //FIXME this tolerance seems too high, should aim for 50.  Not sure if this is due to rounding in the book?
             Assert.AreEqual(  3500, reactionNode4.Z,   50);
         }
+        
+        [Test]
+        public void Example4_4_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Beam1D);
+            var node1 = model.NodeFactory.Create(0);
+            var node2 = model.NodeFactory.Create(3);
+            var node3 = model.NodeFactory.Create(6);
+            
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.YY);
+            
+            var material = new GenericElasticMaterial(0, 210000000000, 0, 0); //E = 210 GPa
+            var section = new GenericCrossSection(1, 0.0004); //I = 4E-4 (A is ignored)
+            
+            var beam1 = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
+            var beam2 = model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
+            
+            var force = model.ForceFactory.CreateFor1DBeam(-10000, -20000); //10kN Z, 20kNm YY
+            model.ApplyForceToNode(force, node2);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacementNode2 = results.GetDisplacement(node2);
+            Assert.AreEqual(-0.0001339, displacementNode2.Z, 0.00000005);
+            Assert.AreEqual(-0.00008928, displacementNode2.YY, 0.00000001); //FIXME rotation was inverse //FIXME would prefer tollerance of 0.000000005
+            
+            var reactionNode1 = results.GetReaction(node1);
+            var reactionNode3 = results.GetReaction(node3);
+            
+            Assert.AreEqual( 10000, reactionNode1.Z,  1);
+            Assert.AreEqual(-12500, reactionNode1.YY, 1); //FIXME rotation was inverse
+            Assert.AreEqual(     0, reactionNode3.Z,  0.5);
+            Assert.AreEqual(  2500, reactionNode3.YY, 1); //FIXME rotation was inverse
+        }
     }
 }
