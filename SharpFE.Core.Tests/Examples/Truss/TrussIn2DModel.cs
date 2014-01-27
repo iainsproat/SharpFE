@@ -210,5 +210,43 @@ namespace SharpFE.Examples.Truss
 			Assert.AreEqual(3.3513, displacementAtNode6.X, 0.001);
 			Assert.AreEqual(-9.0386, displacementAtNode6.Z, 0.001);
 		}
+		
+		[Test]
+		public void Example3_6SolutionOfPlaneTruss_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+		{
+		    var model = new FiniteElementModel(ModelType.Truss2D);
+		    
+		    var node1 = model.NodeFactory.CreateFor2DTruss( 0,  0);
+		    
+		    var node2 = model.NodeFactory.CreateFor2DTruss( 0, 120); //10 feet in inches
+		    model.ConstrainNode(node2, DegreeOfFreedom.X);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Z);
+		    
+		    var node3 = model.NodeFactory.CreateFor2DTruss(120, 120); //10 feet in inches
+		    model.ConstrainNode(node3, DegreeOfFreedom.X);
+		    model.ConstrainNode(node3, DegreeOfFreedom.Z);
+		    
+		    var node4 = model.NodeFactory.CreateFor2DTruss(120,  0); //10 feet in inches
+		    model.ConstrainNode(node4, DegreeOfFreedom.X);
+		    model.ConstrainNode(node4, DegreeOfFreedom.Z);
+		    
+		    IMaterial material = new GenericElasticMaterial(0, 30000000, 0, 0); //E = 30E6 psi
+            ICrossSection section = new GenericCrossSection(2, 2); //A = 2 in^2
+            
+            var truss1 = model.ElementFactory.CreateLinearTruss(node1, node2, material, section);
+            var truss2 = model.ElementFactory.CreateLinearTruss(node1, node3, material, section);
+            var truss3 = model.ElementFactory.CreateLinearTruss(node1, node4, material, section);
+            
+            var force10Z = model.ForceFactory.CreateForTruss(0, -10000); //lbs
+            model.ApplyForceToNode(force10Z, node1);
+            
+            //solve model
+            var solver = new MatrixInversionLinearSolver(model);
+			var results = solver.Solve();
+			
+			var displacementAtNode1 = results.GetDisplacement(node1);
+			Assert.AreEqual(0.00414, displacementAtNode1.X, 0.00001);
+			Assert.AreEqual(-0.0159, displacementAtNode1.Z, 0.0001);
+		}
     }
 }
