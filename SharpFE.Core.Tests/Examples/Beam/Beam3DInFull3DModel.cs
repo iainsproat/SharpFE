@@ -410,5 +410,58 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(1019, node4Reaction.XX, 1);
             Assert.AreEqual(-31776, node4Reaction.YY, 1);
         }
+        
+        [Test]
+        public void Example5_8_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Full3D);
+            var node1 = model.NodeFactory.Create(100, 0, 0);
+            var node2 = model.NodeFactory.Create(0, 0, 0);
+            var node3 = model.NodeFactory.Create(100, 100, 0);
+            var node4 = model.NodeFactory.Create(100, 0, -100);
+            
+            //TODO make this less verbose
+            model.ConstrainNode(node2, DegreeOfFreedom.X);
+            model.ConstrainNode(node2, DegreeOfFreedom.Y);
+            model.ConstrainNode(node2, DegreeOfFreedom.Z);
+            model.ConstrainNode(node2, DegreeOfFreedom.XX);
+            model.ConstrainNode(node2, DegreeOfFreedom.YY);
+            model.ConstrainNode(node2, DegreeOfFreedom.ZZ);
+            
+            model.ConstrainNode(node3, DegreeOfFreedom.X);
+            model.ConstrainNode(node3, DegreeOfFreedom.Y);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.XX);
+            model.ConstrainNode(node3, DegreeOfFreedom.YY);
+            model.ConstrainNode(node3, DegreeOfFreedom.ZZ);
+            
+            model.ConstrainNode(node4, DegreeOfFreedom.X);
+            model.ConstrainNode(node4, DegreeOfFreedom.Y);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            model.ConstrainNode(node4, DegreeOfFreedom.XX);
+            model.ConstrainNode(node4, DegreeOfFreedom.YY);
+            model.ConstrainNode(node4, DegreeOfFreedom.ZZ);
+            
+            var material = new GenericElasticMaterial(0, 30000000, 0, 10000000);
+            var section = new GenericCrossSection(10, 100, 1000, 50);
+            
+            var beam1 = model.ElementFactory.CreateLinear3DBeam(node2, node1, material, section);
+            var beam2 = model.ElementFactory.CreateLinear3DBeam(node3, node1, material, section);
+            var beam3 = model.ElementFactory.CreateLinear3DBeam(node4, node1, material, section);
+            
+            var force = model.ForceFactory.Create(0, 0, -50000, 1000000, 0, 0);
+            model.ApplyForceToNode(force, node1);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacement1 = results.GetDisplacement(node1);
+            Assert.AreEqual(0.00007098, displacement1.X, 0.000000005);
+            Assert.AreEqual(-0.014, displacement1.Y, 0.0005);
+            Assert.AreEqual(-0.002352, displacement1.Z, 0.0000005);
+            Assert.AreEqual(-0.003996, displacement1.XX, 0.0000005);
+            Assert.AreEqual(0.0000178, displacement1.YY, 0.00000005);
+            Assert.AreEqual(-0.0001033, displacement1.ZZ, 0.00000005);
+        }
     }
 }
