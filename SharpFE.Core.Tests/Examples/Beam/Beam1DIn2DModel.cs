@@ -617,6 +617,40 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-5010, reaction4.X, 5);            
             Assert.AreEqual( 3700, reaction4.Z, 5);
             Assert.AreEqual(-375000, reaction4.YY, 500);
-        }        
+        }
+
+        [Test]
+        public void Example5_4_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Frame2D);
+            var node1 = model.NodeFactory.CreateFor2DFrame(0, 0);
+            var node2 = model.NodeFactory.CreateFor2DFrame(3, 0);
+            var node3 = model.NodeFactory.CreateFor2DFrame(3, 3);
+            
+            model.ConstrainNode(node2, DegreeOfFreedom.X);
+            model.ConstrainNode(node2, DegreeOfFreedom.Z);
+            model.ConstrainNode(node2, DegreeOfFreedom.YY);
+            model.ConstrainNode(node3, DegreeOfFreedom.X);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.YY);
+            
+            var material = new GenericElasticMaterial(0, 210000000000, 0, 0);
+            var sectionBar = new GenericCrossSection(0.001);
+            var sectionBeam = new GenericCrossSection(0.002, 0.00005);
+            
+            var beam = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, sectionBeam);
+            var bar = model.ElementFactory.CreateLinearTruss(node1, node3, material, sectionBar);
+            
+            var force = model.ForceFactory.CreateFor2DFrame(0, -500000, 0);
+            model.ApplyForceToNode(force, node1);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacement1 = results.GetDisplacement(node1);
+            Assert.AreEqual( 0.00338, displacement1.X,  0.000005);
+            Assert.AreEqual(-0.0225,  displacement1.Z,  0.00005);
+            Assert.AreEqual(-0.0113,  displacement1.YY, 0.00005);
+        }
     }
 }
