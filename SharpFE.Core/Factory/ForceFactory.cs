@@ -84,6 +84,20 @@ namespace SharpFE
             return newForce;
         }
         
+        public ForceVector CreateFor2DFrame(double valueOfXComponent, double valueOfZComponent, double valueOfMomentAboutYY)
+        {
+            Guard.AgainstInvalidState(() => { return !(this.modelType == ModelType.Frame2D); },
+                                      "Can only use the CreateFor2DFrame(double valueOfXComponent, double valueOfZComponent, double valueOfMomentAboutYY) method when a 2D Frame system is in use");
+            
+            var newForce = new ForceVector(valueOfXComponent, 0, valueOfZComponent, 0, valueOfMomentAboutYY, 0);
+            if (this.repository != null)
+            {
+                this.repository.Add(newForce);
+            }
+            
+            return newForce;
+        }
+        
         /// <summary>
         /// Creates a new force for a 2D ModelType
         /// </summary>

@@ -8,6 +8,9 @@ using NUnit.Framework;
 
 namespace SharpFE.Examples.Beam
 {
+    /// <summary>
+    /// 1D beams and 2D frames
+    /// </summary>
     [TestFixture]
     public class Beam1DIn2DModel
     {
@@ -178,7 +181,7 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section);
             model.ElementFactory.CreateLinear1DBeam(node2,node3,material,section);
             
-            ForceVector force = model.ForceFactory.Create(0, 0, -10000, 0, 0, 0);
+            ForceVector force = model.ForceFactory.CreateFor2DFrame(0, -10000, 0);
             model.ApplyForceToNode(force, node2);
             
             IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
@@ -248,7 +251,7 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
             model.ElementFactory.CreateLinear1DBeam(node4, node5, material, section);
             
-            ForceVector force = model.ForceFactory.Create(0, 0, 10000, 0, 0, 0);
+            ForceVector force = model.ForceFactory.CreateFor2DFrame(0, 10000, 0);
             model.ApplyForceToNode(force, node3);
             
             IFiniteElementSolver solver = new LinearSolverSVD(model);
@@ -331,11 +334,11 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
             model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
             
-            ForceVector force2 = model.ForceFactory.Create(0, 0, -10000, 0, 5000, 0);
+            ForceVector force2 = model.ForceFactory.CreateFor2DFrame(0, -10000, 5000);
             model.ApplyForceToNode(force2, node2);
             
             
-            ForceVector force3 = model.ForceFactory.Create(0, 0, -10000, 0, -5000, 0);
+            ForceVector force3 = model.ForceFactory.CreateFor2DFrame(0, -10000, -5000);
             model.ApplyForceToNode(force3, node3);
             
             IFiniteElementSolver solver = new LinearSolverSVD(model);
@@ -348,21 +351,21 @@ namespace SharpFE.Examples.Beam
             
             
             Assert.AreEqual(0, node2Displacement.X, 0.0001);
-            Assert.AreEqual(-0.0013496, node2Displacement.Z, 0.0001); ///NOTE this value of -0.0013496 matches the example, but -0.0314233 was calculated using a commercial finite element software
-            Assert.AreEqual(0.00059173, node2Displacement.YY, 0.0001); ///NOTE this value of 0.00059173 does not match the example, but was verified using a commercial finite element software
+            Assert.AreEqual(-0.0013496, node2Displacement.Z, 0.0001); //NOTE this value of -0.0013496 matches the example, but -0.0314233 was calculated using a commercial finite element software
+            Assert.AreEqual(0.00059173, node2Displacement.YY, 0.0001); //NOTE this value of 0.00059173 does not match the example, but was verified using a commercial finite element software
             
             Assert.AreEqual(0, node3Displacement.X, 0.0001);
-            Assert.AreEqual(-0.0013496, node3Displacement.Z, 0.0001); ///NOTE this value matches the example, but was verified using a commercial finite element software
-            Assert.AreEqual(-0.00059173, node3Displacement.YY, 0.0001); ///NOTE this value of -0.00059173 does not match the example, but was verified using a commercial finite element software
+            Assert.AreEqual(-0.0013496, node3Displacement.Z, 0.0001); //NOTE this value matches the example, but was verified using a commercial finite element software
+            Assert.AreEqual(-0.00059173, node3Displacement.YY, 0.0001); //NOTE this value of -0.00059173 does not match the example, but was verified using a commercial finite element software
             
             Assert.AreEqual(0, node1Reaction.X, 1);
             Assert.AreEqual(10000, node1Reaction.Z, 1);
-            Assert.AreEqual(-23284, node1Reaction.YY, 1); ///NOTE this value of -23284 does not match the example, but was verified using a commercial finite element software
+            Assert.AreEqual(-23284, node1Reaction.YY, 1); //NOTE this value of -23284 does not match the example, but was verified using a commercial finite element software
             
             Console.WriteLine(node4Reaction);
             Assert.AreEqual(0, node4Reaction.X, 1);
             Assert.AreEqual(10000, node4Reaction.Z, 1);
-            Assert.AreEqual(23284, node4Reaction.YY, 1); ///NOTE this value of 23284 does not match the example, but was verified using a commercial finite element software
+            Assert.AreEqual(23284, node4Reaction.YY, 1); //NOTE this value of 23284 does not match the example, but was verified using a commercial finite element software
             
         }
         
@@ -396,7 +399,7 @@ namespace SharpFE.Examples.Beam
             model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section);
             model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section);
             
-            ForceVector force2 = model.ForceFactory.Create(15000, 0, 0, 0, -10000, 0);
+            ForceVector force2 = model.ForceFactory.CreateFor2DFrame(15000, 0, -10000);
             model.ApplyForceToNode(force2, node2);
             
             IFiniteElementSolver solver = new LinearSolverSVD(model);
@@ -561,6 +564,59 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-12500, reactionNode1.YY, 1); //FIXME rotation was inverse
             Assert.AreEqual(     0, reactionNode3.Z,  0.5);
             Assert.AreEqual(  2500, reactionNode3.YY, 1); //FIXME rotation was inverse
-        }
+        }    
+
+        [Test]
+        public void Example5_1_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Frame2D);
+            var node1 = model.NodeFactory.CreateFor2DFrame(-60, 0); //5 feet in inches
+            var node2 = model.NodeFactory.CreateFor2DFrame(-60, 120); //10 feet in inches
+            var node3 = model.NodeFactory.CreateFor2DFrame(60, 120); //10 feet in inches
+            var node4 = model.NodeFactory.CreateFor2DFrame(60, 0); //10 feet in inches
+            
+            model.ConstrainNode(node1, DegreeOfFreedom.X);
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+            model.ConstrainNode(node4, DegreeOfFreedom.X);
+            model.ConstrainNode(node4, DegreeOfFreedom.Z);
+            model.ConstrainNode(node4, DegreeOfFreedom.YY);
+            
+            var material = new GenericElasticMaterial(0, 30000000, 0, 0);
+            var section1_3 = new GenericCrossSection(10, 200);
+            var section2 = new GenericCrossSection(10, 100);
+            
+            var beam1 = model.ElementFactory.CreateLinear1DBeam(node1, node2, material, section1_3);
+            var beam2 = model.ElementFactory.CreateLinear1DBeam(node2, node3, material, section2);
+            var beam3 = model.ElementFactory.CreateLinear1DBeam(node3, node4, material, section1_3);
+            
+            var force2 = model.ForceFactory.CreateFor2DFrame(10000, 0, 0);
+            var force3 = model.ForceFactory.CreateFor2DFrame(0, 0, -5000);
+            model.ApplyForceToNode(force2, node2);
+            model.ApplyForceToNode(force3, node3);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacement2 = results.GetDisplacement(node2);
+            var displacement3 = results.GetDisplacement(node3);
+            
+            Assert.AreEqual(0.211, displacement2.X, 0.0005);
+            Assert.AreEqual(0.00148, displacement2.Z, 0.000005);
+            Assert.AreEqual(0.00153, displacement2.YY, 0.000005); //FIXME orientation (sign) is reversed
+            Assert.AreEqual(0.209, displacement3.X, 0.0005);
+            Assert.AreEqual(-0.00148, displacement3.Z, 0.000005);
+            Assert.AreEqual(0.00149, displacement3.YY, 0.000005);
+            
+            var reaction1 = results.GetReaction(node1);
+            var reaction4 = results.GetReaction(node4);
+            
+            Assert.AreEqual(-4990, reaction1.X, 5);
+            Assert.AreEqual(-3700, reaction1.Z, 5);
+            Assert.AreEqual(-376000, reaction1.YY, 500);
+            Assert.AreEqual(-5010, reaction4.X, 5);            
+            Assert.AreEqual( 3700, reaction4.Z, 5);
+            Assert.AreEqual(-375000, reaction4.YY, 500);
+        }        
     }
 }
