@@ -62,7 +62,7 @@ namespace SharpFE
         Frame2D,
         
         /// <summary>
-        /// A two dimensional slab.
+        /// A two dimensional slab or grid.
         /// : Positioning of nodes and elements:
         ///     - 2D along the x-axis and y-axis.
         /// : Forces can be applied:

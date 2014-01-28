@@ -363,7 +363,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force3 = model.ForceFactory.Create(0, 0, -10000, 0, -5000, 0);
             model.ApplyForceToNode(force3, node3);
             
-            IFiniteElementSolver solver = new LinearSolverSVD(model);
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
             DisplacementVector node2Displacement = results.GetDisplacement(node2);
@@ -427,7 +427,7 @@ namespace SharpFE.Examples.Beam
             ForceVector force2 = model.ForceFactory.Create(15000, 0, 0, 0, -10000, 0);
             model.ApplyForceToNode(force2, node2);
             
-            IFiniteElementSolver solver = new LinearSolverSVD(model);
+            IFiniteElementSolver solver = new MatrixInversionLinearSolver(model);
             FiniteElementResults results = solver.Solve();
             
             DisplacementVector node2Displacement = results.GetDisplacement(node2);
@@ -450,6 +450,39 @@ namespace SharpFE.Examples.Beam
             Assert.AreEqual(-6000, node4Reaction.X, 500);
             Assert.AreEqual(5000, node4Reaction.Z, 500);
             Assert.AreEqual(-22586, node4Reaction.YY, 500); 
+        }
+        
+        [Test]
+        public void Example5_6_FirstCourseInTheFiniteElementMethod_Logan_4thEd()
+        {
+            var model = new FiniteElementModel(ModelType.Slab2D);
+            var node1 = model.NodeFactory.Create(3, 0);
+            var node2 = model.NodeFactory.Create(3, 3);
+            var node3 = model.NodeFactory.Create(0, 3);
+            
+            model.ConstrainNode(node1, DegreeOfFreedom.Z);
+            model.ConstrainNode(node1, DegreeOfFreedom.XX);
+            model.ConstrainNode(node1, DegreeOfFreedom.YY);
+            model.ConstrainNode(node3, DegreeOfFreedom.Z);
+            model.ConstrainNode(node3, DegreeOfFreedom.XX);
+            model.ConstrainNode(node3, DegreeOfFreedom.YY);
+            
+            var material = new GenericElasticMaterial(0, 210000000000, 0, 84000000000);
+            var section = new GenericCrossSection(1, 0.000166, 0.000166, 0.000046); //Izz is ignored(?)
+            
+            var beam1 = model.ElementFactory.CreateLinear3DBeam(node1, node2, material, section);
+            var beam2 = model.ElementFactory.CreateLinear3DBeam(node2, node3, material, section);
+            
+            var force = model.ForceFactory.Create(0, 0, -22000, 0, 0, 0); //TODO make helper method
+            model.ApplyForceToNode(force, node2);
+            
+            var solver = new MatrixInversionLinearSolver(model);
+            var results = solver.Solve();
+            
+            var displacement2 = results.GetDisplacement(node2);
+            Assert.AreEqual(-0.00259, displacement2.Z, 0.00004); //FIXME tolerance is too large, should ideally be 0.000005
+            Assert.AreEqual(-0.00126, displacement2.XX, 0.00002); //FIXME tolerance is too large, should ideally be 0.000005
+            Assert.AreEqual( 0.00126, displacement2.YY, 0.00002); //FIXME tolerance is too large, should ideally be 0.000005
         }
     }
 }
