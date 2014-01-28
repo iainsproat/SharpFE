@@ -126,5 +126,42 @@ namespace SharpFE.Examples.Membrane
 			Assert.AreNotEqual(0.0, displacement4.Y); // TODO calculate the actual value, rather than just checking we have any value
 			Assert.AreNotEqual(0.0, displacement4.Z); // TODO calculate the actual value, rather than just checking we have any value
 		}
+		
+		[Test]
+		public void Example6_5_AFirstCourseInFiniteElementMethod_Logan_4thEdition()
+		{
+		    var model = new FiniteElementModel(ModelType.Membrane2D);
+		    var node1 = model.NodeFactory.Create( 0,  0);
+		    var node2 = model.NodeFactory.Create( 0, 10);
+		    var node3 = model.NodeFactory.Create(20, 10);
+		    var node4 = model.NodeFactory.Create(20,  0);
+		    
+		    model.ConstrainNode(node1, DegreeOfFreedom.X);
+		    model.ConstrainNode(node1, DegreeOfFreedom.Y);
+		    model.ConstrainNode(node2, DegreeOfFreedom.X);
+		    model.ConstrainNode(node2, DegreeOfFreedom.Y);
+		    
+		    var material = new GenericElasticMaterial(0, 30000000, 0.3, 0);
+		   
+		    model.ElementFactory.CreateLinearConstantStrainTriangle(node1, node2, node3, material, 1);
+		    model.ElementFactory.CreateLinearConstantStrainTriangle(node1, node3, node4, material, 1);
+		    
+		    var force = model.ForceFactory.Create(5000, 0);
+		    model.ApplyForceToNode(force, node3);
+		    model.ApplyForceToNode(force, node4);
+		    
+		    var solver = new MatrixInversionLinearSolver(model);
+		    var results = solver.Solve();
+		    
+		    var displacement3 = results.GetDisplacement(node3);
+		    var displacement4 = results.GetDisplacement(node4);
+		    
+		    Console.WriteLine(displacement3);
+		    Console.WriteLine(displacement4);
+		    Assert.AreEqual(0.0006096, displacement3.X, 0.00000005);
+		    Assert.AreEqual(0.0000042, displacement3.Y, 0.00000005);
+		    Assert.AreEqual(0.0006637, displacement4.X, 0.00000005);
+		    Assert.AreEqual(0.0001041, displacement4.Y, 0.00000005);
+		}
 	}
 }

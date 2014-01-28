@@ -21,6 +21,8 @@ namespace SharpFE
         /// <param name="shearModElasticity">Shear modulus of elasticity of the elastic material</param>
         public GenericElasticMaterial(double rho, double youngsMod, double nu, double shearModElasticity)
         {
+            Guard.AgainstBadArgument("youngsMod", () => youngsMod <= 0, "Youngs Modulus must be greater than zero");
+                                     
             this.Density = rho;
             this.YoungsModulus = youngsMod;
             this.PoissonsRatio = nu;
